@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NovAIX — Giải pháp công nghệ cho doanh nghiệp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  --bg:#070b16;
+  --bg-2:#0b1120;
+  --panel:rgba(255,255,255,0.03);
+  --line:rgba(255,255,255,0.08);
+  --ink:#eef2fb;
+  --muted:#8b97b4;
+  --accent:#2dd4bf;      /* teal */
+  --accent-2:#38bdf8;    /* sky */
+  --accent-3:#fbbf24;    /* gold */
+  --glow:0 0 40px rgba(45,212,191,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Manrope',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 50% at 80% 0%, rgba(56,189,248,.10), transparent 60%),
+    radial-gradient(50% 50% at 0% 30%, rgba(45,212,191,.10), transparent 60%);
+}
+/* film grain */
+body::after{
+  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+h1,h2,h3,.display{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;line-height:1.05}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit;text-decoration:none}
+.accent{color:var(--accent)}
+.kicker{
+  display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.18em;color:var(--accent);
+  padding:6px 14px;border:1px solid var(--line);border-radius:100px;background:var(--panel);
+}
+.kicker::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:var(--glow)}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  backdrop-filter:blur(14px);background:rgba(7,11,22,.6);
+  border-bottom:1px solid var(--line);
+}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:20px}
+.logo .mark{
+  width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04121a;font-size:15px;
+  box-shadow:var(--glow)
+}
+.nav-links{display:flex;gap:28px;font-size:14px;font-weight:500;color:var(--muted)}
+.nav-links a:hover{color:var(--ink)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;
+  padding:11px 20px;border-radius:11px;cursor:pointer;transition:.2s;border:1px solid transparent
+}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04121a;box-shadow:var(--glow)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-ghost{border-color:var(--line);color:var(--ink);background:var(--panel)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+@media(max-width:820px){.nav-links{display:none}}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding-top:68px;overflow:hidden}
+#scene{position:absolute;inset:0;z-index:0}
+.hero .wrap{z-index:3}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+@media(max-width:920px){.hero-grid{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(40px,6vw,76px);font-weight:800;margin:22px 0 18px}
+.hero h1 .grad{background:linear-gradient(120deg,var(--accent),var(--accent-2) 60%,var(--accent-3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:540px;margin-bottom:30px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.fade{opacity:0;transform:translateY(24px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+.d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.32s}.d4{animation-delay:.46s}.d5{animation-delay:.6s}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* stat strip */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:60px;
+  border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:26px;backdrop-filter:blur(6px)}
+.stat .num{font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;background:linear-gradient(120deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .lbl{font-size:13px;color:var(--muted);margin-top:2px}
+@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* section */
+section.block{padding:110px 0;position:relative;z-index:2}
+.head{max-width:680px;margin-bottom:54px}
+.head h2{font-size:clamp(30px,4vw,48px);font-weight:800;margin:16px 0 14px}
+.head p{color:var(--muted);font-size:17px}
+
+/* marquee */
+.marquee-wrap{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 0;overflow:hidden;background:var(--bg-2)}
+.marquee-label{text-align:center;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.16em;margin-bottom:18px}
+.marquee{display:flex;gap:56px;width:max-content;animation:scroll 26s linear infinite}
+.marquee span{font-family:'Bricolage Grotesque';font-weight:700;font-size:22px;color:#5f6c8a;white-space:nowrap}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* module cards */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:920px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid-3{grid-template-columns:1fr}}
+.card{
+  border:1px solid var(--line);border-radius:18px;padding:28px;background:var(--panel);
+  transition:.25s;position:relative;overflow:hidden
+}
+.card:hover{transform:translateY(-5px);border-color:rgba(45,212,191,.4);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.card .ico{
+  width:48px;height:48px;border-radius:13px;display:grid;place-items:center;font-size:22px;margin-bottom:18px;
+  background:linear-gradient(135deg,rgba(45,212,191,.18),rgba(56,189,248,.14));border:1px solid var(--line)
+}
+.card h3{font-size:20px;font-weight:700;margin-bottom:8px}
+.card p{color:var(--muted);font-size:14.5px}
+.card .tag{display:inline-block;margin-top:14px;font-size:12px;color:var(--accent);font-weight:600}
+
+/* features split */
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+@media(max-width:880px){.feat{grid-template-columns:1fr}}
+.feat-list{display:flex;flex-direction:column;gap:18px}
+.feat-item{display:flex;gap:16px;align-items:flex-start;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.feat-item .n{width:34px;height:34px;flex:none;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04121a;font-weight:800;font-family:'Bricolage Grotesque'}
+.feat-item h4{font-size:16px;margin-bottom:3px}
+.feat-item p{color:var(--muted);font-size:14px}
+.feat-visual{border:1px solid var(--line);border-radius:20px;background:linear-gradient(160deg,var(--bg-2),#0d1424);min-height:340px;position:relative;overflow:hidden;display:grid;place-items:center}
+.orbit{width:220px;height:220px;border:1px dashed rgba(45,212,191,.4);border-radius:50%;position:relative;animation:spin 18s linear infinite}
+.orbit::after{content:"";position:absolute;width:380px;height:380px;border:1px dashed rgba(56,189,248,.18);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
+.orbit .core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:800;font-family:'Bricolage Grotesque';color:#04121a;box-shadow:var(--glow);animation:spin 18s linear infinite reverse}
+.orbit .dot{position:absolute;width:42px;height:42px;border-radius:11px;background:#0d1424;border:1px solid var(--line);display:grid;place-items:center;font-size:18px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* process */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;counter-reset:s}
+@media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.step{border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--panel);position:relative}
+.step .s-n{font-family:'Bricolage Grotesque';font-weight:800;font-size:14px;color:var(--accent);letter-spacing:.1em}
+.step h4{font-size:17px;margin:10px 0 6px}
+.step p{color:var(--muted);font-size:13.5px}
+
+/* segments */
+.grid-3.seg .card{padding:30px}
+.card ul{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.card li{font-size:14px;color:var(--muted);display:flex;gap:9px;align-items:flex-start}
+.card li::before{content:"›";color:var(--accent);font-weight:800}
+
+/* testimonials */
+.quote{border:1px solid var(--line);border-radius:18px;padding:30px;background:var(--panel)}
+.quote p{font-size:16px;line-height:1.7;margin-bottom:20px}
+.who{display:flex;align-items:center;gap:12px}
+.av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:800;color:#04121a;font-family:'Bricolage Grotesque'}
+.who b{font-size:14px}.who span{font-size:12.5px;color:var(--muted);display:block}
+
+/* CTA */
+.cta-box{border:1px solid var(--line);border-radius:26px;padding:64px 40px;text-align:center;
+  background:radial-gradient(60% 120% at 50% 0%,rgba(45,212,191,.14),transparent 70%),var(--bg-2);position:relative;overflow:hidden}
+.cta-box h2{font-size:clamp(30px,4.5vw,54px);font-weight:800;margin-bottom:16px}
+.cta-box p{color:var(--muted);max-width:520px;margin:0 auto 28px}
+.cta-box .hero-cta{justify-content:center}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:60px 0 36px;background:var(--bg-2);position:relative;z-index:2}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:34px}
+@media(max-width:780px){.foot-grid{grid-template-columns:1fr 1fr}}
+.foot-grid h5{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:16px}
+.foot-grid a,.foot-grid p{display:block;color:#9aa6c4;font-size:14px;margin-bottom:10px}
+.foot-grid a:hover{color:var(--accent)}
+.foot-bottom{margin-top:46px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:13px}
+.contact-row{font-size:14px;color:#9aa6c4;display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.contact-row b{color:var(--ink)}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+@media(max-width:880px){.about-grid{grid-template-columns:1fr}}
+.value-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+@media(max-width:640px){.value-cards{grid-template-columns:1fr}}
+.value-card{border:1px solid var(--line);border-radius:14px;padding:20px;background:var(--panel)}
+.value-card .v-icon{font-size:24px;margin-bottom:10px}
+.value-card h4{font-size:15px;margin-bottom:6px;font-weight:700}
+.value-card p{color:var(--muted);font-size:13.5px}
+.about-visual{border:1px solid var(--line);border-radius:20px;background:linear-gradient(160deg,var(--bg-2),#0d1424);padding:32px;display:flex;flex-direction:column;gap:20px}
+.tl-item{display:flex;gap:16px;align-items:flex-start}
+.tl-dot{width:38px;height:38px;flex:none;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04121a;font-weight:800;font-size:12px;font-family:'Bricolage Grotesque'}
+.tl-year{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.08em}
+.tl-title{font-size:15px;font-weight:700;margin:2px 0 4px}
+.tl-desc{color:var(--muted);font-size:13px}
+
+/* pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:880px){.pricing-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.pricing-grid{grid-template-columns:1fr}}
+.pricing-card{border:1px solid var(--line);border-radius:20px;padding:32px;background:var(--panel);position:relative;display:flex;flex-direction:column}
+.pricing-card.popular{border-color:rgba(45,212,191,.5);background:linear-gradient(160deg,rgba(45,212,191,.06),rgba(56,189,248,.04))}
+.popular-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04121a;font-size:12px;font-weight:700;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.tier-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.tier-name{font-size:22px;font-weight:800;margin:6px 0;font-family:'Bricolage Grotesque'}
+.price-num{font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;color:var(--ink);margin:10px 0 4px}
+.price-sub{color:var(--muted);font-size:13px;margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.pricing-feat{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;flex:1}
+.pricing-feat li{font-size:14px;color:#9aa6c4;display:flex;gap:9px;align-items:flex-start}
+.pricing-feat li::before{content:"✓";color:var(--accent);font-weight:800;flex:none}
+.pricing-feat li.na{opacity:.4}
+.pricing-feat li.na::before{content:"—";color:var(--muted)}
+
+/* faq */
+.faq-list{display:flex;flex-direction:column;gap:12px;max-width:820px}
+details.faq-item{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+details.faq-item[open]{border-color:rgba(45,212,191,.35)}
+details.faq-item summary{padding:20px 24px;font-size:16px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;transition:.2s}
+details.faq-item summary:hover{color:var(--accent)}
+details.faq-item summary::-webkit-details-marker{display:none}
+details.faq-item summary::after{content:"+";color:var(--accent);font-size:22px;font-weight:700;flex:none;line-height:1;transition:.25s;display:inline-block}
+details.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-body{padding:0 24px 20px;color:var(--muted);font-size:15px;line-height:1.7}
+
+/* contact form */
+.contact-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start}
+@media(max-width:880px){.contact-grid{grid-template-columns:1fr}}
+.contact-info h2{font-size:clamp(26px,3.5vw,40px);font-weight:800;font-family:'Bricolage Grotesque';margin:16px 0 18px;line-height:1.1}
+.contact-info>p{color:var(--muted);margin-bottom:32px;font-size:16px}
+.contact-detail{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;font-size:14px;color:#9aa6c4}
+.contact-detail .icon{font-size:16px;margin-top:2px}
+.contact-detail b{color:var(--ink);display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;font-weight:700}
+.form-box{border:1px solid var(--line);border-radius:22px;padding:36px;background:var(--panel)}
+.form-box h3{font-size:20px;font-weight:700;margin-bottom:24px;font-family:'Bricolage Grotesque'}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:520px){.form-row{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.form-group label{font-size:13px;font-weight:600;color:var(--ink)}
+.form-group input,.form-group select,.form-group textarea{
+  background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;
+  padding:11px 14px;color:var(--ink);font-family:'Manrope',sans-serif;font-size:14px;
+  outline:none;transition:.2s;width:100%
+}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,212,191,.1)}
+.form-group select{cursor:pointer}
+.form-group select option{background:#0b1120}
+.form-group textarea{resize:vertical;min-height:110px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="#"><span class="mark">N</span>Nov<span class="accent">AIX</span></a>
+    <div class="nav-links">
+      <a href="#ve-chung-toi">Giới thiệu</a>
+      <a href="#modules">Sản phẩm</a>
+      <a href="#quy-trinh">Quy trình</a>
+      <a href="#bang-gia">Bảng giá</a>
+      <a href="#lien-he">Liên hệ</a>
+    </div>
+    <a class="btn btn-primary" href="#lien-he">Đặt lịch demo →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div id="scene"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="kicker fade d1">Nền tảng CRM · ERP cho doanh nghiệp Việt</span>
+        <h1 class="fade d2">Hệ thống hóa <span class="grad">toàn bộ vận hành</span> doanh nghiệp của bạn</h1>
+        <p class="lead fade d3">NovAIX kết nối bán hàng, sản xuất, kho vận, nhân sự và tài chính trên một nền tảng duy nhất — chuẩn hóa quy trình, tự động hóa nghiệp vụ và ra quyết định bằng dữ liệu thời gian thực.</p>
+        <div class="hero-cta fade d4">
+          <a class="btn btn-primary" href="#lien-he">Đặt lịch demo miễn phí →</a>
+          <a class="btn btn-ghost" href="#modules">Khám phá module</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats fade d5">
+      <div class="stat"><div class="num" data-target="40">0</div><div class="lbl">Module nghiệp vụ</div></div>
+      <div class="stat"><div class="num" data-target="99" data-suffix="%">0</div><div class="lbl">Uptime cam kết</div></div>
+      <div class="stat"><div class="num" data-target="60" data-suffix="%">0</div><div class="lbl">Giảm thao tác thủ công</div></div>
+      <div class="stat"><div class="num" data-target="24" data-suffix="/7">0</div><div class="lbl">Hỗ trợ vận hành</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-label">Phù hợp với mọi lĩnh vực kinh doanh</div>
+  <div class="marquee">
+    <span>Bán lẻ &amp; Chuỗi</span><span>Sản xuất</span><span>Phân phối</span><span>Xây dựng &amp; Nội thất</span><span>Logistics</span><span>F&amp;B</span><span>Thương mại điện tử</span><span>Dịch vụ</span>
+    <span>Bán lẻ &amp; Chuỗi</span><span>Sản xuất</span><span>Phân phối</span><span>Xây dựng &amp; Nội thất</span><span>Logistics</span><span>F&amp;B</span><span>Thương mại điện tử</span><span>Dịch vụ</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="block" id="ve-chung-toi" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="about-grid">
+      <div>
+        <span class="kicker">Về NovAIX</span>
+        <h2 style="font-size:clamp(28px,4vw,44px);font-weight:800;margin:16px 0 18px">Xây dựng nền tảng công nghệ cho doanh nghiệp Việt</h2>
+        <p style="color:var(--muted);font-size:16px;line-height:1.75;margin-bottom:24px">NovAIX ra đời từ mong muốn giúp doanh nghiệp Việt chuyển đổi số thực chất — không chỉ là phần mềm mà còn là quy trình vận hành chuẩn, đội ngũ đồng hành và công nghệ phù hợp với thực tế địa phương.</p>
+        <div class="value-cards">
+          <div class="value-card">
+            <div class="v-icon">🎯</div>
+            <h4>Sứ mệnh</h4>
+            <p>Số hóa quy trình vận hành để mọi doanh nghiệp Việt vận hành hiệu quả như doanh nghiệp toàn cầu.</p>
+          </div>
+          <div class="value-card">
+            <div class="v-icon">🔭</div>
+            <h4>Tầm nhìn</h4>
+            <p>Trở thành nền tảng quản trị doanh nghiệp hàng đầu Đông Nam Á vào năm 2030.</p>
+          </div>
+          <div class="value-card">
+            <div class="v-icon">💎</div>
+            <h4>Giá trị cốt lõi</h4>
+            <p>Thực chất · Đồng hành · Đổi mới liên tục · Lấy khách hàng làm trọng tâm.</p>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="tl-item">
+          <div class="tl-dot">21</div>
+          <div>
+            <div class="tl-year">2021 · Thành lập</div>
+            <div class="tl-title">Ra mắt NovAIX</div>
+            <div class="tl-desc">Triển khai module CRM đầu tiên cho nhóm SME tại TP.HCM, khởi đầu hành trình số hóa.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">22</div>
+          <div>
+            <div class="tl-year">2022 · Mở rộng</div>
+            <div class="tl-title">Hệ sinh thái ERP & Kho</div>
+            <div class="tl-desc">Triển khai thành công cho 20+ doanh nghiệp sản xuất và phân phối trên cả nước.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">23</div>
+          <div>
+            <div class="tl-year">2023 · Đột phá</div>
+            <div class="tl-title">Tích hợp AI Automation</div>
+            <div class="tl-desc">Ra mắt module tự động hóa trí tuệ nhân tạo, giảm 60% tác vụ lặp lại trong vận hành.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">26</div>
+          <div>
+            <div class="tl-year">2024 – 2026 · Hiện tại</div>
+            <div class="tl-title">Nền tảng toàn diện</div>
+            <div class="tl-desc">40+ module, 100+ doanh nghiệp đang vận hành và tiếp tục mở rộng toàn quốc.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="block" id="modules">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Hệ sinh thái module</span>
+      <h2>Một nền tảng — đầy đủ nghiệp vụ doanh nghiệp</h2>
+      <p>Triển khai từng phần hoặc trọn bộ. Các module dùng chung một cơ sở dữ liệu, nên dữ liệu chảy liền mạch giữa các phòng ban mà không cần nhập liệu lại.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><div class="ico">🤝</div><h3>CRM — Quan hệ khách hàng</h3><p>Quản lý lead, pipeline bán hàng, chăm sóc và lịch sử tương tác đa kênh (Zalo, email, hotline) trên một màn hình.</p><span class="tag">Sales · Marketing · CSKH</span></div>
+      <div class="card"><div class="ico">🏭</div><h3>ERP — Hoạch định nguồn lực</h3><p>Lõi vận hành kết nối đơn hàng, sản xuất, mua hàng và tài chính theo thời gian thực, xuyên suốt toàn doanh nghiệp.</p><span class="tag">Core nghiệp vụ</span></div>
+      <div class="card"><div class="ico">📦</div><h3>Kho &amp; Chuỗi cung ứng</h3><p>Tồn kho đa kho, mã vạch/QR, định mức nguyên vật liệu, theo dõi nhập–xuất–tồn và cảnh báo tự động.</p><span class="tag">Inventory · SCM</span></div>
+      <div class="card"><div class="ico">💰</div><h3>Kế toán &amp; Tài chính</h3><p>Sổ cái, công nợ phải thu/phải trả, dòng tiền, hóa đơn điện tử và báo cáo tài chính tuân thủ chuẩn Việt Nam.</p><span class="tag">Finance</span></div>
+      <div class="card"><div class="ico">👥</div><h3>HRM — Nhân sự &amp; Chấm công</h3><p>Hồ sơ nhân sự, chấm công, tính lương, KPI và quản lý hiệu suất gắn liền với quy trình phê duyệt.</p><span class="tag">HR · Payroll</span></div>
+      <div class="card"><div class="ico">📋</div><h3>Quy trình &amp; Dự án</h3><p>Số hóa quy trình phê duyệt, giao việc, theo dõi tiến độ dự án và checklist nghiệm thu theo từng giai đoạn.</p><span class="tag">Workflow · BPM</span></div>
+      <div class="card"><div class="ico">📊</div><h3>BI — Báo cáo &amp; Phân tích</h3><p>Dashboard điều hành theo thời gian thực, báo cáo tùy biến và cảnh báo chỉ số kinh doanh quan trọng.</p><span class="tag">Analytics</span></div>
+      <div class="card"><div class="ico">🤖</div><h3>Tự động hóa AI</h3><p>Trợ lý AI bóc tách chứng từ, dự báo nhu cầu, gợi ý quyết định và tự động hóa tác vụ lặp lại.</p><span class="tag">AI Automation</span></div>
+      <div class="card"><div class="ico">🔗</div><h3>Tích hợp &amp; API mở</h3><p>Kết nối sàn TMĐT, vận chuyển, ngân hàng và phần mềm hiện có qua API & webhook tiêu chuẩn.</p><span class="tag">Integration</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES / WHY -->
+<section class="block" id="giai-phap" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="feat">
+      <div>
+        <span class="kicker">Vì sao chọn NovAIX</span>
+        <h2 style="font-size:clamp(28px,4vw,44px);font-weight:800;margin:16px 0 26px">Không chỉ là phần mềm — là một hệ thống vận hành chuẩn hóa</h2>
+        <div class="feat-list">
+          <div class="feat-item"><div class="n">1</div><div><h4>Một nguồn dữ liệu duy nhất</h4><p>Mọi phòng ban làm việc trên cùng dữ liệu, loại bỏ file Excel rời rạc và sai lệch số liệu.</p></div></div>
+          <div class="feat-item"><div class="n">2</div><div><h4>Tùy biến theo quy trình của bạn</h4><p>Cấu hình module và luồng phê duyệt khớp với cách doanh nghiệp đang vận hành, không bắt bạn đổi theo phần mềm.</p></div></div>
+          <div class="feat-item"><div class="n">3</div><div><h4>Triển khai theo giai đoạn</h4><p>Bắt đầu từ module cấp thiết nhất, mở rộng dần để kiểm soát chi phí và rủi ro.</p></div></div>
+          <div class="feat-item"><div class="n">4</div><div><h4>Đồng hành sau triển khai</h4><p>Đào tạo, hỗ trợ và tối ưu liên tục để hệ thống thực sự được dùng, không bị bỏ phí.</p></div></div>
+        </div>
+      </div>
+      <div class="feat-visual">
+        <div class="orbit">
+          <div class="core">NovAIX</div>
+          <div class="dot" style="top:-21px;left:50%;transform:translateX(-50%)">🤝</div>
+          <div class="dot" style="bottom:-21px;left:50%;transform:translateX(-50%)">💰</div>
+          <div class="dot" style="top:50%;left:-21px;transform:translateY(-50%)">📦</div>
+          <div class="dot" style="top:50%;right:-21px;transform:translateY(-50%)">👥</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="block" id="quy-trinh">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Lộ trình triển khai</span>
+      <h2>Từ khảo sát đến vận hành — 5 bước rõ ràng</h2>
+      <p>Phương pháp triển khai chuẩn hóa giúp doanh nghiệp đưa hệ thống vào sử dụng nhanh, đúng quy trình và đo lường được hiệu quả.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="s-n">BƯỚC 01</div><h4>Khảo sát</h4><p>Phân tích quy trình hiện tại, xác định điểm nghẽn và mục tiêu số hóa.</p></div>
+      <div class="step"><div class="s-n">BƯỚC 02</div><h4>Thiết kế quy trình</h4><p>Chuẩn hóa luồng nghiệp vụ và cấu hình module phù hợp với doanh nghiệp.</p></div>
+      <div class="step"><div class="s-n">BƯỚC 03</div><h4>Triển khai</h4><p>Cài đặt, nhập dữ liệu, tích hợp hệ thống cũ và kiểm thử thực tế.</p></div>
+      <div class="step"><div class="s-n">BƯỚC 04</div><h4>Đào tạo</h4><p>Hướng dẫn từng phòng ban sử dụng thành thạo, bàn giao tài liệu vận hành.</p></div>
+      <div class="step"><div class="s-n">BƯỚC 05</div><h4>Tối ưu</h4><p>Theo dõi chỉ số, hỗ trợ liên tục và mở rộng module theo nhu cầu.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEGMENTS -->
+<section class="block" id="khach-hang" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Giải pháp theo đối tượng</span>
+      <h2>Phù hợp với từng giai đoạn phát triển</h2>
+      <p>Dù bạn là doanh nghiệp đang tăng trưởng nóng hay đã có quy mô, NovAIX có gói phù hợp.</p>
+    </div>
+    <div class="grid-3 seg">
+      <div class="card">
+        <div class="ico">🚀</div><h3>SME đang tăng trưởng</h3>
+        <p>Thoát khỏi Excel và phần mềm rời rạc, chuẩn hóa quy trình trước khi mở rộng.</p>
+        <ul><li>Triển khai nhanh trong 4–6 tuần</li><li>Gói module thiết yếu</li><li>Chi phí tối ưu theo người dùng</li></ul>
+      </div>
+      <div class="card">
+        <div class="ico">🏢</div><h3>Doanh nghiệp quy mô</h3>
+        <p>Hợp nhất nhiều phòng ban, chi nhánh và quy trình phức tạp trên một nền tảng.</p>
+        <ul><li>Phân quyền đa cấp</li><li>Quản lý đa chi nhánh</li><li>Tích hợp hệ thống sẵn có</li></ul>
+      </div>
+      <div class="card">
+        <div class="ico">🛠️</div><h3>Ngành đặc thù</h3>
+        <p>Sản xuất, xây dựng – nội thất, phân phối với định mức và quy trình riêng.</p>
+        <ul><li>Cấu hình quy trình tùy biến</li><li>Quản lý định mức &amp; BOM</li><li>Báo cáo chuyên ngành</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="block" id="bang-gia">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Bảng giá</span>
+      <h2>Linh hoạt theo quy mô doanh nghiệp</h2>
+      <p>Không có gói cứng nhắc — chúng tôi tư vấn lộ trình phù hợp dựa trên số người dùng, module cần thiết và đặc thù ngành.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="tier-label">Khởi đầu</div>
+        <div class="tier-name">Starter</div>
+        <div class="price-num">Liên hệ</div>
+        <div class="price-sub">Phù hợp SME dưới 20 người dùng</div>
+        <ul class="pricing-feat">
+          <li>CRM — Quản lý khách hàng</li>
+          <li>Kho &amp; Chuỗi cung ứng cơ bản</li>
+          <li>Kế toán &amp; Tài chính cơ bản</li>
+          <li>HRM — Chấm công &amp; Lương</li>
+          <li>Dashboard báo cáo</li>
+          <li class="na">Tùy biến quy trình nâng cao</li>
+          <li class="na">AI Automation</li>
+          <li class="na">Tích hợp API mở</li>
+        </ul>
+        <a class="btn btn-ghost" style="width:100%;justify-content:center" href="#lien-he">Tư vấn miễn phí →</a>
+      </div>
+      <div class="pricing-card popular">
+        <div class="popular-badge">⭐ Phổ biến nhất</div>
+        <div class="tier-label">Mở rộng</div>
+        <div class="tier-name">Business</div>
+        <div class="price-num">Liên hệ</div>
+        <div class="price-sub">Phù hợp doanh nghiệp 20–100 người dùng</div>
+        <ul class="pricing-feat">
+          <li>Tất cả module Starter</li>
+          <li>ERP toàn diện đa phòng ban</li>
+          <li>Quy trình &amp; BPM tùy biến</li>
+          <li>BI — Báo cáo nâng cao</li>
+          <li>AI Automation cơ bản</li>
+          <li>Quản lý đa chi nhánh</li>
+          <li>Tích hợp TMĐT &amp; vận chuyển</li>
+          <li class="na">Enterprise SLA &amp; Custom Dev</li>
+        </ul>
+        <a class="btn btn-primary" style="width:100%;justify-content:center" href="#lien-he">Đặt lịch demo →</a>
+      </div>
+      <div class="pricing-card">
+        <div class="tier-label">Toàn diện</div>
+        <div class="tier-name">Enterprise</div>
+        <div class="price-num">Theo yêu cầu</div>
+        <div class="price-sub">Phù hợp doanh nghiệp 100+ người dùng</div>
+        <ul class="pricing-feat">
+          <li>Tất cả module Business</li>
+          <li>AI Automation toàn phần</li>
+          <li>Tùy biến &amp; phát triển riêng</li>
+          <li>SLA cam kết theo hợp đồng</li>
+          <li>Dedicated support team</li>
+          <li>On-premise hoặc Private Cloud</li>
+          <li>Đào tạo chuyên sâu định kỳ</li>
+          <li>Tích hợp không giới hạn</li>
+        </ul>
+        <a class="btn btn-ghost" style="width:100%;justify-content:center" href="#lien-he">Liên hệ Enterprise →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="block">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Khách hàng nói gì</span>
+      <h2>Vận hành gọn hơn, quyết định nhanh hơn</h2>
+      <p>Một vài chia sẻ minh họa về trải nghiệm chuẩn hóa quy trình cùng NovAIX.</p>
+    </div>
+    <div class="grid-3">
+      <div class="quote">
+        <p>“Trước đây mỗi phòng dùng một file riêng, đối số liệu cuối tháng rất mệt. Sau khi dùng NovAIX, dữ liệu thông suốt, báo cáo có ngay trong vài phút.”</p>
+        <div class="who"><div class="av">TM</div><div><b>Chị Thu Minh</b><span>Giám đốc vận hành · Chuỗi bán lẻ</span></div></div>
+      </div>
+      <div class="quote">
+        <p>“Module sản xuất và kho giúp chúng tôi kiểm soát định mức nguyên vật liệu chặt chẽ, giảm hao hụt rõ rệt chỉ sau một quý.”</p>
+        <div class="who"><div class="av">QH</div><div><b>Anh Quốc Huy</b><span>Quản lý nhà máy · Sản xuất</span></div></div>
+      </div>
+      <div class="quote">
+        <p>“Đội NovAIX không chỉ bàn giao phần mềm mà còn giúp chúng tôi chuẩn hóa lại quy trình. Đó mới là giá trị thật.”</p>
+        <div class="who"><div class="av">NL</div><div><b>Chị Ngọc Lan</b><span>Founder · Doanh nghiệp nội thất</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="block" id="faq" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="head">
+      <span class="kicker">Câu hỏi thường gặp</span>
+      <h2>Những điều doanh nghiệp hay hỏi</h2>
+      <p>Chưa tìm thấy câu trả lời? Liên hệ đội ngũ tư vấn — chúng tôi phản hồi trong 2 giờ làm việc.</p>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>NovAIX phù hợp với quy mô doanh nghiệp nào?</summary>
+        <div class="faq-body">NovAIX phù hợp với doanh nghiệp từ 10 đến 500+ người dùng, bao gồm SME đang tăng trưởng, doanh nghiệp quy mô vừa và các tập đoàn có nhiều chi nhánh. Chúng tôi thiết kế gói triển khai linh hoạt theo từng giai đoạn phát triển của bạn.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Thời gian triển khai mất bao lâu?</summary>
+        <div class="faq-body">Với gói Starter, thời gian triển khai thường từ 4–6 tuần. Gói Business mất 8–12 tuần tùy mức độ phức tạp quy trình. Chúng tôi sẽ lập lịch chi tiết và minh bạch sau buổi khảo sát ban đầu.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Dữ liệu của tôi có được bảo mật không?</summary>
+        <div class="faq-body">Có. Dữ liệu được mã hóa tại chỗ và trong quá trình truyền tải (AES-256, TLS 1.3), lưu trữ trên hạ tầng đám mây đặt tại Việt Nam, sao lưu tự động hàng ngày và phân quyền truy cập chi tiết theo từng người dùng.</div>
+      </details>
+      <details class="faq-item">
+        <summary>NovAIX có tích hợp được với phần mềm đang dùng không?</summary>
+        <div class="faq-body">Có. NovAIX hỗ trợ tích hợp qua API REST &amp; Webhook tiêu chuẩn. Chúng tôi đã có connector sẵn với các sàn TMĐT (Shopee, Lazada, TikTok Shop), đơn vị vận chuyển (GHN, GHTK, J&T), ngân hàng và phần mềm kế toán MISA.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Chi phí có bao gồm hỗ trợ sau triển khai không?</summary>
+        <div class="faq-body">Có. Tất cả các gói đều bao gồm hỗ trợ kỹ thuật trong năm đầu tiên. Từ năm thứ hai, chúng tôi cung cấp gói duy trì linh hoạt theo nhu cầu với cam kết phản hồi trong vòng 4 giờ trong giờ hành chính.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Nếu quy trình công ty tôi đặc thù, NovAIX có tùy biến được không?</summary>
+        <div class="faq-body">Hoàn toàn có. Đây là thế mạnh của NovAIX — chúng tôi cấu hình module theo quy trình thực tế của bạn, không bắt doanh nghiệp phải thay đổi để theo phần mềm. Với yêu cầu phát triển riêng, gói Business và Enterprise hỗ trợ custom development.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="block" id="lien-he">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <span class="kicker">Liên hệ</span>
+        <h2>Bắt đầu hành trình số hóa ngay hôm nay</h2>
+        <p>Đặt lịch demo 30 phút — chúng tôi phân tích quy trình và đề xuất lộ trình phù hợp, hoàn toàn miễn phí và không ràng buộc.</p>
+        <div class="contact-detail">
+          <span class="icon">📍</span>
+          <div><b>Địa chỉ</b>14 Đường 41, An Khánh, TP. Thủ Đức, TP. Hồ Chí Minh</div>
+        </div>
+        <div class="contact-detail">
+          <span class="icon">✉️</span>
+          <div><b>Email</b>contact@novaix.vn</div>
+        </div>
+        <div class="contact-detail">
+          <span class="icon">📞</span>
+          <div><b>Điện thoại</b>+84 (0) xxx xxx xxx</div>
+        </div>
+        <div class="contact-detail">
+          <span class="icon">🕐</span>
+          <div><b>Giờ làm việc</b>Thứ 2 – Thứ 6 &nbsp;·&nbsp; 8:00 – 17:30</div>
+        </div>
+        <div style="margin-top:32px;padding:24px;border:1px solid var(--line);border-radius:16px;background:var(--panel)">
+          <div style="font-size:13px;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:700">Cam kết của chúng tôi</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:14px;color:#9aa6c4;display:flex;gap:8px"><span style="color:var(--accent)">✓</span>Phản hồi trong 2 giờ làm việc</div>
+            <div style="font-size:14px;color:#9aa6c4;display:flex;gap:8px"><span style="color:var(--accent)">✓</span>Demo miễn phí, không ràng buộc</div>
+            <div style="font-size:14px;color:#9aa6c4;display:flex;gap:8px"><span style="color:var(--accent)">✓</span>Tư vấn lộ trình phù hợp quy mô</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-box">
+        <h3>Đăng ký tư vấn miễn phí</h3>
+        <form onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Họ và tên *</label>
+              <input type="text" placeholder="Nguyễn Văn A" required />
+            </div>
+            <div class="form-group">
+              <label>Số điện thoại *</label>
+              <input type="tel" placeholder="0901 234 567" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" placeholder="email@congty.vn" required />
+            </div>
+            <div class="form-group">
+              <label>Tên công ty</label>
+              <input type="text" placeholder="Công ty TNHH ABC" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Quy mô doanh nghiệp</label>
+            <select>
+              <option value="">Chọn quy mô...</option>
+              <option>Dưới 20 nhân viên</option>
+              <option>20 – 100 nhân viên</option>
+              <option>100 – 500 nhân viên</option>
+              <option>Trên 500 nhân viên</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Module quan tâm</label>
+            <select>
+              <option value="">Chọn giải pháp...</option>
+              <option>CRM — Quản lý khách hàng</option>
+              <option>ERP — Hoạch định nguồn lực</option>
+              <option>Kho &amp; Chuỗi cung ứng</option>
+              <option>Kế toán &amp; Tài chính</option>
+              <option>HRM — Nhân sự &amp; Lương</option>
+              <option>Trọn bộ giải pháp</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mô tả nhu cầu</label>
+            <textarea placeholder="Mô tả ngắn gọn về quy trình và vấn đề bạn đang gặp phải..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:14px 20px;font-size:15px">Gửi yêu cầu tư vấn →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#"><span class="mark">N</span>Nov<span class="accent">AIX</span></a>
+        <p style="margin-top:16px;max-width:300px">Giải pháp công nghệ giúp doanh nghiệp Việt hệ thống hóa quy trình và vận hành bằng dữ liệu.</p>
+      </div>
+      <div>
+        <h5>Sản phẩm</h5>
+        <a href="#modules">CRM</a><a href="#modules">ERP</a><a href="#modules">HRM</a><a href="#modules">Kế toán</a><a href="#modules">BI &amp; Báo cáo</a>
+      </div>
+      <div>
+        <h5>Công ty</h5>
+        <a href="#giai-phap">Giải pháp</a><a href="#quy-trinh">Quy trình</a><a href="#khach-hang">Khách hàng</a><a href="#lien-he">Liên hệ</a>
+      </div>
+      <div>
+        <h5>Liên hệ</h5>
+        <div class="contact-row">📍 <span><b>NovAIX</b><br>14 Đường 41, An Khánh, TP. Thủ Đức, HCM</span></div>
+        <div class="contact-row">✉️ <span>contact@novaix.vn</span></div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 NovAIX. Mọi quyền được bảo lưu.</span>
+      <span>Chính sách bảo mật · Điều khoản</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---- Three.js node-network hero ---- */
+(function(){
+  const mount = document.getElementById('scene');
+  if(!mount || !window.THREE) return;
+  const W = () => mount.clientWidth, H = () => mount.clientHeight;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, W()/H(), 0.1, 100);
+  camera.position.z = 13;
+
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(W(), H());
+  mount.appendChild(renderer.domElement);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // nodes
+  const N = 70;
+  const positions = [];
+  const nodes = [];
+  for(let i=0;i<N;i++){
+    const r = 6.2 * Math.cbrt(Math.random());
+    const t = Math.random()*Math.PI*2;
+    const p = Math.acos(2*Math.random()-1);
+    const x = r*Math.sin(p)*Math.cos(t);
+    const y = r*Math.sin(p)*Math.sin(t)*0.7;
+    const z = r*Math.cos(p);
+    positions.push(x,y,z);
+    nodes.push(new THREE.Vector3(x,y,z));
+  }
+  const ptGeo = new THREE.BufferGeometry();
+  ptGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
+  const ptMat = new THREE.PointsMaterial({color:0x2dd4bf, size:0.16, transparent:true, opacity:0.95});
+  group.add(new THREE.Points(ptGeo, ptMat));
+
+  // glow accent points (sky)
+  const ptMat2 = new THREE.PointsMaterial({color:0x38bdf8, size:0.09, transparent:true, opacity:0.7});
+  group.add(new THREE.Points(ptGeo, ptMat2));
+
+  // lines between near nodes
+  const linePos = [];
+  const maxDist = 2.7;
+  for(let i=0;i<N;i++){
+    for(let j=i+1;j<N;j++){
+      if(nodes[i].distanceTo(nodes[j]) < maxDist){
+        linePos.push(nodes[i].x,nodes[i].y,nodes[i].z, nodes[j].x,nodes[j].y,nodes[j].z);
+      }
+    }
+  }
+  const lineGeo = new THREE.BufferGeometry();
+  lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePos,3));
+  const lineMat = new THREE.LineBasicMaterial({color:0x2dd4bf, transparent:true, opacity:0.16});
+  group.add(new THREE.LineSegments(lineGeo, lineMat));
+
+  // mouse parallax
+  let mx=0, my=0, tx=0, ty=0;
+  window.addEventListener('mousemove', e=>{
+    mx = (e.clientX / window.innerWidth - 0.5);
+    my = (e.clientY / window.innerHeight - 0.5);
+  });
+
+  function resize(){
+    camera.aspect = W()/H(); camera.updateProjectionMatrix();
+    renderer.setSize(W(), H());
+  }
+  window.addEventListener('resize', resize);
+
+  let raf;
+  function animate(){
+    raf = requestAnimationFrame(animate);
+    group.rotation.y += 0.0016;
+    group.rotation.x += 0.0006;
+    tx += (mx - tx) * 0.04;
+    ty += (my - ty) * 0.04;
+    group.rotation.y += tx * 0.01;
+    camera.position.x += (tx*3 - camera.position.x) * 0.04;
+    camera.position.y += (-ty*3 - camera.position.y) * 0.04;
+    camera.lookAt(0,0,0);
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+/* ---- animated stat counters ---- */
+(function(){
+  const els = document.querySelectorAll('.stat .num');
+  let done = false;
+  function run(){
+    if(done) return; done = true;
+    els.forEach(el=>{
+      const target = +el.dataset.target;
+      const suffix = el.dataset.suffix || '';
+      let cur = 0;
+      const step = target/60;
+      const iv = setInterval(()=>{
+        cur += step;
+        if(cur >= target){ cur = target; clearInterval(iv); }
+        el.textContent = Math.round(cur) + suffix;
+      }, 22);
+    });
+  }
+  const io = new IntersectionObserver((ent)=>{
+    ent.forEach(e=>{ if(e.isIntersecting) run(); });
+  }, {threshold:.4});
+  const strip = document.querySelector('.stats');
+  if(strip) io.observe(strip);
+})();
+
+/* ---- contact form submit ---- */
+window.handleSubmit = function(e){
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.textContent = '✓ Đã gửi — chúng tôi sẽ liên hệ sớm!';
+  btn.style.background = 'linear-gradient(135deg,#2dd4bf,#38bdf8)';
+  btn.disabled = true;
+};
+
+/* ---- scroll reveal for cards/sections ---- */
+(function(){
+  const io = new IntersectionObserver((ent)=>{
+    ent.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.style.transition='.7s cubic-bezier(.2,.7,.2,1)';
+        e.target.style.opacity=1;
+        e.target.style.transform='none';
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:.15});
+  document.querySelectorAll('.card,.step,.feat-item,.quote,.head,.value-card,.pricing-card,.faq-item,.tl-item,.contact-info,.form-box').forEach((el,i)=>{
+    el.style.opacity=0;
+    el.style.transform='translateY(26px)';
+    el.style.transitionDelay=(i%4*0.06)+'s';
+    io.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
