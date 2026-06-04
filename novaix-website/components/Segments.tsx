@@ -9,7 +9,7 @@ export default function Segments() {
         <SectionHead
           kicker="Giải pháp theo đối tượng"
           title="Phù hợp với từng giai đoạn phát triển"
-          desc="Dù bạn là doanh nghiệp đang tăng trưởng nóng hay đã có quy mô, NovAIX có gói phù hợp."
+          desc="Dù bạn là doanh nghiệp đang tăng trưởng nóng hay đã có quy mô, OAlpha có gói phù hợp."
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-[18px]">
           {segments.map((s, i) => (

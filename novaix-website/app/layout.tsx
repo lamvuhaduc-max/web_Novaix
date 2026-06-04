@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "NovAIX — Giải pháp công nghệ CRM & ERP cho doanh nghiệp",
+  title: "OAlpha — Giải pháp công nghệ CRM & ERP cho doanh nghiệp",
   description:
-    "NovAIX giúp doanh nghiệp Việt hệ thống hóa toàn bộ quy trình vận hành: CRM, ERP, kho vận, nhân sự, tài chính và tự động hóa AI trên một nền tảng duy nhất.",
-  keywords: ["NovAIX", "CRM", "ERP", "phần mềm doanh nghiệp", "chuyển đổi số", "tự động hóa"],
+    "OAlpha giúp doanh nghiệp Việt hệ thống hóa toàn bộ quy trình vận hành: CRM, ERP, kho vận, nhân sự, tài chính và tự động hóa AI trên một nền tảng duy nhất.",
+  keywords: ["OAlpha", "CRM", "ERP", "phần mềm doanh nghiệp", "chuyển đổi số", "tự động hóa"],
   openGraph: {
-    title: "NovAIX — Hệ thống hóa vận hành doanh nghiệp",
+    title: "OAlpha — Hệ thống hóa vận hành doanh nghiệp",
     description: "Nền tảng CRM · ERP và các module nghiệp vụ cho doanh nghiệp Việt.",
     locale: "vi_VN",
     type: "website",

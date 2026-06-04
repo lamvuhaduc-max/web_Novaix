@@ -46,7 +46,7 @@ export default function CTA() {
 
             {[
               { icon: "📍", label: "Địa chỉ", value: "14 Đường 41, An Khánh, TP. Thủ Đức, TP. Hồ Chí Minh" },
-              { icon: "✉️", label: "Email", value: "contact@novaix.vn" },
+              { icon: "✉️", label: "Email", value: "OAlphaGlobal@oalpha.vn" },
               { icon: "📞", label: "Điện thoại", value: "+84 (0) xxx xxx xxx" },
               { icon: "🕐", label: "Giờ làm việc", value: "Thứ 2 – Thứ 6  ·  8:00 – 17:30" },
             ].map((d) => (

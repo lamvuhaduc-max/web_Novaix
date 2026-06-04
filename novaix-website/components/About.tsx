@@ -7,7 +7,7 @@ const values = [
 ];
 
 const timeline = [
-  { year: "2021 · Thành lập", title: "Ra mắt NovAIX", desc: "Triển khai module CRM đầu tiên cho nhóm SME tại TP.HCM, khởi đầu hành trình số hóa.", label: "21" },
+  { year: "2021 · Thành lập", title: "Ra mắt OAlpha", desc: "Triển khai module CRM đầu tiên cho nhóm SME tại TP.HCM, khởi đầu hành trình số hóa.", label: "21" },
   { year: "2022 · Mở rộng", title: "Hệ sinh thái ERP & Kho", desc: "Triển khai thành công cho 20+ doanh nghiệp sản xuất và phân phối trên cả nước.", label: "22" },
   { year: "2023 · Đột phá", title: "Tích hợp AI Automation", desc: "Ra mắt module tự động hóa trí tuệ nhân tạo, giảm 60% tác vụ lặp lại trong vận hành.", label: "23" },
   { year: "2024 – 2026 · Hiện tại", title: "Nền tảng toàn diện", desc: "40+ module, 100+ doanh nghiệp đang vận hành và tiếp tục mở rộng toàn quốc.", label: "26" },
@@ -20,7 +20,7 @@ export default function About() {
         <div className="grid lg:grid-cols-2 gap-[50px] items-center">
           <div>
             <Reveal>
-              <span className="kicker">Về NovAIX</span>
+              <span className="kicker">Về OAlpha</span>
               <h2
                 className="font-extrabold my-4"
                 style={{ fontSize: "clamp(28px,4vw,44px)" }}
@@ -28,7 +28,7 @@ export default function About() {
                 Xây dựng nền tảng công nghệ cho doanh nghiệp Việt
               </h2>
               <p className="text-muted text-base leading-[1.75] mb-6">
-                NovAIX ra đời từ mong muốn giúp doanh nghiệp Việt chuyển đổi số thực chất — không chỉ là phần mềm mà còn là quy trình vận hành chuẩn, đội ngũ đồng hành và công nghệ phù hợp với thực tế địa phương.
+                OAlpha ra đời từ mong muốn giúp doanh nghiệp Việt chuyển đổi số thực chất — không chỉ là phần mềm mà còn là quy trình vận hành chuẩn, đội ngũ đồng hành và công nghệ phù hợp với thực tế địa phương.
               </p>
             </Reveal>
             <div className="grid grid-cols-3 gap-3.5 mt-1">

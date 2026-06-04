@@ -43,7 +43,7 @@ export default function Hero() {
               className="text-muted max-w-[540px] mb-[30px]"
               style={{ fontSize: "clamp(16px,2vw,19px)" }}
             >
-              NovAIX kết nối bán hàng, sản xuất, kho vận, nhân sự và tài chính trên một nền tảng duy
+              OAlpha kết nối bán hàng, sản xuất, kho vận, nhân sự và tài chính trên một nền tảng duy
               nhất — chuẩn hóa quy trình, tự động hóa nghiệp vụ và ra quyết định bằng dữ liệu thời
               gian thực.
             </motion.p>

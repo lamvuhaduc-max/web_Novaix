@@ -7,7 +7,7 @@ export default function Features() {
       <div className="wrap">
         <div className="grid md:grid-cols-2 gap-[50px] items-center">
           <Reveal>
-            <span className="kicker">Vì sao chọn NovAIX</span>
+            <span className="kicker">Vì sao chọn OAlpha</span>
             <h2 className="font-extrabold my-[26px] mt-4" style={{ fontSize: "clamp(28px,4vw,44px)" }}>
               Không chỉ là phần mềm — là một hệ thống vận hành chuẩn hóa
             </h2>
@@ -38,7 +38,7 @@ export default function Features() {
                   style={{ border: "1px dashed rgba(56,189,248,0.18)" }} />
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[74px] h-[74px] rounded-[18px] grid place-items-center font-extrabold font-display text-[#04121a] animate-spin18r"
                   style={{ background: "linear-gradient(135deg,#2dd4bf,#38bdf8)", boxShadow: "var(--glow)" }}>
-                  NovAIX
+                  OAlpha
                 </div>
                 {[
                   { e: "🤝", s: "top-[-21px] left-1/2 -translate-x-1/2" },

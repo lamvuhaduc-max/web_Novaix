@@ -9,7 +9,7 @@ export default function Testimonials() {
         <SectionHead
           kicker="Khách hàng nói gì"
           title="Vận hành gọn hơn, quyết định nhanh hơn"
-          desc="Một vài chia sẻ minh họa về trải nghiệm chuẩn hóa quy trình cùng NovAIX."
+          desc="Một vài chia sẻ minh họa về trải nghiệm chuẩn hóa quy trình cùng OAlpha."
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-[18px]">
           {testimonials.map((t, i) => (

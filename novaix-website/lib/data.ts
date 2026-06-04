@@ -44,9 +44,9 @@ export const segments = [
 ];
 
 export const testimonials = [
-  { initials: "TM", quote: "Trước đây mỗi phòng dùng một file riêng, đối số liệu cuối tháng rất mệt. Sau khi dùng NovAIX, dữ liệu thông suốt, báo cáo có ngay trong vài phút.", name: "Chị Thu Minh", role: "Giám đốc vận hành · Chuỗi bán lẻ" },
+  { initials: "TM", quote: "Trước đây mỗi phòng dùng một file riêng, đối số liệu cuối tháng rất mệt. Sau khi dùng OAlpha, dữ liệu thông suốt, báo cáo có ngay trong vài phút.", name: "Chị Thu Minh", role: "Giám đốc vận hành · Chuỗi bán lẻ" },
   { initials: "QH", quote: "Module sản xuất và kho giúp chúng tôi kiểm soát định mức nguyên vật liệu chặt chẽ, giảm hao hụt rõ rệt chỉ sau một quý.", name: "Anh Quốc Huy", role: "Quản lý nhà máy · Sản xuất" },
-  { initials: "NL", quote: "Đội NovAIX không chỉ bàn giao phần mềm mà còn giúp chúng tôi chuẩn hóa lại quy trình. Đó mới là giá trị thật.", name: "Chị Ngọc Lan", role: "Founder · Doanh nghiệp nội thất" },
+  { initials: "NL", quote: "Đội OAlpha không chỉ bàn giao phần mềm mà còn giúp chúng tôi chuẩn hóa lại quy trình. Đó mới là giá trị thật.", name: "Chị Ngọc Lan", role: "Founder · Doanh nghiệp nội thất" },
 ];
 
 export const nav = [

@@ -6,8 +6,8 @@ import SectionHead from "./SectionHead";
 
 const faqs = [
   {
-    q: "NovAIX phù hợp với quy mô doanh nghiệp nào?",
-    a: "NovAIX phù hợp với doanh nghiệp từ 10 đến 500+ người dùng, bao gồm SME đang tăng trưởng, doanh nghiệp quy mô vừa và các tập đoàn có nhiều chi nhánh. Chúng tôi thiết kế gói triển khai linh hoạt theo từng giai đoạn phát triển của bạn.",
+    q: "OAlpha phù hợp với quy mô doanh nghiệp nào?",
+    a: "OAlpha phù hợp với doanh nghiệp từ 10 đến 500+ người dùng, bao gồm SME đang tăng trưởng, doanh nghiệp quy mô vừa và các tập đoàn có nhiều chi nhánh. Chúng tôi thiết kế gói triển khai linh hoạt theo từng giai đoạn phát triển của bạn.",
   },
   {
     q: "Thời gian triển khai mất bao lâu?",
@@ -18,16 +18,16 @@ const faqs = [
     a: "Có. Dữ liệu được mã hóa tại chỗ và trong quá trình truyền tải (AES-256, TLS 1.3), lưu trữ trên hạ tầng đám mây đặt tại Việt Nam, sao lưu tự động hàng ngày và phân quyền truy cập chi tiết theo từng người dùng.",
   },
   {
-    q: "NovAIX có tích hợp được với phần mềm đang dùng không?",
-    a: "Có. NovAIX hỗ trợ tích hợp qua API REST & Webhook tiêu chuẩn. Chúng tôi đã có connector sẵn với các sàn TMĐT (Shopee, Lazada, TikTok Shop), đơn vị vận chuyển (GHN, GHTK, J&T), ngân hàng và phần mềm kế toán MISA.",
+    q: "OAlpha có tích hợp được với phần mềm đang dùng không?",
+    a: "Có. OAlpha hỗ trợ tích hợp qua API REST & Webhook tiêu chuẩn. Chúng tôi đã có connector sẵn với các sàn TMĐT (Shopee, Lazada, TikTok Shop), đơn vị vận chuyển (GHN, GHTK, J&T), ngân hàng và phần mềm kế toán MISA.",
   },
   {
     q: "Chi phí có bao gồm hỗ trợ sau triển khai không?",
     a: "Có. Tất cả các gói đều bao gồm hỗ trợ kỹ thuật trong năm đầu tiên. Từ năm thứ hai, chúng tôi cung cấp gói duy trì linh hoạt theo nhu cầu với cam kết phản hồi trong vòng 4 giờ trong giờ hành chính.",
   },
   {
-    q: "Nếu quy trình công ty tôi đặc thù, NovAIX có tùy biến được không?",
-    a: "Hoàn toàn có. Đây là thế mạnh của NovAIX — chúng tôi cấu hình module theo quy trình thực tế của bạn, không bắt doanh nghiệp phải thay đổi để theo phần mềm. Với yêu cầu phát triển riêng, gói Business và Enterprise hỗ trợ custom development.",
+    q: "Nếu quy trình công ty tôi đặc thù, OAlpha có tùy biến được không?",
+    a: "Hoàn toàn có. Đây là thế mạnh của OAlpha — chúng tôi cấu hình module theo quy trình thực tế của bạn, không bắt doanh nghiệp phải thay đổi để theo phần mềm. Với yêu cầu phát triển riêng, gói Business và Enterprise hỗ trợ custom development.",
   },
 ];
 
