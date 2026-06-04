@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description:
     "OAlpha giúp doanh nghiệp Việt hệ thống hóa toàn bộ quy trình vận hành: CRM, ERP, kho vận, nhân sự, tài chính và tự động hóa AI trên một nền tảng duy nhất.",
   keywords: ["OAlpha", "CRM", "ERP", "phần mềm doanh nghiệp", "chuyển đổi số", "tự động hóa"],
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   openGraph: {
     title: "OAlpha — Hệ thống hóa vận hành doanh nghiệp",
     description: "Nền tảng CRM · ERP và các module nghiệp vụ cho doanh nghiệp Việt.",
