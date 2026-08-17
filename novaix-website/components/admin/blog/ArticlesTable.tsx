@@ -51,7 +51,7 @@ import {
   type ArticleItemRow,
   type ArticleListPage,
 } from "@/lib/blog/article-actions";
-import type { CategoryRow } from "@/lib/blog/category-actions";
+import type { CategoryRow } from "@/lib/blog/category-queries";
 import type { ArticleStatus } from "@/lib/db/schema";
 
 const statusConfig: Record<
@@ -136,9 +136,13 @@ export default function ArticlesTable({
     router.push(`/admin/blog?${params.toString()}`);
   }
 
+  function runSearch() {
+    applyFilters({ query: searchInput });
+  }
+
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault();
-    applyFilters({ query: searchInput });
+    runSearch();
   }
 
   function handleClearFilters() {
@@ -339,6 +343,15 @@ export default function ArticlesTable({
               placeholder="Tìm tiêu đề hoặc địa chỉ..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
+              // Form này không có nút submit nào, mà lại chứa nhiều trường nhập,
+              // nên trình duyệt KHÔNG tự submit khi nhấn Enter — ô tìm kiếm coi
+              // như chết. Bắt phím Enter thủ công.
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  runSearch();
+                }
+              }}
               InputProps={{
                 startAdornment: <IconSearch size={18} style={{ marginRight: 8, opacity: 0.4 }} />,
               }}

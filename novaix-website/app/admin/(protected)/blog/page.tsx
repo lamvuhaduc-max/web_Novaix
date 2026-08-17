@@ -1,7 +1,7 @@
 import PageHeader from "@/components/admin/PageHeader";
 import ArticlesManager from "@/components/admin/blog/ArticlesManager";
 import { listArticles } from "@/lib/blog/article-actions";
-import { listCategories } from "@/lib/blog/category-actions";
+import { listCategories } from "@/lib/blog/category-queries";
 
 export const metadata = { title: "Bài viết · OAlpha Admin" };
 export const dynamic = "force-dynamic";

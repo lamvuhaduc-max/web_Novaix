@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { PublicArticleCard } from "@/lib/blog/queries";
 
 const dateFormatter = new Intl.DateTimeFormat("vi-VN", {

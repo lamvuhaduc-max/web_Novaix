@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import ArticleEditor from "@/components/admin/blog/ArticleEditor";
 import { getArticleForEdit } from "@/lib/blog/article-actions";
-import { listCategories } from "@/lib/blog/category-actions";
+import { listCategories } from "@/lib/blog/category-queries";
 
 export const metadata = { title: "Sửa bài viết · OAlpha Admin" };
 export const dynamic = "force-dynamic";

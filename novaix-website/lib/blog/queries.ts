@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { articles, articleCategories } from "@/lib/db/schema";
-import { getHomeRailsConfig } from "@/lib/blog/rails-actions";
+import { getHomeRailsConfig } from "@/lib/blog/rails-config";
 import { extractToc, type TocItem } from "@/lib/blog/toc";
 import { eq, and, isNull, inArray, desc, count, sql } from "drizzle-orm";
 
@@ -58,8 +58,9 @@ export async function getPublishedArticles(opts?: {
   limit: number;
   totalPages: number;
 }> {
-  const page = opts?.page || 1;
-  const limit = opts?.limit || 9;
+  // Chốt chặn thứ hai: hàm này có thể được gọi từ nhiều nơi, không chỉ trang /blog.
+  const page = Math.max(1, Math.trunc(opts?.page || 1));
+  const limit = Math.min(50, Math.max(1, Math.trunc(opts?.limit || 9)));
   const offset = (page - 1) * limit;
 
   const conditions = [visibleArticleCondition];
@@ -258,7 +259,26 @@ export async function getRelatedArticles(
   return result;
 }
 
+/**
+ * Dải bài viết trên trang chủ.
+ *
+ * Trang chủ được prerender lúc `next build`, nên hàm này chạy cả khi build.
+ * Nếu để lỗi database thoát ra ngoài thì build sập và cả trang giới thiệu
+ * công ty không lên được — chỉ vì phần bài viết. Bọc lỗi lại, trả về mảng
+ * rỗng để các section còn lại vẫn hiển thị bình thường.
+ */
 export async function getHomeRails(): Promise<
+  { title: string; articles: PublicArticleCard[] }[]
+> {
+  try {
+    return await getHomeRailsUnsafe();
+  } catch (err) {
+    console.error("[blog] Không tải được dải bài viết trang chủ:", err);
+    return [];
+  }
+}
+
+async function getHomeRailsUnsafe(): Promise<
   { title: string; articles: PublicArticleCard[] }[]
 > {
   const railsConfig = await getHomeRailsConfig();

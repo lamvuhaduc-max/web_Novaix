@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ArticleCard from "@/components/blog/ArticleCard";
 import { getPublishedArticles } from "@/lib/blog/queries";
-import { listCategories } from "@/lib/blog/category-actions";
+import { listCategories } from "@/lib/blog/category-queries";
 
 export const metadata = {
   title: "Bài viết & Tin tức · OAlpha",
@@ -21,7 +21,10 @@ type Props = {
 };
 
 export default async function PublicArticlesListPage({ searchParams }: Props) {
-  const page = parseInt(searchParams.trang || "1", 10);
+  // Tham số trên URL do người dùng gõ tùy ý: "?trang=-1" từng làm OFFSET âm
+  // và Postgres ném lỗi, trả về trang 500. Ép về số nguyên >= 1.
+  const parsedPage = Number.parseInt(searchParams.trang || "1", 10);
+  const page = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
   const categorySlug = searchParams.danh_muc;
 
   const [data, categories] = await Promise.all([

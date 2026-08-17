@@ -48,7 +48,13 @@ export const railSchema = z.object({
   visible: z.boolean(),
   source: z.enum(["category", "manual"]),
   categoryIds: z.array(z.string().uuid()).max(5).default([]),
-  articleIds: z.array(z.string().uuid()).max(12).default([]),
+  // articles.id là serial (số nguyên), KHÔNG phải uuid như article_categories.id.
+  // Khai uuid ở đây khiến mọi lần lưu dải "chọn thủ công" đều fail validation.
+  // Chuẩn hóa về string để so sánh trong RailsEditor luôn nhất quán.
+  articleIds: z
+    .array(z.union([z.number().int().positive(), z.string().regex(/^\d+$/)]).transform(String))
+    .max(12)
+    .default([]),
   limit: z.number().int().min(1).max(12).default(6),
 });
 

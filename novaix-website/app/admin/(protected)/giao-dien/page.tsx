@@ -1,7 +1,7 @@
 import PageHeader from "@/components/admin/PageHeader";
 import RailsEditor from "@/components/admin/blog/RailsEditor";
-import { getHomeRailsConfig } from "@/lib/blog/rails-actions";
-import { listCategories } from "@/lib/blog/category-actions";
+import { getHomeRailsConfig } from "@/lib/blog/rails-config";
+import { listCategories } from "@/lib/blog/category-queries";
 import { listArticles } from "@/lib/blog/article-actions";
 
 export const metadata = { title: "Quản lý Giao diện Trang chủ · OAlpha Admin" };

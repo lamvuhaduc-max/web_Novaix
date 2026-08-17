@@ -119,25 +119,45 @@ export function sanitizeArticleHtml(raw: string): {
 /**
  * Kiểm tra xem các thẻ <img> có trỏ về host được phép (R2 CDN hoặc local /uploads/) hay không.
  */
+/** Host được phép chứa ảnh bài viết: CDN R2 của mình, cộng localhost khi chạy dev. */
+function allowedImageHosts(): Set<string> {
+  const hosts = new Set(["localhost", "127.0.0.1"]);
+  const r2Url = process.env.R2_PUBLIC_URL;
+  if (r2Url) {
+    try {
+      hosts.add(new URL(r2Url).hostname);
+    } catch {
+      // R2_PUBLIC_URL sai định dạng thì coi như không có host nào được thêm.
+    }
+  }
+  return hosts;
+}
+
 export function assertLocalImages(html: string): void {
-  const r2Url = process.env.R2_PUBLIC_URL || "";
+  const hosts = allowedImageHosts();
   const imgMatches = html.match(/<img[^>]+src=["']([^"']+)["']/gi) || [];
 
   for (const imgTag of imgMatches) {
     const srcMatch = imgTag.match(/src=["']([^"']+)["']/i);
-    if (srcMatch && srcMatch[1]) {
-      const src = srcMatch[1];
-      const isLocal =
-        src.startsWith("/uploads/") ||
-        src.startsWith("http://localhost") ||
-        src.startsWith("https://localhost");
-      const isR2 = r2Url ? src.startsWith(r2Url) : false;
+    const src = srcMatch?.[1];
+    if (!src) continue;
 
-      if (!isLocal && !isR2) {
-        throw new Error(
-          `Ảnh (${src}) không nằm trên hệ thống lưu trữ của OAlpha. Vui lòng upload ảnh trực tiếp qua trình soạn thảo.`
-        );
-      }
+    // Đường dẫn tương đối do LocalStorageDriver sinh ra.
+    if (src.startsWith("/uploads/")) continue;
+
+    // So khớp theo hostname, KHÔNG dùng startsWith trên cả URL:
+    // "https://cdn.oalpha.vn.ke-gian.com/x.jpg" vẫn qua được phép so sánh tiền tố.
+    let hostname: string;
+    try {
+      hostname = new URL(src).hostname;
+    } catch {
+      throw new Error(`Ảnh (${src}) có địa chỉ không hợp lệ.`);
+    }
+
+    if (!hosts.has(hostname)) {
+      throw new Error(
+        `Ảnh (${src}) không nằm trên hệ thống lưu trữ của OAlpha. Vui lòng upload ảnh trực tiếp qua trình soạn thảo.`
+      );
     }
   }
 }

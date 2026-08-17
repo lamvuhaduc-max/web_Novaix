@@ -1,5 +1,7 @@
 "use server";
 
+import { rethrowIfNextControlFlow } from "@/lib/next-errors";
+
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { articles, articleCategories, users, type ArticleStatus } from "@/lib/db/schema";
@@ -12,7 +14,7 @@ import {
   listArticlesFilterSchema,
   type ActionResult,
 } from "@/lib/blog/schema";
-import { eq, and, isNull, isNotNull, like, or, gte, lte, desc, count, sql } from "drizzle-orm";
+import { eq, and, isNull, isNotNull, ilike, or, gte, lte, desc, count, sql } from "drizzle-orm";
 
 export type ArticleItemRow = {
   id: number;
@@ -79,8 +81,12 @@ export async function listArticles(input: unknown): Promise<ArticleListPage> {
   }
 
   if (filter.query) {
-    const q = `%${filter.query}%`;
-    conditions.push(or(like(articles.title, q), like(articles.excerpt, q)));
+    // ilike thay cho like: LIKE của Postgres phân biệt hoa thường nên tìm "CRM"
+    // sẽ không ra bài có chữ "crm". Escape % và _ để người dùng gõ chúng như
+    // ký tự thường thay vì thành ký tự đại diện khớp mọi thứ.
+    const escaped = filter.query.replace(/[\\%_]/g, (c) => `\\${c}`);
+    const q = `%${escaped}%`;
+    conditions.push(or(ilike(articles.title, q), ilike(articles.excerpt, q)));
   }
 
   if (filter.startDate) {
@@ -271,6 +277,7 @@ export async function saveArticle(
 
     return { ok: true, data: { id: articleId!, removedTags } };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     console.error("[blog] saveArticle thất bại:", err);
     return { ok: false, error: err.message || "Không thể lưu bài viết." };
   }
@@ -312,6 +319,7 @@ export async function setArticleStatus(
 
     return { ok: true };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     return { ok: false, error: "Lỗi cập nhật trạng thái bài viết." };
   }
 }
@@ -335,6 +343,7 @@ export async function softDeleteArticle(id: number | string): Promise<ActionResu
 
     return { ok: true };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     return { ok: false, error: "Không thể chuyển bài viết vào thùng rác." };
   }
 }
@@ -359,6 +368,7 @@ export async function restoreArticle(id: number | string): Promise<ActionResult>
 
     return { ok: true };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     return { ok: false, error: "Không thể khôi phục bài viết." };
   }
 }
@@ -380,6 +390,7 @@ export async function hardDeleteArticle(id: number | string): Promise<ActionResu
     revalidatePath("/admin/blog");
     return { ok: true };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     return { ok: false, error: "Không thể xóa vĩnh viễn bài viết." };
   }
 }

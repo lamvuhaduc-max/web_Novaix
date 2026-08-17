@@ -1,49 +1,16 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { count, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { articleCategories, articles } from "@/lib/db/schema";
 import { requireUser } from "@/lib/auth/session";
+import { rethrowIfNextControlFlow } from "@/lib/next-errors";
 import { writeLog } from "@/lib/blog/log";
 import { saveCategorySchema, type ActionResult } from "@/lib/blog/schema";
-import { eq, count, sql, isNull, and } from "drizzle-orm";
 
-export type CategoryRow = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  sortOrder: number;
-  visible: boolean;
-  articleCount: number;
-  createdAt: Date;
-};
-
-export async function listCategories(): Promise<CategoryRow[]> {
-  const rows = await db
-    .select({
-      id: articleCategories.id,
-      name: articleCategories.name,
-      slug: articleCategories.slug,
-      description: articleCategories.description,
-      sortOrder: articleCategories.sortOrder,
-      visible: articleCategories.visible,
-      createdAt: articleCategories.createdAt,
-      articleCount: count(articles.id),
-    })
-    .from(articleCategories)
-    .leftJoin(
-      articles,
-      and(eq(articles.categoryId, articleCategories.id), isNull(articles.deletedAt))
-    )
-    .groupBy(articleCategories.id)
-    .orderBy(articleCategories.sortOrder, articleCategories.name);
-
-  return rows.map((r) => ({
-    ...r,
-    articleCount: Number(r.articleCount),
-  }));
-}
+// Hàm đọc danh sách nằm ở lib/blog/category-queries.ts — không đặt trong file
+// "use server" này, vì mọi export ở đây đều trở thành endpoint HTTP công khai.
 
 export async function saveCategory(input: unknown): Promise<ActionResult<{ id: string }>> {
   try {
@@ -97,6 +64,7 @@ export async function saveCategory(input: unknown): Promise<ActionResult<{ id: s
 
     return { ok: true, data: { id: catId! } };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     console.error("[blog] saveCategory thất bại:", err);
     return { ok: false, error: err.message || "Lỗi lưu danh mục bài viết." };
   }
@@ -130,6 +98,7 @@ export async function deleteCategory(id: string): Promise<ActionResult> {
 
     return { ok: true };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     console.error("[blog] deleteCategory thất bại:", err);
     return { ok: false, error: err.message || "Không thể xóa danh mục bài viết." };
   }
@@ -155,6 +124,7 @@ export async function reorderCategories(
 
     return { ok: true };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     return { ok: false, error: "Lỗi thay đổi thứ tự danh mục." };
   }
 }

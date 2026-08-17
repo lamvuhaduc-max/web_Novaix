@@ -1,5 +1,7 @@
 "use server";
 
+import { rethrowIfNextControlFlow } from "@/lib/next-errors";
+
 import { requireUser } from "@/lib/auth/session";
 import { getStorageDriver } from "@/lib/blog/storage";
 import type { ActionResult } from "@/lib/blog/schema";
@@ -70,6 +72,7 @@ export async function uploadArticleImage(
 
     return { ok: true, data: { url: publicUrl } };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     console.error("[blog] Upload ảnh thất bại:", err);
     return { ok: false, error: err.message || "Lỗi upload ảnh lên hệ thống." };
   }

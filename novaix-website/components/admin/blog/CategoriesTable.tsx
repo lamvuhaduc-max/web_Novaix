@@ -31,12 +31,8 @@ import {
   IconArrowUp,
   IconArrowDown,
 } from "@tabler/icons-react";
-import {
-  saveCategory,
-  deleteCategory,
-  reorderCategories,
-  type CategoryRow,
-} from "@/lib/blog/category-actions";
+import { saveCategory, deleteCategory, reorderCategories } from "@/lib/blog/category-actions";
+import type { CategoryRow } from "@/lib/blog/category-queries";
 import { slugify } from "@/lib/blog/toc";
 
 type DialogState =

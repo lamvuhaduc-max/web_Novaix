@@ -57,7 +57,7 @@ import { TableCell as TableCellExtension } from "@tiptap/extension-table-cell";
 import { saveArticle, type ArticleEditModel } from "@/lib/blog/article-actions";
 import { uploadArticleImage } from "@/lib/blog/image-actions";
 import { slugify, extractToc } from "@/lib/blog/toc";
-import type { CategoryRow } from "@/lib/blog/category-actions";
+import type { CategoryRow } from "@/lib/blog/category-queries";
 import type { ArticleStatus } from "@/lib/db/schema";
 
 type EditorProps = {

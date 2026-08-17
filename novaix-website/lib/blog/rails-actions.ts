@@ -1,48 +1,18 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { siteSettings } from "@/lib/db/schema";
 import { requireUser } from "@/lib/auth/session";
+import { rethrowIfNextControlFlow } from "@/lib/next-errors";
 import { writeLog } from "@/lib/blog/log";
-import {
-  homeRailsSchema,
-  HOME_RAILS_KEY,
-  DEFAULT_RAILS,
-  type ActionResult,
-} from "@/lib/blog/schema";
-import { eq } from "drizzle-orm";
-import { z } from "zod";
+import { homeRailsSchema, HOME_RAILS_KEY, type ActionResult } from "@/lib/blog/schema";
 
-export type RailConfig = z.infer<typeof homeRailsSchema>[number];
+// Hàm đọc cấu hình nằm ở lib/blog/rails-config.ts — không đặt trong file
+// "use server" này, vì mọi export ở đây đều trở thành endpoint HTTP công khai.
 
-export async function getHomeRailsConfig(): Promise<RailConfig[]> {
-  try {
-    const rows = await db
-      .select()
-      .from(siteSettings)
-      .where(eq(siteSettings.key, HOME_RAILS_KEY));
-
-    if (rows.length === 0) return DEFAULT_RAILS;
-
-    const parsed = homeRailsSchema.safeParse(rows[0].value);
-    if (!parsed.success) {
-      console.warn(
-        "[blog] Cấu hình dải bài viết hỏng schema, trả về mặc định:",
-        parsed.error.issues[0]
-      );
-      return DEFAULT_RAILS;
-    }
-    return parsed.data;
-  } catch (err) {
-    console.error("[blog] Đọc dải bài viết thất bại:", err);
-    return DEFAULT_RAILS;
-  }
-}
-
-export async function saveHomeRailsConfig(
-  input: unknown
-): Promise<ActionResult> {
+export async function saveHomeRailsConfig(input: unknown): Promise<ActionResult> {
   try {
     const actor = await requireUser();
     const data = homeRailsSchema.parse(input);
@@ -70,6 +40,7 @@ export async function saveHomeRailsConfig(
 
     return { ok: true };
   } catch (err: any) {
+    rethrowIfNextControlFlow(err);
     console.error("[blog] saveHomeRailsConfig thất bại:", err);
     return { ok: false, error: err.message || "Không thể lưu cấu hình dải bài viết." };
   }

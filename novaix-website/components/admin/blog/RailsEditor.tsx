@@ -18,8 +18,9 @@ import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { IconDeviceFloppy, IconLayoutList, IconSparkles } from "@tabler/icons-react";
-import { saveHomeRailsConfig, type RailConfig } from "@/lib/blog/rails-actions";
-import type { CategoryRow } from "@/lib/blog/category-actions";
+import { saveHomeRailsConfig } from "@/lib/blog/rails-actions";
+import type { RailConfig } from "@/lib/blog/rails-config";
+import type { CategoryRow } from "@/lib/blog/category-queries";
 import type { ArticleItemRow } from "@/lib/blog/article-actions";
 
 export default function RailsEditor({

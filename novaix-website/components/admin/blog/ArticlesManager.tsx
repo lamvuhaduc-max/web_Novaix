@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import ArticlesTable from "./ArticlesTable";
 import CategoriesTable from "./CategoriesTable";
 import type { ArticleListPage } from "@/lib/blog/article-actions";
-import type { CategoryRow } from "@/lib/blog/category-actions";
+import type { CategoryRow } from "@/lib/blog/category-queries";
 
 export default function ArticlesManager({
   initialArticles,

@@ -30,8 +30,10 @@ export function extractToc(html: string): { html: string; toc: TocItem[] } {
   const toc: TocItem[] = [];
   const usedIds = new Map<string, number>();
 
-  // Regex tìm các thẻ h2, h3, h4
-  const headingRegex = /<h([234])([^>]*)>(.*?)<\/h\1>/gi;
+  // Regex tìm các thẻ h2, h3, h4.
+  // Cờ `s` để `.` khớp cả ký tự xuống dòng — trình soạn thảo hay xuống dòng
+  // bên trong heading, thiếu cờ này thì heading đó mất khỏi mục lục.
+  const headingRegex = /<h([234])([^>]*)>(.*?)<\/h\1>/gis;
 
   const newHtml = html.replace(
     headingRegex,

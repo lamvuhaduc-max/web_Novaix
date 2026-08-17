@@ -55,8 +55,26 @@ export class R2StorageDriver implements BlobStorage {
 
 export function getStorageDriver(): BlobStorage {
   const driver = process.env.STORAGE_DRIVER || "local";
-  if (driver === "r2" && process.env.R2_ACCESS_KEY_ID) {
+
+  if (driver === "r2") {
+    // Trước đây thiếu biến thì lặng lẽ rơi về LocalStorageDriver. Trên môi trường
+    // serverless, ổ đĩa chỉ đọc hoặc bị xóa sau mỗi lần deploy — ảnh coi như mất
+    // mà không ai biết. Thà báo lỗi ngay lúc cấu hình sai.
+    const missing = [
+      "R2_ENDPOINT",
+      "R2_BUCKET",
+      "R2_ACCESS_KEY_ID",
+      "R2_SECRET_ACCESS_KEY",
+      "R2_PUBLIC_URL",
+    ].filter((key) => !process.env[key]);
+
+    if (missing.length > 0) {
+      throw new Error(
+        `STORAGE_DRIVER=r2 nhưng thiếu biến môi trường: ${missing.join(", ")}.`
+      );
+    }
     return new R2StorageDriver();
   }
+
   return new LocalStorageDriver();
 }
