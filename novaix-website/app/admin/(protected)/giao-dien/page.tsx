@@ -1,25 +1,25 @@
-import ComingSoon from "@/components/admin/ComingSoon";
-import PageHeader from "@/components/admin/PageHeader";
+import CustomizerShell from "@/components/admin/customizer/CustomizerShell";
+import { getHomeContentForEdit } from "@/lib/site-content/actions";
+import { DEFAULT_HOME_CONTENT } from "@/lib/site-content/defaults";
 
-export const metadata = { title: "Giao diện trang chủ · OAlpha Admin" };
+export const dynamic = "force-dynamic";
 
-export default function HomeContentPage() {
+export const metadata = {
+  title: "Giao diện trang chủ · OAlpha Admin",
+};
+
+export default async function HomeContentPage() {
+  const result = await getHomeContentForEdit();
+
+  const content = result.ok ? result.data.content : DEFAULT_HOME_CONTENT;
+  const updatedAt = result.ok ? result.data.updatedAt : null;
+  const updatedByName = result.ok ? result.data.updatedByName : null;
+
   return (
-    <>
-      <PageHeader
-        title="Giao diện trang chủ"
-        description="Chỉnh sửa toàn bộ chữ hiển thị trên trang chủ mà không cần lập trình viên."
-      />
-      <ComingSoon
-        icon="🎨"
-        title="Trình sửa nội dung trang chủ"
-        points={[
-          "Sửa tiêu đề, mô tả từng khối: Hero, Giới thiệu, Module, Quy trình, Bảng giá, FAQ",
-          "Quản lý danh sách số liệu, lĩnh vực, cảm nhận khách hàng",
-          "Xem trước thay đổi trước khi xuất bản",
-          "Lưu lịch sử phiên bản, hoàn tác về bản cũ",
-        ]}
-      />
-    </>
+    <CustomizerShell
+      initialContent={content}
+      initialUpdatedAt={updatedAt}
+      initialUpdatedByName={updatedByName}
+    />
   );
 }

@@ -1,0 +1,478 @@
+// Đây là NỘI DUNG MẶC ĐỊNH, chỉ dùng khi database chưa có bản nào hoặc bản đó hỏng.
+// Website đang chạy đọc nội dung từ site_settings.home_content — SỬA FILE NÀY KHÔNG ĐỔI TRANG ĐANG CHẠY.
+// Muốn đổi chữ trên web: /admin/giao-dien
+
+import type { HomeContent } from "./schema";
+
+export const DEFAULT_HOME_CONTENT: HomeContent = {
+  v: 1,
+  theme: {
+    primary: "#2dd4bf",
+    primaryDark: "#0d9488",
+    accent: "#38bdf8",
+    textColor: "#eef2fb",
+    textMuted: "#9aa6c4",
+    bgColor: "#070b16",
+    borderRadius: 12,
+  },
+  nav: {
+    brandName: "OAlpha",
+    items: [
+      { href: "#ve-chung-toi", label: "Giới thiệu", visible: true },
+      { href: "#modules", label: "Sản phẩm", visible: true },
+      { href: "#quy-trinh", label: "Quy trình", visible: true },
+      { href: "#bang-gia", label: "Bảng giá", visible: true },
+      { href: "#lien-he", label: "Liên hệ", visible: true },
+    ],
+    ctaLabel: "Đặt lịch demo →",
+  },
+  hero: {
+    kicker: "Nền tảng CRM · ERP cho doanh nghiệp Việt",
+    titleLead: "Hệ thống hóa",
+    titleHighlight: "toàn bộ vận hành",
+    titleTail: "doanh nghiệp của bạn",
+    desc: "OAlpha kết nối bán hàng, sản xuất, kho vận, nhân sự và tài chính trên một nền tảng duy nhất — chuẩn hóa quy trình, tự động hóa nghiệp vụ và ra quyết định bằng dữ liệu thời gian thực.",
+    ctaPrimary: "Đặt lịch demo miễn phí →",
+    ctaSecondary: "Khám phá module",
+    stats: [
+      { target: 40, suffix: "", label: "Module nghiệp vụ" },
+      { target: 99, suffix: "%", label: "Uptime cam kết" },
+      { target: 60, suffix: "%", label: "Giảm thao tác thủ công" },
+      { target: 24, suffix: "/7", label: "Hỗ trợ vận hành" },
+    ],
+  },
+  marquee: {
+    enabled: true,
+    label: "Phù hợp với mọi lĩnh vực kinh doanh",
+    items: [
+      "Bán lẻ & Chuỗi",
+      "Sản xuất",
+      "Phân phối",
+      "Xây dựng & Nội thất",
+      "Logistics",
+      "F&B",
+      "Thương mại điện tử",
+      "Dịch vụ",
+    ],
+    bgColor: "#0b1120",
+    textColor: "#5f6c8a",
+    labelBgColor: "#2dd4bf",
+    labelTextColor: "#04121a",
+    speed: 30,
+    gap: 160,
+    link: "#modules",
+  },
+  about: {
+    kicker: "Về OAlpha",
+    title: "Xây dựng nền tảng công nghệ cho doanh nghiệp Việt",
+    desc: "OAlpha ra đời từ mong muốn giúp doanh nghiệp Việt chuyển đổi số thực chất — không chỉ là phần mềm mà còn là quy trình vận hành chuẩn, đội ngũ đồng hành và công nghệ phù hợp với thực tế địa phương.",
+    values: [
+      {
+        icon: "🎯",
+        title: "Sứ mệnh",
+        desc: "Số hóa quy trình vận hành để mọi doanh nghiệp Việt vận hành hiệu quả như doanh nghiệp toàn cầu.",
+      },
+      {
+        icon: "🔭",
+        title: "Tầm nhìn",
+        desc: "Trở thành nền tảng quản trị doanh nghiệp hàng đầu Đông Nam Á vào năm 2030.",
+      },
+      {
+        icon: "💎",
+        title: "Giá trị cốt lõi",
+        desc: "Thực chất · Đồng hành · Đổi mới liên tục · Lấy khách hàng làm trọng tâm.",
+      },
+    ],
+    timeline: [
+      {
+        year: "2021 · Thành lập",
+        title: "Ra mắt OAlpha",
+        desc: "Triển khai module CRM đầu tiên cho nhóm SME tại TP.HCM, khởi đầu hành trình số hóa.",
+        label: "21",
+      },
+      {
+        year: "2022 · Mở rộng",
+        title: "Hệ sinh thái ERP & Kho",
+        desc: "Triển khai thành công cho 20+ doanh nghiệp sản xuất và phân phối trên cả nước.",
+        label: "22",
+      },
+      {
+        year: "2023 · Đột phá",
+        title: "Tích hợp AI Automation",
+        desc: "Ra mắt module tự động hóa trí tuệ nhân tạo, giảm 60% tác vụ lặp lại trong vận hành.",
+        label: "23",
+      },
+      {
+        year: "2024 – 2026 · Hiện tại",
+        title: "Nền tảng toàn diện",
+        desc: "40+ module, 100+ doanh nghiệp đang vận hành và tiếp tục mở rộng toàn quốc.",
+        label: "26",
+      },
+    ],
+  },
+  modules: {
+    kicker: "Hệ sinh thái module",
+    title: "Một nền tảng — đầy đủ nghiệp vụ doanh nghiệp",
+    desc: "Triển khai từng phần hoặc trọn bộ. Các module dùng chung một cơ sở dữ liệu, nên dữ liệu chảy liền mạch giữa các phòng ban mà không cần nhập liệu lại.",
+    items: [
+      {
+        icon: "🤝",
+        title: "CRM — Quan hệ khách hàng",
+        desc: "Quản lý lead, pipeline bán hàng, chăm sóc và lịch sử tương tác đa kênh (Zalo, email, hotline) trên một màn hình.",
+        tag: "Sales · Marketing · CSKH",
+      },
+      {
+        icon: "🏭",
+        title: "ERP — Hoạch định nguồn lực",
+        desc: "Lõi vận hành kết nối đơn hàng, sản xuất, mua hàng và tài chính theo thời gian thực, xuyên suốt toàn doanh nghiệp.",
+        tag: "Core nghiệp vụ",
+      },
+      {
+        icon: "📦",
+        title: "Kho & Chuỗi cung ứng",
+        desc: "Tồn kho đa kho, mã vạch/QR, định mức nguyên vật liệu, theo dõi nhập–xuất–tồn và cảnh báo tự động.",
+        tag: "Inventory · SCM",
+      },
+      {
+        icon: "💰",
+        title: "Kế toán & Tài chính",
+        desc: "Sổ cái, công nợ phải thu/phải trả, dòng tiền, hóa đơn điện tử và báo cáo tài chính tuân thủ chuẩn Việt Nam.",
+        tag: "Finance",
+      },
+      {
+        icon: "👥",
+        title: "HRM — Nhân sự & Chấm công",
+        desc: "Hồ sơ nhân sự, chấm công, tính lương, KPI và quản lý hiệu suất gắn liền với quy trình phê duyệt.",
+        tag: "HR · Payroll",
+      },
+      {
+        icon: "📋",
+        title: "Quy trình & Dự án",
+        desc: "Số hóa quy trình phê duyệt, giao việc, theo dõi tiến độ dự án và checklist nghiệm thu theo từng giai đoạn.",
+        tag: "Workflow · BPM",
+      },
+      {
+        icon: "📊",
+        title: "BI — Báo cáo & Phân tích",
+        desc: "Dashboard điều hành theo thời gian thực, báo cáo tùy biến và cảnh báo chỉ số kinh doanh quan trọng.",
+        tag: "Analytics",
+      },
+      {
+        icon: "🤖",
+        title: "Tự động hóa AI",
+        desc: "Trợ lý AI bóc tách chứng từ, dự báo nhu cầu, gợi ý quyết định và tự động hóa tác vụ lặp lại.",
+        tag: "AI Automation",
+      },
+      {
+        icon: "🔗",
+        title: "Tích hợp & API mở",
+        desc: "Kết nối sàn TMĐT, vận chuyển, ngân hàng và phần mềm hiện có qua API & webhook tiêu chuẩn.",
+        tag: "Integration",
+      },
+    ],
+  },
+  features: {
+    kicker: "Vì sao chọn OAlpha",
+    title: "Không chỉ là phần mềm — là một hệ thống vận hành chuẩn hóa",
+    desc: "Giải pháp chuyển đổi số đồng bộ cho toàn bộ quy trình của bạn.",
+    items: [
+      {
+        n: 1,
+        title: "Một nguồn dữ liệu duy nhất",
+        desc: "Mọi phòng ban làm việc trên cùng dữ liệu, loại bỏ file Excel rời rạc và sai lệch số liệu.",
+      },
+      {
+        n: 2,
+        title: "Tùy biến theo quy trình của bạn",
+        desc: "Cấu hình module và luồng phê duyệt khớp với cách doanh nghiệp đang vận hành, không bắt bạn đổi theo phần mềm.",
+      },
+      {
+        n: 3,
+        title: "Triển khai theo giai đoạn",
+        desc: "Bắt đầu từ module cấp thiết nhất, mở rộng dần để kiểm soát chi phí và rủi ro.",
+      },
+      {
+        n: 4,
+        title: "Đồng hành sau triển khai",
+        desc: "Đào tạo, hỗ trợ và tối ưu liên tục để hệ thống thực sự được dùng, không bị bỏ phí.",
+      },
+    ],
+  },
+  process: {
+    kicker: "Lộ trình triển khai",
+    title: "Từ khảo sát đến vận hành — 5 bước rõ ràng",
+    desc: "Phương pháp triển khai chuẩn hóa giúp doanh nghiệp đưa hệ thống vào sử dụng nhanh, đúng quy trình và đo lường được hiệu quả.",
+    items: [
+      {
+        n: "BƯỚC 01",
+        title: "Khảo sát",
+        desc: "Phân tích quy trình hiện tại, xác định điểm nghẽn và mục tiêu số hóa.",
+      },
+      {
+        n: "BƯỚC 02",
+        title: "Thiết kế quy trình",
+        desc: "Chuẩn hóa luồng nghiệp vụ và cấu hình module phù hợp với doanh nghiệp.",
+      },
+      {
+        n: "BƯỚC 03",
+        title: "Triển khai",
+        desc: "Cài đặt, nhập dữ liệu, tích hợp hệ thống cũ và kiểm thử thực tế.",
+      },
+      {
+        n: "BƯỚC 04",
+        title: "Đào tạo",
+        desc: "Hướng dẫn từng phòng ban sử dụng thành thạo, bàn giao tài liệu vận hành.",
+      },
+      {
+        n: "BƯỚC 05",
+        title: "Tối ưu",
+        desc: "Theo dõi chỉ số, hỗ trợ liên tục và mở rộng module theo nhu cầu.",
+      },
+    ],
+  },
+  segments: {
+    kicker: "Giải pháp theo đối tượng",
+    title: "Phù hợp với từng giai đoạn phát triển",
+    desc: "Dù bạn là doanh nghiệp đang tăng trưởng nóng hay đã có quy mô, OAlpha có gói phù hợp.",
+    items: [
+      {
+        icon: "🚀",
+        title: "SME đang tăng trưởng",
+        desc: "Thoát khỏi Excel và phần mềm rời rạc, chuẩn hóa quy trình trước khi mở rộng.",
+        items: [
+          "Triển khai nhanh trong 4–6 tuần",
+          "Gói module thiết yếu",
+          "Chi phí tối ưu theo người dùng",
+        ],
+      },
+      {
+        icon: "🏢",
+        title: "Doanh nghiệp quy mô",
+        desc: "Hợp nhất nhiều phòng ban, chi nhánh và quy trình phức tạp trên một nền tảng.",
+        items: [
+          "Phân quyền đa cấp",
+          "Quản lý đa chi nhánh",
+          "Tích hợp hệ thống sẵn có",
+        ],
+      },
+      {
+        icon: "🛠️",
+        title: "Ngành đặc thù",
+        desc: "Sản xuất, xây dựng – nội thất, phân phối với định mức và quy trình riêng.",
+        items: [
+          "Cấu hình quy trình tùy biến",
+          "Quản lý định mức & BOM",
+          "Báo cáo chuyên ngành",
+        ],
+      },
+    ],
+  },
+  pricing: {
+    kicker: "Bảng giá",
+    title: "Linh hoạt theo quy mô doanh nghiệp",
+    desc: "Không có gói cứng nhắc — chúng tôi tư vấn lộ trình phù hợp dựa trên số người dùng, module cần thiết và đặc thù ngành.",
+    tiers: [
+      {
+        label: "Khởi đầu",
+        name: "Starter",
+        price: "Liên hệ",
+        sub: "Phù hợp SME dưới 20 người dùng",
+        popular: false,
+        cta: "Tư vấn miễn phí →",
+        ctaClass: "btn btn-ghost",
+        features: [
+          { text: "CRM — Quản lý khách hàng" },
+          { text: "Kho & Chuỗi cung ứng cơ bản" },
+          { text: "Kế toán & Tài chính cơ bản" },
+          { text: "HRM — Chấm công & Lương" },
+          { text: "Dashboard báo cáo" },
+          { text: "Tùy biến quy trình nâng cao", na: true },
+          { text: "AI Automation", na: true },
+          { text: "Tích hợp API mở", na: true },
+        ],
+      },
+      {
+        label: "Mở rộng",
+        name: "Business",
+        price: "Liên hệ",
+        sub: "Phù hợp doanh nghiệp 20–100 người dùng",
+        popular: true,
+        cta: "Đặt lịch demo →",
+        ctaClass: "btn btn-primary",
+        features: [
+          { text: "Tất cả module Starter" },
+          { text: "ERP toàn diện đa phòng ban" },
+          { text: "Quy trình & BPM tùy biến" },
+          { text: "BI — Báo cáo nâng cao" },
+          { text: "AI Automation cơ bản" },
+          { text: "Quản lý đa chi nhánh" },
+          { text: "Tích hợp TMĐT & vận chuyển" },
+          { text: "Enterprise SLA & Custom Dev", na: true },
+        ],
+      },
+      {
+        label: "Toàn diện",
+        name: "Enterprise",
+        price: "Theo yêu cầu",
+        sub: "Phù hợp doanh nghiệp 100+ người dùng",
+        popular: false,
+        cta: "Liên hệ Enterprise →",
+        ctaClass: "btn btn-ghost",
+        features: [
+          { text: "Tất cả module Business" },
+          { text: "AI Automation toàn phần" },
+          { text: "Tùy biến & phát triển riêng" },
+          { text: "SLA cam kết theo hợp đồng" },
+          { text: "Dedicated support team" },
+          { text: "On-premise hoặc Private Cloud" },
+          { text: "Đào tạo chuyên sâu định kỳ" },
+          { text: "Tích hợp không giới hạn" },
+        ],
+      },
+    ],
+  },
+  testimonials: {
+    kicker: "Khách hàng nói gì",
+    title: "Vận hành gọn hơn, quyết định nhanh hơn",
+    desc: "Một vài chia sẻ minh họa về trải nghiệm chuẩn hóa quy trình cùng OAlpha.",
+    items: [
+      {
+        initials: "TM",
+        quote: "Trước đây mỗi phòng dùng một file riêng, đối số liệu cuối tháng rất mệt. Sau khi dùng OAlpha, dữ liệu thông suốt, báo cáo có ngay trong vài phút.",
+        name: "Chị Thu Minh",
+        role: "Giám đốc vận hành · Chuỗi bán lẻ",
+      },
+      {
+        initials: "QH",
+        quote: "Module sản xuất và kho giúp chúng tôi kiểm soát định mức nguyên vật liệu chặt chẽ, giảm hao hụt rõ rệt chỉ sau một quý.",
+        name: "Anh Quốc Huy",
+        role: "Quản lý nhà máy · Sản xuất",
+      },
+      {
+        initials: "NL",
+        quote: "Đội OAlpha không chỉ bàn giao phần mềm mà còn giúp chúng tôi chuẩn hóa lại quy trình. Đó mới là giá trị thật.",
+        name: "Chị Ngọc Lan",
+        role: "Founder · Doanh nghiệp nội thất",
+      },
+    ],
+  },
+  faq: {
+    kicker: "Câu hỏi thường gặp",
+    title: "Những điều doanh nghiệp hay hỏi",
+    desc: "Chưa tìm thấy câu trả lời? Liên hệ đội ngũ tư vấn — chúng tôi phản hồi trong 2 giờ làm việc.",
+    items: [
+      {
+        q: "OAlpha phù hợp với quy mô doanh nghiệp nào?",
+        a: "OAlpha phù hợp với doanh nghiệp từ 10 đến 500+ người dùng, bao gồm SME đang tăng trưởng, doanh nghiệp quy mô vừa và các tập đoàn có nhiều chi nhánh. Chúng tôi thiết kế gói triển khai linh hoạt theo từng giai đoạn phát triển của bạn.",
+      },
+      {
+        q: "Thời gian triển khai mất bao lâu?",
+        a: "Với gói Starter, thời gian triển khai thường từ 4–6 tuần. Gói Business mất 8–12 tuần tùy mức độ phức tạp quy trình. Chúng tôi sẽ lập lịch chi tiết và minh bạch sau buổi khảo sát ban đầu.",
+      },
+      {
+        q: "Dữ liệu của tôi có được bảo mật không?",
+        a: "Có. Dữ liệu được mã hóa tại chỗ và trong quá trình truyền tải (AES-256, TLS 1.3), lưu trữ trên hạ tầng đám mây đặt tại Việt Nam, sao lưu tự động hàng ngày và phân quyền truy cập chi tiết theo từng người dùng.",
+      },
+      {
+        q: "OAlpha có tích hợp được với phần mềm đang dùng không?",
+        a: "Có. OAlpha hỗ trợ tích hợp qua API REST & Webhook tiêu chuẩn. Chúng tôi đã có connector sẵn với các sàn TMĐT (Shopee, Lazada, TikTok Shop), đơn vị vận chuyển (GHN, GHTK, J&T), ngân hàng và phần mềm kế toán MISA.",
+      },
+      {
+        q: "Chi phí có bao gồm hỗ trợ sau triển khai không?",
+        a: "Có. Tất cả các gói đều bao gồm hỗ trợ kỹ thuật trong năm đầu tiên. Từ năm thứ hai, chúng tôi cung cấp gói duy trì linh hoạt theo nhu cầu với cam kết phản hồi trong vòng 4 giờ trong giờ hành chính.",
+      },
+      {
+        q: "Nếu quy trình công ty tôi đặc thù, OAlpha có tùy biến được không?",
+        a: "Hoàn toàn có. Đây là thế mạnh của OAlpha — chúng tôi cấu hình module theo quy trình thực tế của bạn, không bắt doanh nghiệp phải thay đổi để theo phần mềm. Với yêu cầu phát triển riêng, gói Business và Enterprise hỗ trợ custom development.",
+      },
+    ],
+  },
+  cta: {
+    kicker: "Liên hệ",
+    title: "Bắt đầu hành trình số hóa ngay hôm nay",
+    desc: "Đặt lịch demo 30 phút — chúng tôi phân tích quy trình và đề xuất lộ trình phù hợp, hoàn toàn miễn phí và không ràng buộc.",
+    contacts: [
+      { icon: "📍", label: "Địa chỉ", value: "14 Đường 41, An Khánh, TP. Thủ Đức, TP. Hồ Chí Minh" },
+      { icon: "✉️", label: "Email", value: "OAlphaGlobal@oalpha.vn" },
+      { icon: "📞", label: "Điện thoại", value: "+84 (0) xxx xxx xxx" },
+      { icon: "🕐", label: "Giờ làm việc", value: "Thứ 2 – Thứ 6  ·  8:00 – 17:30" },
+    ],
+    commitmentsTitle: "Cam kết của chúng tôi",
+    commitments: [
+      "Phản hồi trong 2 giờ làm việc",
+      "Demo miễn phí, không ràng buộc",
+      "Tư vấn lộ trình phù hợp quy mô",
+    ],
+    formTitle: "Đăng ký tư vấn miễn phí",
+    formSuccessTitle: "Đã nhận yêu cầu!",
+    formSuccessDesc: "Đội ngũ tư vấn sẽ liên hệ với bạn trong vòng 2 giờ làm việc.",
+    buttonText: "Gửi yêu cầu tư vấn →",
+    formFields: [
+      { id: "name", label: "Họ và tên", type: "text", placeholder: "Nguyễn Văn A", required: true, width: "half", options: [] },
+      { id: "phone", label: "Số điện thoại", type: "tel", placeholder: "0901 234 567", required: true, width: "half", options: [] },
+      { id: "email", label: "Email", type: "email", placeholder: "email@congty.vn", required: true, width: "half", options: [] },
+      { id: "company", label: "Tên công ty", type: "text", placeholder: "Công ty TNHH ABC", required: false, width: "half", options: [] },
+      {
+        id: "size",
+        label: "Quy mô doanh nghiệp",
+        type: "select",
+        placeholder: "Chọn quy mô...",
+        required: false,
+        width: "full",
+        options: ["Dưới 20 nhân viên", "20 – 100 nhân viên", "100 – 500 nhân viên", "Trên 500 nhân viên"],
+      },
+      {
+        id: "module",
+        label: "Module quan tâm",
+        type: "select",
+        placeholder: "Chọn giải pháp...",
+        required: false,
+        width: "full",
+        options: [
+          "CRM — Quản lý khách hàng",
+          "ERP — Hoạch định nguồn lực",
+          "Kho & Chuỗi cung ứng",
+          "Kế toán & Tài chính",
+          "HRM — Nhân sự & Lương",
+          "Trọn bộ giải pháp",
+        ],
+      },
+      { id: "note", label: "Mô tả nhu cầu", type: "textarea", placeholder: "Mô tả ngắn gọn về quy trình và vấn đề bạn đang gặp phải...", required: false, width: "full", options: [] },
+    ],
+  },
+
+  footer: {
+    bgColor: "#0b1120",
+    textColor: "#9aa6c4",
+    brandDesc: "Giải pháp công nghệ giúp doanh nghiệp Việt hệ thống hóa quy trình và vận hành bằng dữ liệu.",
+    columns: [
+      {
+        title: "Sản phẩm",
+        links: [
+          { label: "CRM", href: "#modules" },
+          { label: "ERP", href: "#modules" },
+          { label: "HRM", href: "#modules" },
+          { label: "Kế toán", href: "#modules" },
+          { label: "BI & Báo cáo", href: "#modules" },
+        ],
+      },
+      {
+        title: "Công ty",
+        links: [
+          { label: "Giải pháp", href: "#giai-phap" },
+          { label: "Quy trình", href: "#quy-trinh" },
+          { label: "Khách hàng", href: "#khach-hang" },
+          { label: "Liên hệ", href: "#lien-he" },
+        ],
+      },
+    ],
+    copyright: "© 2026 OAlpha. Mọi quyền được bảo lưu.",
+    bottomLinks: [
+      { label: "Về chúng tôi", href: "#ve-chung-toi" },
+      { label: "Điều khoản", href: "#" },
+      { label: "Bảo mật", href: "#" },
+      { label: "Liên hệ", href: "#lien-he" },
+    ],
+  },
+};
+

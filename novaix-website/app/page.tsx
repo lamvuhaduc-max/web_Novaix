@@ -1,33 +1,36 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Marquee from "@/components/Marquee";
-import About from "@/components/About";
-import Modules from "@/components/Modules";
-import Features from "@/components/Features";
-import Process from "@/components/Process";
-import Segments from "@/components/Segments";
-import Pricing from "@/components/Pricing";
-import Testimonials from "@/components/Testimonials";
-import FAQ from "@/components/FAQ";
-import CTA from "@/components/CTA";
-import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+import HomeSections from "@/components/preview/HomeSections";
+import PreviewBridge from "@/components/preview/PreviewBridge";
+import { getHomeContent } from "@/lib/site-content/queries";
 
-export default function Home() {
-  return (
-    <main>
-      <Navbar />
-      <Hero />
-      <Marquee />
-      <About />
-      <Modules />
-      <Features />
-      <Process />
-      <Segments />
-      <Pricing />
-      <Testimonials />
-      <FAQ />
-      <CTA />
-      <Footer />
-    </main>
-  );
+type Props = {
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const isPreview = searchParams?.preview === "1";
+  if (isPreview) {
+    return {
+      title: "Xem trước Trang chủ · OAlpha",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+  return {
+    title: "OAlpha — Hệ thống hóa toàn bộ vận hành doanh nghiệp của bạn",
+    description: "Nền tảng CRM · ERP cho doanh nghiệp Việt. Chuẩn hóa quy trình, tự động hóa nghiệp vụ và ra quyết định bằng dữ liệu.",
+  };
+}
+
+export default async function Home({ searchParams }: Props) {
+  const content = await getHomeContent();
+  const isPreview = searchParams?.preview === "1";
+
+  if (isPreview) {
+    return <PreviewBridge initial={content} />;
+  }
+
+  return <HomeSections content={content} />;
 }

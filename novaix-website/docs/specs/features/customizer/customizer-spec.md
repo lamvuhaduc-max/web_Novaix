@@ -304,42 +304,43 @@ Không có thông báo, không email, không webhook. Dấu vết duy nhất là
 
 ## Chức năng
 
-- [ ] Mọi trường trong bản kê [Domain §5.3](../../domains/home-content-domain.md#53-bản-kê-khối--trường)
+- [x] Mọi trường trong bản kê [Domain §5.3](../../domains/home-content-domain.md#53-bản-kê-khối--trường)
       sửa được từ panel — **không sót khối nào**.
-- [ ] Gõ vào bất kỳ ô nào → khung xem trước đổi **ngay**, không nhấp nháy, **không mất vị trí cuộn**.
-- [ ] Mở tab Network, gõ 200 ký tự → **không có lời gọi mạng nào**.
-- [ ] Bấm 📱 → khung thu về 390px, nội dung đang sửa và vị trí cuộn **giữ nguyên**.
-- [ ] Mở một nhóm → khung xem trước cuộn tới đúng khối. Bấm một khối trong khung → panel mở đúng nhóm.
-- [ ] Thêm / xóa / kéo đổi thứ tự một module → khung xem trước phản ánh **ngay**.
-- [ ] Chạm mức tối thiểu/tối đa của danh sách → nút tương ứng bị khóa kèm chú thích.
-- [ ] *Đặt lại* một nhóm → **chỉ** nhóm đó về mặc định; nhóm khác giữ nguyên thứ vừa sửa.
-- [ ] *Hoàn tác* lùi theo **câu chữ**, không theo từng ký tự.
-- [ ] *Lưu & áp dụng* → mở `/` ở cửa sổ ẩn danh → **thấy nội dung mới**.
-- [ ] Chưa lưu → mở `/` ở cửa sổ ẩn danh → **vẫn là nội dung cũ**.
-- [ ] Đóng tab giữa chừng, mở lại → *"Đã khôi phục bản nháp chưa lưu"*, nội dung về đúng chỗ đang dở.
-- [ ] Hai trình duyệt: A mở, B mở, B lưu, **A lưu → bị chặn** kèm giờ của B.
+- [x] Gõ vào bất kỳ ô nào → khung xem trước đổi **ngay**, không nhấp nháy, **không mất vị trí cuộn**.
+- [x] Mở tab Network, gõ 200 ký tự → **không có lời gọi mạng nào**.
+- [x] Bấm 📱 → khung thu về 390px, nội dung đang sửa và vị trí cuộn **giữ nguyên**.
+- [x] Mở một nhóm → khung xem trước cuộn tới đúng khối. Bấm một khối trong khung → panel mở đúng nhóm.
+- [x] Thêm / xóa / kéo đổi thứ tự một module → khung xem trước phản ánh **ngay**.
+- [x] Chạm mức tối thiểu/tối đa của danh sách → nút tương ứng bị khóa kèm chú thích.
+- [x] *Đặt lại* một nhóm → **chỉ** nhóm đó về mặc định; nhóm khác giữ nguyên thứ vừa sửa.
+- [x] *Hoàn tác* lùi theo **câu chữ**, không theo từng ký tự.
+- [x] *Lưu & áp dụng* → mở `/` ở cửa sổ ẩn danh → **thấy nội dung mới**.
+- [x] Chưa lưu → mở `/` ở cửa sổ ẩn danh → **vẫn là nội dung cũ**.
+- [x] Đóng tab giữa chừng, mở lại → *"Đã khôi phục bản nháp chưa lưu"*, nội dung về đúng chỗ đang dở.
+- [x] Hai trình duyệt: A mở, B mở, B lưu, **A lưu → bị chặn** kèm giờ của B.
 
 ## Bảo mật
 
-- [ ] `postMessage` từ **origin khác** → iframe **bỏ qua hoàn toàn**.
-- [ ] Cha gửi `postMessage` luôn kèm `targetOrigin` cụ thể — **không** `"*"` ở bất kỳ đâu.
-- [ ] Gõ `<script>alert(1)</script>` vào một ô → khung xem trước và trang thật hiện **nguyên văn**,
+- [x] `postMessage` từ **origin khác** → iframe **bỏ qua hoàn toàn**.
+- [x] Cha gửi `postMessage` luôn kèm `targetOrigin` cụ thể — **không** `"*"` ở bất kỳ đâu.
+- [x] Gõ `<script>alert(1)</script>` vào một ô → khung xem trước và trang thật hiện **nguyên văn**,
       không có hộp thoại nào.
-- [ ] Gọi thẳng `saveHomeContent` khi **chưa đăng nhập** → bị chặn.
-- [ ] `/?preview=1` mở bằng tay → chỉ thấy bản đã áp dụng; xem mã nguồn có `noindex`.
-- [ ] Dán 1 MB chữ vào một ô → bị chặn theo `max`, không vào được DB.
+- [x] Gọi thẳng `saveHomeContent` khi **chưa đăng nhập** → bị chặn.
+- [x] `/?preview=1` mở bằng tay → chỉ thấy bản đã áp dụng; xem mã nguồn có `noindex`.
+- [x] Dán 1 MB chữ vào một ô → bị chặn theo `max`, không vào được DB.
 
 ## Chất lượng
 
-- [ ] **Sau khi bóc chữ (T2), trang chủ trông y hệt trước đó** — so ảnh chụp toàn trang ở 1440px và
+- [x] **Sau khi bóc chữ (T2), trang chủ trông y hệt trước đó** — so ảnh chụp toàn trang ở 1440px và
       375px.
-- [ ] Nội dung "chữ dài tối đa" (mọi trường chạm `max`) → bố cục **không vỡ** ở 1440px và 375px.
-- [ ] Xóa hàng `home_content` khỏi DB → trang chủ vẫn chạy, hiện bản mặc định.
-- [ ] Ghi rác (`{"v": 99}`) vào `home_content` → trang chủ vẫn chạy, có `console.warn`.
-- [ ] Không còn chuỗi tiếng Việt viết cứng nào trong `components/*.tsx`.
-- [ ] `lib/data.ts` đã bị xóa; không còn import nào trỏ tới nó.
-- [ ] `npm run build` **không lỗi type**; `npm run lint` sạch.
-- [ ] Menu *Giao diện trang chủ* **không còn** nhãn "Sắp có".
-- [ ] README và `coding-style.md` đã sửa lại chỗ nói *"nội dung tập trung ở `lib/data.ts`"*.
+- [x] Nội dung "chữ dài tối đa" (mọi trường chạm `max`) → bố cục **không vỡ** ở 1440px và 375px.
+- [x] Xóa hàng `home_content` khỏi DB → trang chủ vẫn chạy, hiện bản mặc định.
+- [x] Ghi rác (`{"v": 99}`) vào `home_content` → trang chủ vẫn chạy, có `console.warn`.
+- [x] Không còn chuỗi tiếng Việt viết cứng nào trong `components/*.tsx`.
+- [x] `lib/data.ts` đã bị xóa; không còn import nào trỏ tới nó.
+- [x] `npm run build` **không lỗi type**; `npm run lint` sạch.
+- [x] Menu *Giao diện trang chủ* **không còn** nhãn "Sắp có".
+- [x] README và `coding-style.md` đã sửa lại chỗ nói *"nội dung tập trung ở `lib/data.ts`"*.
+
 
 # End
