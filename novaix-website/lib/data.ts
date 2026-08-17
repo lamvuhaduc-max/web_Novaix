@@ -53,6 +53,7 @@ export const nav = [
   { href: "#ve-chung-toi", label: "Giới thiệu" },
   { href: "#modules", label: "Sản phẩm" },
   { href: "#quy-trinh", label: "Quy trình" },
+  { href: "/blog", label: "Bài viết" },
   { href: "#bang-gia", label: "Bảng giá" },
   { href: "#lien-he", label: "Liên hệ" },
 ];

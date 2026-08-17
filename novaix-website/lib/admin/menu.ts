@@ -25,7 +25,7 @@ export const menuGroups: MenuGroup[] = [
     caption: "Nội dung",
     items: [
       { label: "Giao diện trang chủ", href: "/admin/giao-dien", icon: "layout", comingSoon: true },
-      { label: "Bài viết", href: "/admin/bai-viet", icon: "article", comingSoon: true },
+      { label: "Bài viết", href: "/admin/blog", icon: "article" },
     ],
   },
   {

@@ -48,11 +48,16 @@ export const getSessionState = cache(async (): Promise<SessionState> => {
   return { state: "active", user };
 });
 
-/** Dùng trong server action: ném lỗi nếu phiên không còn hợp lệ. */
+import { redirect } from "next/navigation";
+
+/** Dùng trong server action / page: chuyển hướng hoặc ném lỗi nếu phiên không còn hợp lệ. */
 export async function requireUser(): Promise<SessionUser> {
   const result = await getSessionState();
-  if (result.state !== "active") {
-    throw new Error("Phiên đăng nhập không còn hợp lệ. Vui lòng đăng nhập lại.");
+  if (result.state === "anonymous") {
+    redirect("/admin/login");
+  }
+  if (result.state === "revoked") {
+    redirect(`/admin/logout?reason=${result.reason}`);
   }
   return result.user;
 }

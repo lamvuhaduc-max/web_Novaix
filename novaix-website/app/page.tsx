@@ -9,10 +9,16 @@ import Segments from "@/components/Segments";
 import Pricing from "@/components/Pricing";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
+import ArticleRail from "@/components/blog/ArticleRail";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import { getHomeRails } from "@/lib/blog/queries";
 
-export default function Home() {
+export const revalidate = 60; // Refresh home page cache every 60 seconds
+
+export default async function Home() {
+  const homeRails = await getHomeRails();
+
   return (
     <main>
       <Navbar />
@@ -26,6 +32,7 @@ export default function Home() {
       <Pricing />
       <Testimonials />
       <FAQ />
+      <ArticleRail rails={homeRails} />
       <CTA />
       <Footer />
     </main>

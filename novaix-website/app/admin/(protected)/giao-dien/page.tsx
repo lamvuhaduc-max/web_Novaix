@@ -1,24 +1,29 @@
-import ComingSoon from "@/components/admin/ComingSoon";
 import PageHeader from "@/components/admin/PageHeader";
+import RailsEditor from "@/components/admin/blog/RailsEditor";
+import { getHomeRailsConfig } from "@/lib/blog/rails-actions";
+import { listCategories } from "@/lib/blog/category-actions";
+import { listArticles } from "@/lib/blog/article-actions";
 
-export const metadata = { title: "Giao diện trang chủ · OAlpha Admin" };
+export const metadata = { title: "Quản lý Giao diện Trang chủ · OAlpha Admin" };
+export const dynamic = "force-dynamic";
 
-export default function HomeContentPage() {
+export default async function LayoutSettingsPage() {
+  const [initialRails, categories, articlesPage] = await Promise.all([
+    getHomeRailsConfig(),
+    listCategories(),
+    listArticles({ status: "published", limit: 100 }),
+  ]);
+
   return (
     <>
       <PageHeader
-        title="Giao diện trang chủ"
-        description="Chỉnh sửa toàn bộ chữ hiển thị trên trang chủ mà không cần lập trình viên."
+        title="Quản lý Giao diện Trang chủ"
+        description="Tùy chỉnh các dải bài viết nổi bật hiển thị trên giao diện trang chủ công khai của OAlpha."
       />
-      <ComingSoon
-        icon="🎨"
-        title="Trình sửa nội dung trang chủ"
-        points={[
-          "Sửa tiêu đề, mô tả từng khối: Hero, Giới thiệu, Module, Quy trình, Bảng giá, FAQ",
-          "Quản lý danh sách số liệu, lĩnh vực, cảm nhận khách hàng",
-          "Xem trước thay đổi trước khi xuất bản",
-          "Lưu lịch sử phiên bản, hoàn tác về bản cũ",
-        ]}
+      <RailsEditor
+        initialRails={initialRails}
+        categories={categories}
+        articlesList={articlesPage.items}
       />
     </>
   );
