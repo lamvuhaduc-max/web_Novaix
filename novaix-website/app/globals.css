@@ -188,3 +188,19 @@ nav.fixed {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-8px); }
 }
+
+/* ── Khu quản trị: tắt nền tối + hiệu ứng của trang marketing ── */
+body:has(.admin-root) {
+  background: #f2f6fa;
+  color: #2a3547;
+  overflow-x: auto;
+}
+body:has(.admin-root)::before,
+body:has(.admin-root)::after { display: none; }
+body:has(.admin-root) ::-webkit-scrollbar { width: 7px; height: 7px; }
+body:has(.admin-root) ::-webkit-scrollbar-track { background: transparent; }
+body:has(.admin-root) ::-webkit-scrollbar-thumb {
+  background: #dfe5ef;
+  box-shadow: none;
+  border-radius: 99px;
+}

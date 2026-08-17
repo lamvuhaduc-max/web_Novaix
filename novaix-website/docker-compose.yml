@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: oalpha-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: oalpha
+      POSTGRES_PASSWORD: oalpha
+      POSTGRES_DB: oalpha
+    ports:
+      # 5432 trên máy thật thường đã bị dự án khác chiếm, nên map ra 5433.
+      - "5433:5432"
+    volumes:
+      - oalpha-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oalpha -d oalpha"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  oalpha-pgdata:
