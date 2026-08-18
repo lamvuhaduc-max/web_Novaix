@@ -33,6 +33,10 @@ Schema Drizzle giống hệt nhau ở cả hai bên. Nên toàn bộ việc chuy
 > một hàm serverless — vài chục lượt đồng thời là cạn hạn mức kết nối và trang trả lỗi. Chuỗi pooled
 > đi qua PgBouncer của Neon nên chịu được.
 
+Neon nay thêm `&channel_binding=require` vào cuối chuỗi — **cứ giữ nguyên**. Driver HTTP không
+dùng tới nó, còn `drizzle-kit` và `psql` đều hiểu. Chỉ khi `npm run db:push` báo lỗi tham số lạ thì
+mới thử bỏ đoạn đó đi.
+
 Chuỗi có dạng:
 
 ```
@@ -78,8 +82,11 @@ Bỏ qua bước này nếu bạn muốn bắt đầu sạch (khi đó nhảy t�
 Docker, vốn có sẵn đường ra Internet:
 
 ```bash
-bash scripts/migrate-to-neon.sh "postgresql://<user>:<pass>@ep-xxx-pooler...neon.tech/neondb?sslmode=require"
+bash scripts/migrate-to-neon.sh
 ```
+
+Script tự đọc `DATABASE_URL` trong `.env` (đã trỏ Neon từ §2), nên **chuỗi kết nối kèm mật khẩu
+không nằm lại trong lịch sử shell**.
 
 Script làm bốn việc và **dừng lại nếu có gì bất thường**:
 

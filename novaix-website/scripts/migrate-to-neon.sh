@@ -14,9 +14,16 @@ CONTAINER="${CONTAINER:-oalpha-postgres}"
 LOCAL_USER="${LOCAL_USER:-oalpha}"
 LOCAL_DB="${LOCAL_DB:-oalpha}"
 
+# Không truyền tham số thì đọc DATABASE_URL từ .env — để chuỗi kết nối (kèm mật
+# khẩu) không nằm lại trong lịch sử shell.
+if [ -z "$NEON_URL" ] && [ -f .env ]; then
+  NEON_URL=$(grep -E '^DATABASE_URL=' .env | head -1 | sed -E 's/^DATABASE_URL=//; s/^"//; s/"$//')
+  echo "(dùng DATABASE_URL đang khai trong .env)"
+fi
+
 if [ -z "$NEON_URL" ]; then
-  echo "Thiếu tham số: chuỗi kết nối Neon." >&2
-  echo "Ví dụ: bash scripts/migrate-to-neon.sh \"postgresql://...neon.tech/neondb?sslmode=require\"" >&2
+  echo "Không tìm thấy chuỗi kết nối Neon." >&2
+  echo "Cách dùng: đổi DATABASE_URL trong .env sang Neon rồi chạy: bash scripts/migrate-to-neon.sh" >&2
   exit 1
 fi
 
