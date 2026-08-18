@@ -13,7 +13,12 @@ export default function ArticleCard({ article }: { article: PublicArticleCard })
     : null;
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 transition-all duration-300 hover:-translate-y-1 hover:border-teal-500/50 hover:shadow-xl hover:shadow-teal-500/10">
+    <article
+      className="article-card group flex flex-col overflow-hidden rounded-2xl border border-slate-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      style={{
+        backgroundColor: "var(--articles-card-bg, rgba(15, 23, 42, 0.6))",
+      }}
+    >
       {/* Cover Image Container */}
       <Link href={`/blog/${article.slug}`} className="relative aspect-[16/9] w-full overflow-hidden bg-slate-800">
         {article.coverImage ? (
@@ -30,7 +35,14 @@ export default function ArticleCard({ article }: { article: PublicArticleCard })
 
         {/* Category Badge */}
         {article.category && (
-          <span className="absolute left-3 top-3 rounded-full border border-teal-500/30 bg-slate-950/80 px-3 py-1 text-xs font-semibold text-teal-300 backdrop-blur-sm">
+          <span
+            className="article-cat-badge absolute left-3 top-3 rounded-full border px-3 py-1 text-xs font-semibold backdrop-blur-sm"
+            style={{
+              color: "var(--articles-cat-color, var(--theme-primary, #2dd4bf))",
+              backgroundColor: "var(--articles-cat-bg, rgba(2, 6, 23, 0.8))",
+              borderColor: "color-mix(in srgb, var(--articles-cat-color, var(--theme-primary, #2dd4bf)) 35%, transparent)",
+            }}
+          >
             {article.category.name}
           </span>
         )}
@@ -44,14 +56,25 @@ export default function ArticleCard({ article }: { article: PublicArticleCard })
           </time>
         )}
 
-        <h3 className="mb-2 text-lg font-bold leading-snug text-slate-100 transition-colors group-hover:text-teal-400">
-          <Link href={`/blog/${article.slug}`}>
+        <h3 className="mb-2 text-lg font-bold leading-snug transition-colors">
+          <Link
+            href={`/blog/${article.slug}`}
+            className="article-title-link"
+            style={{
+              color: "var(--articles-card-title, #f1f5f9)",
+            }}
+          >
             {article.title}
           </Link>
         </h3>
 
         {article.excerpt && (
-          <p className="mb-4 line-clamp-2 text-sm text-slate-400">
+          <p
+            className="article-excerpt mb-4 line-clamp-2 text-sm"
+            style={{
+              color: "var(--articles-card-desc, #94a3b8)",
+            }}
+          >
             {article.excerpt}
           </p>
         )}
@@ -59,7 +82,10 @@ export default function ArticleCard({ article }: { article: PublicArticleCard })
         <div className="mt-auto pt-2">
           <Link
             href={`/blog/${article.slug}`}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-400 transition-colors hover:text-teal-300"
+            className="article-readmore-btn inline-flex items-center gap-1.5 text-xs font-semibold transition-colors"
+            style={{
+              color: "var(--articles-readmore-color, var(--theme-primary, #2dd4bf))",
+            }}
           >
             Đọc tiếp
             <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -71,3 +97,4 @@ export default function ArticleCard({ article }: { article: PublicArticleCard })
     </article>
   );
 }
+

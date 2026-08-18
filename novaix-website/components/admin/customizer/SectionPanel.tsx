@@ -6,9 +6,12 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import {
+  IconArrowDown,
+  IconArrowUp,
   IconBolt,
   IconBuilding,
   IconCash,
@@ -20,25 +23,34 @@ import {
   IconMenu2,
   IconMessageCircle,
   IconNavigation,
+  IconNews,
   IconPackage,
   IconRocket,
+
   IconRotate,
   IconRoute,
   IconSparkles,
   IconSpeakerphone,
   IconUsers,
 } from "@tabler/icons-react";
+import AboutSection from "./AboutSection";
+import ArticlesSection from "./ArticlesSection";
 import CTASection from "./CTASection";
+
+import FAQSection from "./FAQSection";
+import FeaturesSection from "./FeaturesSection";
 import FieldInput from "./FieldInput";
 import FooterSection from "./FooterSection";
+import HeroSection from "./HeroSection";
 import ListField from "./ListField";
 import MarqueeSection from "./MarqueeSection";
+import ModulesSection from "./ModulesSection";
 import NavSection from "./NavSection";
 import PricingSection from "./PricingSection";
+import ProcessSection from "./ProcessSection";
+import SegmentsSection from "./SegmentsSection";
+import TestimonialsSection from "./TestimonialsSection";
 import ThemeSection from "./ThemeSection";
-
-
-
 import {
   getAt,
   SECTIONS_CONFIG,
@@ -46,7 +58,7 @@ import {
   type SimpleFieldDef,
 } from "@/lib/site-content/fields";
 import type { SectionKey } from "@/lib/site-content/preview-bridge";
-import type { HomeContent } from "@/lib/site-content/schema";
+import { DEFAULT_SECTION_ORDER, type HomeContent } from "@/lib/site-content/schema";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   IconRocket: <IconRocket size={18} />,
@@ -63,9 +75,11 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   IconCash: <IconCash size={18} />,
   IconMessageCircle: <IconMessageCircle size={18} />,
   IconHelpCircle: <IconHelpCircle size={18} />,
+  IconNews: <IconNews size={18} />,
   IconMail: <IconMail size={18} />,
   IconLayoutBottombar: <IconLayoutBottombar size={18} />,
 };
+
 
 export default function SectionPanel({
   content,
@@ -81,6 +95,27 @@ export default function SectionPanel({
   onToggleSection: (sectionKey: SectionKey) => void;
 }) {
   const categories = ["GIAO DIỆN & MÀU SẮC", "TRANG CHỦ", "ĐIỀU HƯỚNG & LIÊN HỆ"] as const;
+
+  const defaultOrder = [...DEFAULT_SECTION_ORDER];
+  const currentOrder =
+    Array.isArray(content.sectionOrder) && content.sectionOrder.length > 0
+      ? [
+          ...content.sectionOrder.filter((k) => defaultOrder.includes(k as any)),
+          ...defaultOrder.filter((k) => !content.sectionOrder.includes(k)),
+        ]
+      : defaultOrder;
+
+  const handleMoveSection = (key: string, direction: "up" | "down") => {
+    const idx = currentOrder.indexOf(key);
+    if (idx === -1) return;
+    const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= currentOrder.length) return;
+
+    const next = [...currentOrder];
+    const [moved] = next.splice(idx, 1);
+    next.splice(targetIdx, 0, moved);
+    onChange("sectionOrder", next);
+  };
 
   const renderSectionBody = (sec: SectionConfig) => {
     if (sec.key === "theme") {
@@ -119,6 +154,60 @@ export default function SectionPanel({
       );
     }
 
+    if (sec.key === "hero") {
+      return (
+        <HeroSection
+          hero={content.hero}
+          onChange={(newHero) => onChange("hero", newHero)}
+        />
+      );
+    }
+
+    if (sec.key === "about") {
+      return (
+        <AboutSection
+          about={content.about}
+          onChange={(newAbout) => onChange("about", newAbout)}
+        />
+      );
+    }
+
+    if (sec.key === "modules") {
+      return (
+        <ModulesSection
+          modules={content.modules}
+          onChange={(newModules) => onChange("modules", newModules)}
+        />
+      );
+    }
+
+    if (sec.key === "features") {
+      return (
+        <FeaturesSection
+          features={content.features}
+          onChange={(newFeatures) => onChange("features", newFeatures)}
+        />
+      );
+    }
+
+    if (sec.key === "process") {
+      return (
+        <ProcessSection
+          process={content.process}
+          onChange={(newProcess) => onChange("process", newProcess)}
+        />
+      );
+    }
+
+    if (sec.key === "segments") {
+      return (
+        <SegmentsSection
+          segments={content.segments}
+          onChange={(newSegments) => onChange("segments", newSegments)}
+        />
+      );
+    }
+
     if (sec.key === "pricing") {
       return (
         <PricingSection
@@ -128,6 +217,34 @@ export default function SectionPanel({
       );
     }
 
+    if (sec.key === "testimonials") {
+      return (
+        <TestimonialsSection
+          testimonials={content.testimonials}
+          onChange={(newTestimonials) => onChange("testimonials", newTestimonials)}
+        />
+      );
+    }
+
+    if (sec.key === "faq") {
+      return (
+        <FAQSection
+          faq={content.faq}
+          onChange={(newFAQ) => onChange("faq", newFAQ)}
+        />
+      );
+    }
+
+    if (sec.key === "articles") {
+      return (
+        <ArticlesSection
+          articles={content.articles}
+          onChange={(newArticles) => onChange("articles", newArticles)}
+        />
+      );
+    }
+
+
     if (sec.key === "cta") {
       return (
         <CTASection
@@ -136,8 +253,6 @@ export default function SectionPanel({
         />
       );
     }
-
-
 
 
     return (
@@ -172,8 +287,19 @@ export default function SectionPanel({
   return (
     <Box sx={{ p: 2, display: "flex", flexDirection: "column", gap: 3 }}>
       {categories.map((category) => {
-        const sections = SECTIONS_CONFIG.filter((s) => s.category === category);
+        let sections = SECTIONS_CONFIG.filter((s) => s.category === category);
         if (sections.length === 0) return null;
+
+        // Nếu là danh mục TRANG CHỦ, tự động sắp xếp các accordion theo thứ tự sectionOrder hiện tại
+        if (category === "TRANG CHỦ") {
+          sections = [...sections].sort((a, b) => {
+            const idxA = currentOrder.indexOf(a.key);
+            const idxB = currentOrder.indexOf(b.key);
+            if (idxA === -1) return 1;
+            if (idxB === -1) return -1;
+            return idxA - idxB;
+          });
+        }
 
         return (
           <Box key={category}>
@@ -196,6 +322,10 @@ export default function SectionPanel({
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               {sections.map((sec) => {
                 const isExpanded = Boolean(expandedSections[sec.key]);
+                const orderIdx = currentOrder.indexOf(sec.key);
+                const isReorderable = orderIdx !== -1;
+                const canMoveUp = orderIdx > 0;
+                const canMoveDown = orderIdx < currentOrder.length - 1;
 
                 return (
                   <Accordion
@@ -230,7 +360,6 @@ export default function SectionPanel({
                         },
                       }}
                     >
-
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
                         <Box sx={{ color: isExpanded ? "primary.main" : "text.secondary", display: "flex" }}>
                           {ICON_MAP[sec.iconName] || <IconPackage size={18} />}
@@ -240,28 +369,77 @@ export default function SectionPanel({
                         </Typography>
                       </Box>
 
-                      <Tooltip title={`Đặt lại "${sec.title}" về mặc định`}>
-                        <Button
-                          size="small"
-                          variant="text"
-                          startIcon={<IconRotate size={14} />}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onResetSection(sec.key);
-                          }}
-                          sx={{
-                            fontSize: "12px",
-                            py: 0.25,
-                            px: 1,
-                            minWidth: "auto",
-                            textTransform: "none",
-                            color: "text.secondary",
-                            "&:hover": { color: "primary.main", bgcolor: "action.hover" },
-                          }}
-                        >
-                          Đặt lại
-                        </Button>
-                      </Tooltip>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                        {/* Nút mũi tên đổi thứ tự vị trí khối */}
+                        {isReorderable && (
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 0.25, mr: 0.5 }}>
+                            <Tooltip title="Di chuyển khối này lên trên">
+                              <span>
+                                <IconButton
+                                  size="small"
+                                  disabled={!canMoveUp}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleMoveSection(sec.key, "up");
+                                  }}
+                                  sx={{
+                                    p: 0.4,
+                                    color: "text.secondary",
+                                    "&:hover": { color: "primary.main", bgcolor: "action.hover" },
+                                    "&.Mui-disabled": { opacity: 0.25 },
+                                  }}
+                                >
+                                  <IconArrowUp size={15} />
+                                </IconButton>
+                              </span>
+                            </Tooltip>
+
+                            <Tooltip title="Di chuyển khối này xuống dưới">
+                              <span>
+                                <IconButton
+                                  size="small"
+                                  disabled={!canMoveDown}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleMoveSection(sec.key, "down");
+                                  }}
+                                  sx={{
+                                    p: 0.4,
+                                    color: "text.secondary",
+                                    "&:hover": { color: "primary.main", bgcolor: "action.hover" },
+                                    "&.Mui-disabled": { opacity: 0.25 },
+                                  }}
+                                >
+                                  <IconArrowDown size={15} />
+                                </IconButton>
+                              </span>
+                            </Tooltip>
+                          </Box>
+                        )}
+
+                        <Tooltip title={`Đặt lại "${sec.title}" về mặc định`}>
+                          <Button
+                            size="small"
+                            variant="text"
+                            startIcon={<IconRotate size={14} />}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onResetSection(sec.key);
+                            }}
+                            sx={{
+                              fontSize: "12px",
+                              py: 0.25,
+                              px: 1,
+                              minWidth: "auto",
+                              textTransform: "none",
+                              color: "text.secondary",
+                              "&:hover": { color: "primary.main", bgcolor: "action.hover" },
+                            }}
+                          >
+                            Đặt lại
+                          </Button>
+                        </Tooltip>
+                      </Box>
                     </AccordionSummary>
 
                     <AccordionDetails

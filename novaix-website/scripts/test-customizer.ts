@@ -1,7 +1,9 @@
 import { DEFAULT_HOME_CONTENT } from "../lib/site-content/defaults";
 import { SECTIONS_CONFIG, getAt, setAt } from "../lib/site-content/fields";
 import { deepMerge, resolveHomeContent } from "../lib/site-content/merge";
-import { homeContentSchema } from "../lib/site-content/schema";
+import { homeContentSchema, DEFAULT_SECTION_ORDER } from "../lib/site-content/schema";
+import { safeHex } from "../lib/site-content/color";
+import { RENDERABLE_SECTION_KEYS } from "../components/preview/section-keys";
 
 console.log("=== 1. TEST SCHEMA DEFAULT ===");
 const parsed = homeContentSchema.safeParse(DEFAULT_HOME_CONTENT);
@@ -71,15 +73,71 @@ if (getVal !== "Dòng nhãn mới đã đổi" || original.hero.kicker === "Dòn
 }
 
 console.log("\n=== 5. TEST FIELDS.TS COVERAGE ===");
-for (const sec of SECTIONS_CONFIG) {
-  for (const f of sec.fields) {
-    const val = getAt(DEFAULT_HOME_CONTENT, f.path);
-    if (val === undefined) {
-      console.error(`❌ Trường path "${f.path}" trong section "${sec.key}" không tồn tại trong DEFAULT_HOME_CONTENT!`);
-      process.exit(1);
+{
+  // SECTIONS_CONFIG nay chỉ khai tiêu đề/icon; phần trường đã chuyển sang các
+  // component riêng (HeroSection.tsx, AboutSection.tsx…). Vòng lặp cũ chạy qua
+  // `sec.fields` rỗng nên in ra "100% hợp lệ" mà không kiểm gì — tệ hơn là không có test.
+  const declared = SECTIONS_CONFIG.reduce((n, s) => n + s.fields.length, 0);
+  if (declared > 0) {
+    for (const sec of SECTIONS_CONFIG) {
+      for (const f of sec.fields) {
+        if (getAt(DEFAULT_HOME_CONTENT, f.path) === undefined) {
+          console.error(`❌ Trường path "${f.path}" trong section "${sec.key}" không tồn tại trong DEFAULT_HOME_CONTENT!`);
+          process.exit(1);
+        }
+      }
     }
+    console.log(`✅ ${declared} trường khai trong fields.ts đều tồn tại trong DEFAULT_HOME_CONTENT.`);
+  } else {
+    console.log("ℹ️  fields.ts không còn khai trường nào — bỏ qua phép kiểm này.");
   }
 }
-console.log("✅ 100% các field định nghĩa trong fields.ts đều tồn tại trong DEFAULT_HOME_CONTENT!");
 
-console.log("\n🎉 TẤT CẢ 5 BỘ TEST ĐỀU THÀNH CÔNG VƯỢT TRỘI!");
+console.log("\n=== 6. TEST MỌI KHỐI TRONG SECTIONS_CONFIG ĐỀU CÓ DỮ LIỆU MẶC ĐỊNH ===");
+{
+  const missing = SECTIONS_CONFIG
+    .map((s) => s.key)
+    .filter((key) => (DEFAULT_HOME_CONTENT as Record<string, unknown>)[key] === undefined);
+  if (missing.length > 0) {
+    console.error(`❌ Khối khai trong panel nhưng thiếu dữ liệu mặc định: ${missing.join(", ")}`);
+    process.exit(1);
+  }
+  console.log(`✅ ${SECTIONS_CONFIG.length} khối trong panel đều có dữ liệu mặc định.`);
+}
+
+console.log("\n=== 7. TEST THỨ TỰ KHỐI (sectionOrder) ===");
+{
+  // Khóa trong DEFAULT_SECTION_ORDER phải render được, nếu không khối biến mất trong im lặng.
+  const renderable = new Set(RENDERABLE_SECTION_KEYS);
+  const orphan = DEFAULT_SECTION_ORDER.filter((k) => !renderable.has(k));
+  if (orphan.length > 0) {
+    console.error(`❌ Khóa có trong thứ tự nhưng HomeSections không render được: ${orphan.join(", ")}`);
+    process.exit(1);
+  }
+
+  // Trùng khóa phải bị loại, nếu không khối render hai lần và trùng React key.
+  const dup = [...DEFAULT_SECTION_ORDER, "hero"];
+  const deduped = Array.from(new Set(dup.filter((k) => DEFAULT_SECTION_ORDER.includes(k as never))));
+  if (deduped.length !== DEFAULT_SECTION_ORDER.length) {
+    console.error("❌ Logic bỏ trùng thứ tự khối sai.");
+    process.exit(1);
+  }
+  console.log(`✅ ${DEFAULT_SECTION_ORDER.length} khối trong thứ tự đều render được, và trùng khóa bị loại.`);
+}
+
+console.log("\n=== 8. TEST MÀU KHÔNG HỢP LỆ BỊ CHẶN ===");
+{
+  const bad = JSON.parse(JSON.stringify(DEFAULT_HOME_CONTENT));
+  bad.theme.primary = "red; } * { display: none } .x {";
+  if (homeContentSchema.safeParse(bad).success) {
+    console.error("❌ Schema chấp nhận chuỗi tiêm CSS làm màu!");
+    process.exit(1);
+  }
+  if (safeHex(bad.theme.primary, "#2dd4bf") !== "#2dd4bf") {
+    console.error("❌ safeHex không chặn được chuỗi tiêm CSS!");
+    process.exit(1);
+  }
+  console.log("✅ Chuỗi tiêm CSS bị chặn ở cả schema lẫn safeHex.");
+}
+
+console.log("\n🎉 TOÀN BỘ CÁC BỘ TEST ĐỀU THÀNH CÔNG!");

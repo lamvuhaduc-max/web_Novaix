@@ -43,9 +43,34 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
   );
 }
 
-export default function Stats({ stats }: { stats: HeroContent["stats"] }) {
+function hexToRgba(hex: string = "#0b1120", opacityPercent: number = 60) {
+  const clean = hex.replace("#", "");
+  const r = parseInt(clean.substring(0, 2), 16) || 0;
+  const g = parseInt(clean.substring(2, 4), 16) || 0;
+  const b = parseInt(clean.substring(4, 6), 16) || 0;
+  const alpha = Math.max(0, Math.min(100, opacityPercent)) / 100;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+export default function Stats({
+  stats,
+  bgColor = "#0b1120",
+  bgOpacity = 60,
+  borderColor = "#1e293b",
+}: {
+  stats: HeroContent["stats"];
+  bgColor?: string;
+  bgOpacity?: number;
+  borderColor?: string;
+}) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-[18px] mt-14 panel rounded-[18px] p-[26px] backdrop-blur-sm">
+    <div
+      className="grid grid-cols-2 md:grid-cols-4 gap-[18px] mt-14 panel rounded-[18px] p-[26px] backdrop-blur-sm"
+      style={{
+        backgroundColor: hexToRgba(bgColor, bgOpacity),
+        borderColor: borderColor,
+      }}
+    >
       {stats.map((s, idx) => (
         <div key={idx}>
           <Counter target={s.target} suffix={s.suffix} />
@@ -55,3 +80,4 @@ export default function Stats({ stats }: { stats: HeroContent["stats"] }) {
     </div>
   );
 }
+

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -12,6 +13,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
@@ -24,10 +26,13 @@ import {
   IconArrowUp,
   IconChevronDown,
   IconPlus,
+  IconRotate,
   IconTrash,
 } from "@tabler/icons-react";
+import ColorInput from "./ColorInput";
 import FieldInput from "./FieldInput";
 import type { PricingContent } from "@/lib/site-content/schema";
+
 
 export default function PricingSection({
   pricing,
@@ -139,6 +144,20 @@ export default function PricingSection({
     updateField("tiers", next);
   };
 
+  const handleResetToTheme = () => {
+    onChange({
+      ...pricing,
+      customColors: false,
+      kickerColor: "#2dd4bf",
+      titleColor: "#eef2fb",
+      descColor: "#9aa6c4",
+      bgColor: "#070b16",
+      cardBgColor: "#0d1424",
+      popularBorderColor: "#2dd4bf",
+      checkColor: "#2dd4bf",
+    });
+  };
+
   return (
     <Box>
       {/* Header Fields */}
@@ -160,10 +179,97 @@ export default function PricingSection({
         onChange={(val) => updateField("desc", val)}
       />
 
+      <Divider sx={{ my: 2.5 }} />
+
+      {/* TÙY BIẾN MÀU SẮC RIÊNG CHO KHỐI BẢNG GIÁ */}
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1.5 }}>
+        <Box>
+          <Typography variant="subtitle2" sx={{ fontWeight: 700, fontSize: "13.5px" }}>
+            Tùy chỉnh màu sắc riêng cho Bảng giá
+          </Typography>
+          <Typography variant="caption" sx={{ color: "text.secondary", display: "block" }}>
+            {pricing.customColors ? "Đang áp dụng bộ màu riêng cho Bảng giá" : "Đang kế thừa tự động theo Màu Toàn Trang"}
+          </Typography>
+        </Box>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={Boolean(pricing.customColors)}
+              onChange={(e) => updateField("customColors", e.target.checked)}
+              color="primary"
+              size="small"
+            />
+          }
+          label=""
+          sx={{ mr: -1 }}
+        />
+      </Box>
+
+      {pricing.customColors ? (
+        <Box sx={{ bgcolor: "background.default", p: 1.5, borderRadius: "10px", border: "1px solid", borderColor: "divider", mb: 2.5 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+            <Typography variant="caption" sx={{ fontWeight: 700, color: "primary.main", letterSpacing: "0.05em" }}>
+              BẢNG MÀU ĐỘC BẢN BẢNG GIÁ
+            </Typography>
+            <Button
+              size="small"
+              startIcon={<IconRotate size={13} />}
+              onClick={handleResetToTheme}
+              sx={{ textTransform: "none", fontSize: "11px", py: 0.25 }}
+            >
+              Đồng bộ lại theo Toàn trang
+            </Button>
+          </Box>
+
+          <ColorInput
+            label="Màu nhãn trên (Kicker)"
+            value={pricing.kickerColor || "#2dd4bf"}
+            onChange={(val) => updateField("kickerColor", val)}
+          />
+          <ColorInput
+            label="Màu chữ tiêu đề & Tên gói"
+            value={pricing.titleColor || "#eef2fb"}
+            onChange={(val) => updateField("titleColor", val)}
+          />
+          <ColorInput
+            label="Màu chữ mô tả & Phụ đề gói"
+            value={pricing.descColor || "#9aa6c4"}
+            onChange={(val) => updateField("descColor", val)}
+          />
+          <ColorInput
+            label="Màu nền khối Bảng giá"
+            value={pricing.bgColor || "#070b16"}
+            onChange={(val) => updateField("bgColor", val)}
+          />
+          <ColorInput
+            label="Màu nền thẻ bảng giá"
+            value={pricing.cardBgColor || "#0d1424"}
+            onChange={(val) => updateField("cardBgColor", val)}
+          />
+          <ColorInput
+            label="Màu viền & Huy hiệu Gói phổ biến"
+            value={pricing.popularBorderColor || "#2dd4bf"}
+            onChange={(val) => updateField("popularBorderColor", val)}
+          />
+          <ColorInput
+            label="Màu dấu tích tính năng (✓)"
+            value={pricing.checkColor || "#2dd4bf"}
+            onChange={(val) => updateField("checkColor", val)}
+          />
+        </Box>
+      ) : (
+        <Alert severity="info" sx={{ mb: 2.5, py: 0.5, fontSize: "12px", borderRadius: "8px" }}>
+          Khối Bảng giá đang tự động kế thừa bảng màu chung. Khi bạn đổi Bảng màu toàn trang, khối này sẽ tự động đổi màu đồng bộ.
+        </Alert>
+      )}
+
+      <Divider sx={{ my: 2.5 }} />
+
       {/* Danh sách các gói */}
-      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "13px", mt: 3, mb: 1.5 }}>
+      <Typography variant="body2" sx={{ fontWeight: 600, fontSize: "13px", mt: 1, mb: 1.5 }}>
         Các gói bảng giá ({tiers.length}/6)
       </Typography>
+
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mb: 2 }}>
         {tiers.map((tier, tierIdx) => {

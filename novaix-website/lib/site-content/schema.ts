@@ -24,6 +24,11 @@ export const themeSchema = z.object({
   textColor: hexColor("#eef2fb"),
   textMuted: hexColor("#9aa6c4"),
   bgColor: hexColor("#070b16"),
+  btnPrimaryBg: hexColor("#2dd4bf"),
+  btnPrimaryText: hexColor("#04121a"),
+  btnGhostBg: hexColor("#131c31"),
+  btnGhostText: hexColor("#eef2fb"),
+  btnGhostBorder: hexColor("#2dd4bf"),
   borderRadius: z.number().int().min(0).max(32).default(12),
 });
 
@@ -53,8 +58,24 @@ export const heroSchema = z.object({
   desc: required(400, "Mô tả"),
   ctaPrimary: required(30, "Nút chính"),
   ctaSecondary: text(30),
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  highlightColor: hexColor("#2dd4bf"),
+  highlightAccentColor: hexColor("#38bdf8"),
+  descColor: hexColor("#9aa6c4"),
+  btnPrimaryBg: hexColor("#2dd4bf"),
+  btnPrimaryText: hexColor("#04121a"),
+  btnGhostBg: hexColor("#131c31"),
+  btnGhostText: hexColor("#eef2fb"),
+  btnGhostBorder: hexColor("#2dd4bf"),
+  statsBgColor: hexColor("#0b1120"),
+  statsBgOpacity: z.number().int().min(0).max(100).default(60),
+  statsBorderColor: hexColor("#1e293b"),
   stats: z.array(statItemSchema).min(2, "Cần ít nhất 2 số liệu").max(6, "Tối đa 6 số liệu"),
 });
+
+
 
 export const marqueeSchema = z.object({
   enabled: z.boolean().default(true),
@@ -86,9 +107,17 @@ export const aboutSchema = z.object({
   kicker: required(60, "Dòng nhãn"),
   title: required(120, "Tiêu đề"),
   desc: required(500, "Mô tả"),
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  descColor: hexColor("#9aa6c4"),
+  bgColor: hexColor("#0b1120"),
+  cardBgColor: hexColor("#131c31"),
+  accentColor: hexColor("#2dd4bf"),
   values: z.array(aboutValueSchema).min(1, "Cần ít nhất 1 giá trị").max(6, "Tối đa 6 giá trị"),
   timeline: z.array(aboutTimelineSchema).min(1, "Cần ít nhất 1 mốc timeline").max(8, "Tối đa 8 mốc timeline"),
 });
+
 
 export const sectionHeadSchema = z.object({
   kicker: required(60, "Dòng nhãn"),
@@ -103,10 +132,35 @@ export const moduleItemSchema = z.object({
   tag: required(40, "Nhãn phân loại"),
 });
 
+export const modulesSchema = sectionHeadSchema.extend({
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  descColor: hexColor("#9aa6c4"),
+  bgColor: hexColor("#070b16"),
+  cardBgColor: hexColor("#0d1424"),
+  cardTitleColor: hexColor("#eef2fb"),
+  cardDescColor: hexColor("#9aa6c4"),
+  tagColor: hexColor("#38bdf8"),
+  items: z.array(moduleItemSchema).min(3, "Cần ít nhất 3 module").max(16, "Tối đa 16 module"),
+});
+
+
 export const featureItemSchema = z.object({
   n: z.number().int().min(1).max(20),
   title: required(60, "Tiêu đề"),
   desc: required(250, "Mô tả"),
+});
+
+export const featuresSchema = sectionHeadSchema.extend({
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  descColor: hexColor("#9aa6c4"),
+  bgColor: hexColor("#0b1120"),
+  cardBgColor: hexColor("#131c31"),
+  badgeColor: hexColor("#2dd4bf"),
+  items: z.array(featureItemSchema).min(2, "Cần ít nhất 2 ưu điểm").max(8, "Tối đa 8 ưu điểm"),
 });
 
 export const stepItemSchema = z.object({
@@ -115,11 +169,33 @@ export const stepItemSchema = z.object({
   desc: required(250, "Mô tả"),
 });
 
+export const processSchema = sectionHeadSchema.extend({
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  descColor: hexColor("#9aa6c4"),
+  bgColor: hexColor("#070b16"),
+  cardBgColor: hexColor("#0d1424"),
+  stepNumberColor: hexColor("#38bdf8"),
+  items: z.array(stepItemSchema).min(3, "Cần ít nhất 3 bước").max(8, "Tối đa 8 bước"),
+});
+
 export const segmentItemSchema = z.object({
   icon: required(10, "Icon"),
   title: required(60, "Đối tượng"),
   desc: required(250, "Mô tả"),
   items: z.array(required(80, "Đặc điểm")).min(1, "Cần ít nhất 1 đặc điểm").max(6, "Tối đa 6 đặc điểm"),
+});
+
+export const segmentsSchema = sectionHeadSchema.extend({
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  descColor: hexColor("#9aa6c4"),
+  bgColor: hexColor("#0b1120"),
+  cardBgColor: hexColor("#131c31"),
+  accentColor: hexColor("#38bdf8"),
+  items: z.array(segmentItemSchema).min(2, "Cần ít nhất 2 phân khúc").max(6, "Tối đa 6 phân khúc"),
 });
 
 export const tierFeatureSchema = z.object({
@@ -138,6 +214,18 @@ export const tierSchema = z.object({
   features: z.array(tierFeatureSchema).min(1, "Cần ít nhất 1 tính năng").max(20, "Tối đa 20 tính năng"),
 });
 
+export const pricingSchema = sectionHeadSchema.extend({
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  descColor: hexColor("#9aa6c4"),
+  bgColor: hexColor("#070b16"),
+  cardBgColor: hexColor("#0d1424"),
+  popularBorderColor: hexColor("#2dd4bf"),
+  checkColor: hexColor("#2dd4bf"),
+  tiers: z.array(tierSchema).min(1, "Cần ít nhất 1 gói giá").max(6, "Tối đa 6 gói giá"),
+});
+
 export const quoteSchema = z.object({
   initials: required(6, "Chữ cái đầu"),
   quote: required(350, "Lời chứng"),
@@ -145,10 +233,33 @@ export const quoteSchema = z.object({
   role: required(80, "Chức danh"),
 });
 
+export const testimonialsSchema = sectionHeadSchema.extend({
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  descColor: hexColor("#9aa6c4"),
+  bgColor: hexColor("#070b16"),
+  cardBgColor: hexColor("#0d1424"),
+  quoteColor: hexColor("#eef2fb"),
+  items: z.array(quoteSchema).min(1, "Cần ít nhất 1 cảm nhận").max(9, "Tối đa 9 cảm nhận"),
+});
+
 export const qaSchema = z.object({
   q: required(150, "Câu hỏi"),
   a: required(600, "Câu trả lời"),
 });
+
+export const faqSchema = sectionHeadSchema.extend({
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  descColor: hexColor("#9aa6c4"),
+  bgColor: hexColor("#0b1120"),
+  cardBgColor: hexColor("#131c31"),
+  activeQuestionColor: hexColor("#2dd4bf"),
+  items: z.array(qaSchema).min(1, "Cần ít nhất 1 câu hỏi").max(20, "Tối đa 20 câu hỏi"),
+});
+
 
 export const contactItemSchema = z.object({
   icon: required(10, "Icon"),
@@ -170,6 +281,14 @@ export const ctaSchema = z.object({
   kicker: required(60, "Dòng nhãn"),
   title: required(120, "Tiêu đề"),
   desc: required(350, "Mô tả"),
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  descColor: hexColor("#9aa6c4"),
+  bgColor: hexColor("#070b16"),
+  cardBgColor: hexColor("#0d1424"),
+  btnBgColor: hexColor("#2dd4bf"),
+  btnTextColor: hexColor("#04121a"),
   contacts: z.array(contactItemSchema).min(1, "Cần ít nhất 1 thông tin liên hệ").max(8),
   commitmentsTitle: required(60, "Tiêu đề cam kết"),
   commitments: z.array(required(150, "Cam kết")).min(1, "Cần ít nhất 1 cam kết").max(10),
@@ -177,7 +296,7 @@ export const ctaSchema = z.object({
   formSuccessTitle: required(60, "Tiêu đề thành công"),
   formSuccessDesc: required(200, "Mô tả thành công"),
   buttonText: required(40, "Nút gửi form"),
-  formFields: z.array(ctaFormFieldSchema).min(1, "Cần ít nhất 1 trường form").max(20).default([
+  formFields: z.array(ctaFormFieldSchema).min(1, "Cần ít nhất 1 ô nhập").max(12).default([
     { id: "name", label: "Họ và tên", type: "text", placeholder: "Nguyễn Văn A", required: true, width: "half", options: [] },
     { id: "phone", label: "Số điện thoại", type: "tel", placeholder: "0901 234 567", required: true, width: "half", options: [] },
     { id: "email", label: "Email", type: "email", placeholder: "email@congty.vn", required: true, width: "half", options: [] },
@@ -254,6 +373,35 @@ export const footerSchema = z.object({
   ]),
 });
 
+export const articlesSchema = z.object({
+  customColors: z.boolean().default(false),
+  kickerColor: hexColor("#2dd4bf"),
+  titleColor: hexColor("#eef2fb"),
+  categoryBadgeColor: hexColor("#2dd4bf"),
+  categoryBadgeBg: hexColor("#0b1120"),
+  cardTitleColor: hexColor("#eef2fb"),
+  cardDescColor: hexColor("#9aa6c4"),
+  cardBgColor: hexColor("#0d1424"),
+  readMoreColor: hexColor("#2dd4bf"),
+  bgColor: hexColor("#030712"),
+});
+
+export const DEFAULT_SECTION_ORDER = [
+  "hero",
+  "marquee",
+  "about",
+  "modules",
+  "features",
+  "process",
+  "segments",
+  "pricing",
+  "testimonials",
+  "faq",
+  "articles",
+  "cta",
+] as const;
+
+export type ReorderableSectionKey = (typeof DEFAULT_SECTION_ORDER)[number];
 
 export const homeContentSchema = z.object({
   v: z.literal(1),
@@ -264,19 +412,49 @@ export const homeContentSchema = z.object({
     textColor: "#eef2fb",
     textMuted: "#9aa6c4",
     bgColor: "#070b16",
+    btnPrimaryBg: "#2dd4bf",
+    btnPrimaryText: "#04121a",
+    btnGhostBg: "#131c31",
+    btnGhostText: "#eef2fb",
+    btnGhostBorder: "#2dd4bf",
     borderRadius: 12,
   }),
+
+  // Chuẩn hóa ngay tại schema: bỏ khóa lạ, bỏ trùng, bù khóa thiếu.
+  // Nếu để z.array(z.string()) thô thì một bản ghi hỏng sẽ làm khối render hai lần
+  // (trùng React key) hoặc biến mất khỏi trang chủ mà không báo gì.
+  sectionOrder: z
+    .array(z.string())
+    .default([...DEFAULT_SECTION_ORDER])
+    .transform((arr) => {
+      const known = DEFAULT_SECTION_ORDER as readonly string[];
+      const kept = Array.from(new Set(arr.filter((k) => known.includes(k))));
+      return [...kept, ...known.filter((k) => !kept.includes(k))];
+    }),
+
   nav: navSchema,
   hero: heroSchema,
   marquee: marqueeSchema,
   about: aboutSchema,
-  modules: sectionHeadSchema.extend({ items: z.array(moduleItemSchema).min(3, "Cần ít nhất 3 module").max(16, "Tối đa 16 module") }),
-  features: sectionHeadSchema.extend({ items: z.array(featureItemSchema).min(2, "Cần ít nhất 2 ưu điểm").max(8, "Tối đa 8 ưu điểm") }),
-  process: sectionHeadSchema.extend({ items: z.array(stepItemSchema).min(3, "Cần ít nhất 3 bước").max(8, "Tối đa 8 bước") }),
-  segments: sectionHeadSchema.extend({ items: z.array(segmentItemSchema).min(2, "Cần ít nhất 2 phân khúc").max(6, "Tối đa 6 phân khúc") }),
-  pricing: sectionHeadSchema.extend({ tiers: z.array(tierSchema).min(1, "Cần ít nhất 1 gói giá").max(6, "Tối đa 6 gói giá") }),
-  testimonials: sectionHeadSchema.extend({ items: z.array(quoteSchema).min(1, "Cần ít nhất 1 cảm nhận").max(9, "Tối đa 9 cảm nhận") }),
-  faq: sectionHeadSchema.extend({ items: z.array(qaSchema).min(1, "Cần ít nhất 1 câu hỏi").max(20, "Tối đa 20 câu hỏi") }),
+  modules: modulesSchema,
+  features: featuresSchema,
+  process: processSchema,
+  segments: segmentsSchema,
+  pricing: pricingSchema,
+  testimonials: testimonialsSchema,
+  faq: faqSchema,
+  articles: articlesSchema.default({
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    categoryBadgeColor: "#2dd4bf",
+    categoryBadgeBg: "#0b1120",
+    cardTitleColor: "#eef2fb",
+    cardDescColor: "#9aa6c4",
+    cardBgColor: "#0d1424",
+    readMoreColor: "#2dd4bf",
+    bgColor: "#030712",
+  }),
   cta: ctaSchema,
   footer: footerSchema,
 });
@@ -287,12 +465,15 @@ export type NavContent = z.infer<typeof navSchema>;
 export type HeroContent = z.infer<typeof heroSchema>;
 export type MarqueeContent = z.infer<typeof marqueeSchema>;
 export type AboutContent = z.infer<typeof aboutSchema>;
-export type ModulesContent = z.infer<typeof homeContentSchema>["modules"];
-export type FeaturesContent = z.infer<typeof homeContentSchema>["features"];
-export type ProcessContent = z.infer<typeof homeContentSchema>["process"];
-export type SegmentsContent = z.infer<typeof homeContentSchema>["segments"];
-export type PricingContent = z.infer<typeof homeContentSchema>["pricing"];
-export type TestimonialsContent = z.infer<typeof homeContentSchema>["testimonials"];
-export type FAQContent = z.infer<typeof homeContentSchema>["faq"];
+export type ModulesContent = z.infer<typeof modulesSchema>;
+export type FeaturesContent = z.infer<typeof featuresSchema>;
+export type ProcessContent = z.infer<typeof processSchema>;
+export type SegmentsContent = z.infer<typeof segmentsSchema>;
+export type PricingContent = z.infer<typeof pricingSchema>;
+export type TestimonialsContent = z.infer<typeof testimonialsSchema>;
+export type FAQContent = z.infer<typeof faqSchema>;
+export type ArticlesContent = z.infer<typeof articlesSchema>;
 export type CTAContent = z.infer<typeof ctaSchema>;
 export type FooterContent = z.infer<typeof footerSchema>;
+
+

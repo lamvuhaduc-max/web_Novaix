@@ -51,9 +51,13 @@ export default function CustomizerShell({
     pricing: false,
     testimonials: false,
     faq: false,
+    articles: false,
     cta: false,
     footer: false,
   });
+
+
+
 
   const [baseUpdatedAt, setBaseUpdatedAt] = useState<string | null>(
     initialUpdatedAt,
@@ -176,18 +180,21 @@ export default function CustomizerShell({
 
   // Đặt lại 1 khối về mặc định
   const handleResetSection = (sectionKey: SectionKey) => {
-    const defaultSec = DEFAULT_HOME_CONTENT[sectionKey];
-    const updated = {
-      ...current,
-      [sectionKey]: defaultSec,
-    };
-    pushState(updated, sectionKey);
+    if (sectionKey in DEFAULT_HOME_CONTENT) {
+      const defaultSec = (DEFAULT_HOME_CONTENT as any)[sectionKey];
+      const updated = {
+        ...current,
+        [sectionKey]: defaultSec,
+      };
+      pushState(updated, sectionKey);
+    }
     setToast({
       open: true,
       message: `Đã đặt lại khối "${sectionKey}" về mặc định.`,
       severity: "info",
     });
   };
+
 
   // Đặt lại toàn bộ về mặc định
   const handleConfirmResetAll = () => {
