@@ -420,7 +420,17 @@ export const homeContentSchema = z.object({
     borderRadius: 12,
   }),
 
-  sectionOrder: z.array(z.string()).default([...DEFAULT_SECTION_ORDER]),
+  // Chuẩn hóa ngay tại schema: bỏ khóa lạ, bỏ trùng, bù khóa thiếu.
+  // Nếu để z.array(z.string()) thô thì một bản ghi hỏng sẽ làm khối render hai lần
+  // (trùng React key) hoặc biến mất khỏi trang chủ mà không báo gì.
+  sectionOrder: z
+    .array(z.string())
+    .default([...DEFAULT_SECTION_ORDER])
+    .transform((arr) => {
+      const known = DEFAULT_SECTION_ORDER as readonly string[];
+      const kept = Array.from(new Set(arr.filter((k) => known.includes(k))));
+      return [...kept, ...known.filter((k) => !kept.includes(k))];
+    }),
 
   nav: navSchema,
   hero: heroSchema,

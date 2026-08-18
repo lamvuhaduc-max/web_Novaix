@@ -2,16 +2,14 @@ import Link from "next/link";
 import ArticleCard from "./ArticleCard";
 import type { PublicArticleCard } from "@/lib/blog/queries";
 import type { ArticlesContent } from "@/lib/site-content/schema";
+// Dùng helper chung: bản chép tay ở đây chỉ nhận hex 6 ký tự, nên màu hợp lệ
+// như #fff (schema cho phép) bị âm thầm thay bằng màu mặc định.
+import { safeHex } from "@/lib/site-content/color";
 
 export type HomeRailData = {
   title: string;
   articles: PublicArticleCard[];
 };
-
-function safeHex(val?: string | null, fallback = "#000000"): string {
-  if (typeof val === "string" && /^#[0-9A-Fa-f]{6}$/.test(val)) return val;
-  return fallback;
-}
 
 export default function ArticleRail({
   rails,

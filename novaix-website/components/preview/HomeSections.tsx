@@ -15,6 +15,8 @@ import ArticleRail from "@/components/blog/ArticleRail";
 import type { HomeContent } from "@/lib/site-content/schema";
 import type { PublicArticleCard } from "@/lib/blog/queries";
 import { safeHex } from "@/lib/site-content/color";
+import { DEFAULT_SECTION_ORDER } from "@/lib/site-content/schema";
+import { RENDERABLE_SECTION_KEYS } from "./section-keys";
 
 /**
  * Component gom chung toàn bộ các khối trang chủ.
@@ -300,12 +302,12 @@ export default function HomeSections({
     }
     .kicker {
       color: var(--hero-kicker-color, ${c.primary}) !important;
-      border-color: color-mix(in srgb, var(--hero-kicker-color, ${c.primary})) 40%, transparent) !important;
-      background: color-mix(in srgb, var(--hero-kicker-color, ${c.primary})) 10%, transparent) !important;
+      border-color: color-mix(in srgb, var(--hero-kicker-color, ${c.primary}) 40%, transparent) !important;
+      background: color-mix(in srgb, var(--hero-kicker-color, ${c.primary}) 10%, transparent) !important;
     }
     .kicker::before {
       background: var(--hero-kicker-color, ${c.primary}) !important;
-      box-shadow: 0 0 10px var(--hero-kicker-color, ${c.primary})) !important;
+      box-shadow: 0 0 10px var(--hero-kicker-color, ${c.primary}) !important;
     }
     .grad-text {
       background: linear-gradient(120deg, var(--hero-highlight-1, ${c.primary}), var(--hero-highlight-2, ${c.accent}) 55%, #fbbf24) !important;
@@ -319,26 +321,20 @@ export default function HomeSections({
     }
   `;
 
-  const DEFAULT_ORDER = [
-    "hero",
-    "marquee",
-    "about",
-    "modules",
-    "features",
-    "process",
-    "segments",
-    "pricing",
-    "testimonials",
-    "faq",
-    "articles",
-    "cta",
-  ];
+  // Thứ tự khối lấy từ DEFAULT_SECTION_ORDER trong schema — KHÔNG chép lại danh sách
+  // ở đây. Hai bản sẽ trôi dạt ngay lần thêm khối mới, và khối bị sót sẽ biến mất
+  // khỏi trang chủ trong im lặng vì bộ lọc bên dưới loại mọi khóa không có trong danh sách.
+  const DEFAULT_ORDER: string[] = DEFAULT_SECTION_ORDER.filter((k) =>
+    (RENDERABLE_SECTION_KEYS as readonly string[]).includes(k)
+  );
 
   const rawOrder = Array.isArray(content.sectionOrder) && content.sectionOrder.length > 0
     ? content.sectionOrder
     : DEFAULT_ORDER;
 
-  const validOrder = rawOrder.filter((k) => DEFAULT_ORDER.includes(k as any));
+  // Vừa lọc khóa lạ, vừa BỎ TRÙNG: sectionOrder khai là z.array(z.string()) nên một
+  // bản ghi hỏng có thể chứa cùng một khóa hai lần, làm khối render hai lần và trùng React key.
+  const validOrder = Array.from(new Set(rawOrder.filter((k) => DEFAULT_ORDER.includes(k))));
   const missing = DEFAULT_ORDER.filter((k) => !validOrder.includes(k));
   const effectiveOrder = [...validOrder, ...missing];
 
