@@ -355,7 +355,7 @@ export default function CustomizerShell({
           >
             <iframe
               ref={iframeRef}
-              src="/?preview=1"
+              src="/xem-truoc"
               title="Khung xem trước trang chủ"
               style={{
                 width: "100%",

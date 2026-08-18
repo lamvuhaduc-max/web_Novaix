@@ -11,13 +11,21 @@ import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
+import ArticleRail from "@/components/blog/ArticleRail";
 import type { HomeContent } from "@/lib/site-content/schema";
+import type { PublicArticleCard } from "@/lib/blog/queries";
 
 /**
  * Component gom chung toàn bộ các khối trang chủ.
  * Tự động áp dụng bộ theme màu sắc và bo góc toàn trang.
  */
-export default function HomeSections({ content }: { content: HomeContent }) {
+export default function HomeSections({
+  content,
+  articleRails = [],
+}: {
+  content: HomeContent;
+  articleRails?: { title: string; articles: PublicArticleCard[] }[];
+}) {
   const theme = content.theme || {
     primary: "#2dd4bf",
     primaryDark: "#0d9488",
@@ -79,6 +87,7 @@ export default function HomeSections({ content }: { content: HomeContent }) {
       <Pricing content={content.pricing} />
       <Testimonials content={content.testimonials} />
       <FAQ content={content.faq} />
+      <ArticleRail rails={articleRails} />
       <CTA content={content.cta} />
       <Footer content={content.footer} />
     </main>

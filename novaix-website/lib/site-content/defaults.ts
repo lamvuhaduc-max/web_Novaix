@@ -21,6 +21,7 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
       { href: "#ve-chung-toi", label: "Giới thiệu", visible: true },
       { href: "#modules", label: "Sản phẩm", visible: true },
       { href: "#quy-trinh", label: "Quy trình", visible: true },
+      { href: "/blog", label: "Bài viết", visible: true },
       { href: "#bang-gia", label: "Bảng giá", visible: true },
       { href: "#lien-he", label: "Liên hệ", visible: true },
     ],

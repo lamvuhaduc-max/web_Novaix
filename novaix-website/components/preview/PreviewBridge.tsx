@@ -4,8 +4,15 @@ import { useEffect, useState } from "react";
 import HomeSections from "./HomeSections";
 import type { PreviewMessage, SectionKey } from "@/lib/site-content/preview-bridge";
 import type { HomeContent } from "@/lib/site-content/schema";
+import type { PublicArticleCard } from "@/lib/blog/queries";
 
-export default function PreviewBridge({ initial }: { initial: HomeContent }) {
+export default function PreviewBridge({
+  initial,
+  articleRails = [],
+}: {
+  initial: HomeContent;
+  articleRails?: { title: string; articles: PublicArticleCard[] }[];
+}) {
   const [content, setContent] = useState<HomeContent>(initial);
 
   useEffect(() => {
@@ -60,5 +67,5 @@ export default function PreviewBridge({ initial }: { initial: HomeContent }) {
     };
   }, []);
 
-  return <HomeSections content={content} />;
+  return <HomeSections content={content} articleRails={articleRails} />;
 }

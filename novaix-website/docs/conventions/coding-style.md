@@ -195,6 +195,30 @@ Bốn luật:
 3. **Thông báo lỗi là tiếng Việt, hướng người dùng làm gì tiếp** ("Email này đã được sử dụng." chứ không phải "duplicate key value violates unique constraint").
 4. **`revalidatePath` đúng đường dẫn vừa đổi** — quên là bảng trên màn hình vẫn hiện dữ liệu cũ dù ghi đã thành công. Kiểu hỏng im lặng.
 
+### Hàm chỉ đọc KHÔNG đặt trong file `"use server"`
+
+**Mọi export trong file `"use server"` đều trở thành một endpoint HTTP công khai**, kể cả hàm chỉ đọc dữ liệu. Nếu hàm đó không kiểm quyền — mà hàm đọc thì thường không, vì trang công khai cũng gọi — bạn vừa mở một API không xác thực mà không hề biết.
+
+Đặt hàm đọc ở module thường và import trực tiếp vào server component:
+
+| Việc | File | Có `"use server"` |
+| :-- | :-- | :-- |
+| Ghi (tạo/sửa/xóa) | `lib/<miền>/*-actions.ts` | ✅ có, kèm `requireUser()` |
+| Đọc cho trang công khai lẫn admin | `lib/<miền>/*-queries.ts`, `*-config.ts` | ❌ không |
+
+Ví dụ trong repo: `lib/blog/category-queries.ts` và `lib/blog/rails-config.ts` từng nằm trong file action nên bị phơi ra ngoài; đã tách sang module thường.
+
+### `redirect()` trong action phải được ném lại
+
+`redirect()` và `notFound()` hoạt động bằng cách **ném ra Error** mang `digest` đặc biệt. Khối `try/catch` bao quanh thân action sẽ nuốt mất nó: chuyển hướng không xảy ra, người dùng nhận về chuỗi `"NEXT_REDIRECT"` như một thông báo lỗi. `requireUser()` có gọi `redirect()`, nên **mọi khối `catch` trong action phải mở đầu bằng**:
+
+```typescript
+} catch (err) {
+  rethrowIfNextControlFlow(err);   // lib/next-errors.ts
+  // ...xử lý lỗi nghiệp vụ
+}
+```
+
 ---
 
 ## Phân quyền — ba lớp, và vai trò đọc từ database

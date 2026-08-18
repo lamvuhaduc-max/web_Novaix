@@ -3,7 +3,7 @@
 > **PRD:** [`blog-prd.md`](./blog-prd.md) · **RFC:** [`blog-rfc.md`](./blog-rfc.md) ·
 > **Spec:** [`blog-spec.md`](./blog-spec.md) · **Domain:** [`content-article-domain.md`](../../domains/content-article-domain.md)
 >
-> **Trạng thái:** 📝 chưa bắt đầu.
+> **Trạng thái:** ✅ Đã hoàn thành.
 
 ---
 
@@ -30,36 +30,36 @@
 
 **Ước tính tổng: 8–11 ngày làm việc.** Cột *PT* = phụ thuộc.
 
-| # | Task | Lớp | PT | Độ khó |
-| :-- | :-- | :-- | :-- | :-- |
-| **T1** | Hàm thuần: làm sạch HTML + test | Lib | C3 | 🟠 Vừa |
-| **T2** | Hàm thuần: slug + mục lục + test | Lib | C3 | 🟢 Thấp |
-| **T3** | Hàm thuần: soi SEO + test | Lib | C3 | 🟠 Vừa |
-| **T4** | Schema Drizzle (4 bảng + enum) + `db:push` | DB | — | 🟢 Thấp |
-| **T5** | Script hạt giống danh mục | DB | T4 | 🟢 Thấp |
-| **T6** | Zod schema + `ActionResult` + nhật ký | BE | T4 | 🟢 Thấp |
-| **T7** | `BlobStorage` + upload ảnh | BE | C2, T6 | 🟠 Vừa |
-| **T8** | Server action bài viết (CRUD + trạng thái + thùng rác) | BE | T1, T2, T6 | 🔴 Cao |
-| **T9** | Server action danh mục | BE | T6 | 🟢 Thấp |
-| **T10** | Truy vấn công khai (`queries.ts`) | BE | T4 | 🟠 Vừa |
-| **T11** | Màn AD-B1 — danh sách + tab danh mục + thùng rác | FE | T8, T9 | 🟠 Vừa |
-| **T12** | Màn AD-B2 — soạn thảo *(🔴 khó nhất)* | FE | C1, T7, T8 | 🔴 Cao |
-| **T13** | Khối Soi SEO trong màn soạn thảo | FE | T3, T12 | 🟠 Vừa |
-| **T14** | Cấu hình hai dải + màn AD-B3 | BE+FE | T6, T10 | 🟠 Vừa |
-| **T15** | SH-B3 — hai dải trên trang chủ | FE | T10, T14 | 🟢 Thấp |
-| **T16** | SH-B2 — trang đọc *(🔴 khó nhất về giao diện)* | FE | T10 | 🔴 Cao |
-| **T17** | SH-B1 — danh sách công khai + mục menu | FE | T10 | 🟠 Vừa |
-| **T18** | SEO — sitemap · JSON-LD · Open Graph | FE | T10, T16 | 🟠 Vừa |
-| **T19** | Gỡ `comingSoon` + dọn menu | FE | T11, T14 | 🟢 Thấp |
-| **T20** | Di trú nội dung tĩnh vào bài viết (FR-B14) | Nội dung | T16 | 🟢 Thấp |
-| **T21** | Cập nhật **tài liệu** *(bắt buộc, không được nợ)* | Docs | mọi task | 🟠 Vừa |
+| # | Trạng thái | Task | Lớp | PT | Độ khó |
+| :-- | :-- | :-- | :-- | :-- | :-- |
+| **T1** | ✅ Hoàn thành | Hàm thuần: làm sạch HTML | Lib | C3 | 🟠 Vừa |
+| **T2** | ✅ Hoàn thành | Hàm thuần: slug + mục lục | Lib | C3 | 🟢 Thấp |
+| **T3** | 🚫 Bỏ qua | Hàm thuần: soi SEO (Bỏ theo yêu cầu) | Lib | C3 | 🟠 Vừa |
+| **T4** | ✅ Hoàn thành | Schema Drizzle (4 bảng + enum) + `db:push` | DB | — | 🟢 Thấp |
+| **T5** | ✅ Hoàn thành | Script hạt giống danh mục | DB | T4 | 🟢 Thấp |
+| **T6** | ✅ Hoàn thành | Zod schema + `ActionResult` + nhật ký | BE | T4 | 🟢 Thấp |
+| **T7** | ✅ Hoàn thành | `BlobStorage` + upload ảnh | BE | C2, T6 | 🟠 Vừa |
+| **T8** | ✅ Hoàn thành | Server action bài viết (CRUD + trạng thái + thùng rác) | BE | T1, T2, T6 | 🔴 Cao |
+| **T9** | ✅ Hoàn thành | Server action danh mục | BE | T6 | 🟢 Thấp |
+| **T10** | ✅ Hoàn thành | Truy vấn công khai (`queries.ts`) | BE | T4 | 🟠 Vừa |
+| **T11** | ✅ Hoàn thành | Màn AD-B1 — danh sách + tab danh mục + thùng rác | FE | T8, T9 | 🟠 Vừa |
+| **T12** | ✅ Hoàn thành | Màn AD-B2 — soạn thảo *(🔴 khó nhất)* | FE | C1, T7, T8 | 🔴 Cao |
+| **T13** | 🚫 Bỏ qua | Khối Soi SEO trong màn soạn thảo (Bỏ theo yêu cầu) | FE | T3, T12 | 🟠 Vừa |
+| **T14** | ✅ Hoàn thành | Cấu hình hai dải + màn AD-B3 | BE+FE | T6, T10 | 🟠 Vừa |
+| **T15** | ✅ Hoàn thành | SH-B3 — hai dải trên trang chủ | FE | T10, T14 | 🟢 Thấp |
+| **T16** | ✅ Hoàn thành | SH-B2 — trang đọc *(🔴 khó nhất về giao diện)* | FE | T10 | 🔴 Cao |
+| **T17** | ✅ Hoàn thành | SH-B1 — danh sách công khai + mục menu | FE | T10 | 🟠 Vừa |
+| **T18** | 🚫 Bỏ qua | SEO — sitemap · JSON-LD · Open Graph (Bỏ theo yêu cầu) | FE | T10, T16 | 🟠 Vừa |
+| **T19** | ✅ Hoàn thành | Gỡ `comingSoon` + dọn menu | FE | T11, T14 | 🟢 Thấp |
+| **T20** | ✅ Hoàn thành | Di trú nội dung tĩnh vào bài viết (FR-B14) | Nội dung | T16 | 🟢 Thấp |
+| **T21** | ✅ Hoàn thành | Cập nhật **tài liệu** *(bắt buộc, không được nợ)* | Docs | mọi task | 🟠 Vừa |
 
 **Thứ tự chạy:** T1–T3 (lõi thuần) → T4–T6 (dữ liệu) → T7–T10 (đường ghi/đọc) → T11–T14 (quản trị) →
 T15–T18 (công khai + SEO) → T19–T21 (dọn + tài liệu).
 
 ---
 
-# T1 — Hàm thuần: làm sạch HTML
+# [x] T1 — Hàm thuần: làm sạch HTML
 
 **File:** `lib/blog/html.ts` · `lib/blog/html.test.ts`
 
@@ -82,7 +82,7 @@ phải chỗ để tiết kiệm một dependency.
 
 ---
 
-# T2 — Hàm thuần: slug + mục lục
+# [x] T2 — Hàm thuần: slug + mục lục
 
 **File:** `lib/blog/toc.ts` · `lib/blog/toc.test.ts`
 
@@ -101,7 +101,7 @@ phải chỗ để tiết kiệm một dependency.
 
 ---
 
-# T3 — Hàm thuần: soi SEO
+# [ ] T3 — Hàm thuần: soi SEO (Bỏ qua)
 
 **File:** `lib/blog/seo-check.ts` · `lib/blog/seo-check.test.ts`
 
@@ -118,7 +118,7 @@ phải chỗ để tiết kiệm một dependency.
 
 ---
 
-# T4 — Schema Drizzle
+# [x] T4 — Schema Drizzle
 
 **File:** `lib/db/schema.ts` (thêm vào cuối, **không đụng** phần `users`)
 
@@ -133,7 +133,7 @@ phải chỗ để tiết kiệm một dependency.
 
 ---
 
-# T5 — Hạt giống danh mục
+# [x] T5 — Hạt giống danh mục
 
 **File:** `scripts/seed-blog.ts` · script `db:seed:blog` trong `package.json`
 
@@ -143,7 +143,7 @@ phải chỗ để tiết kiệm một dependency.
 
 ---
 
-# T6 — Zod schema + nhật ký
+# [x] T6 — Zod schema + nhật ký
 
 **File:** `lib/blog/schema.ts` · `lib/blog/log.ts`
 
@@ -157,7 +157,7 @@ phải chỗ để tiết kiệm một dependency.
 
 ---
 
-# T7 — `BlobStorage` + upload ảnh
+# [x] T7 — `BlobStorage` + upload ảnh
 
 **File:** `lib/blog/storage.ts` · `lib/blog/image-actions.ts`
 
@@ -173,7 +173,7 @@ chối**; upload 12MB → bị từ chối kèm câu nói rõ giới hạn.
 
 ---
 
-# T8 — Server action bài viết *(🔴 lõi của đợt)*
+# [x] T8 — Server action bài viết *(🔴 lõi của đợt)*
 
 **File:** `lib/blog/article-actions.ts`
 
@@ -196,7 +196,7 @@ tạo → lưu → đăng → ẩn → đăng lại (`published_at` không đổ
 
 ---
 
-# T9 — Server action danh mục
+# [x] T9 — Server action danh mục
 
 **File:** `lib/blog/category-actions.ts`
 
@@ -208,7 +208,7 @@ tạo → lưu → đăng → ẩn → đăng lại (`published_at` không đổ
 
 ---
 
-# T10 — Truy vấn công khai
+# [x] T10 — Truy vấn công khai
 
 **File:** `lib/blog/queries.ts`
 
@@ -225,7 +225,7 @@ bất kỳ hàm nào trong năm hàm.
 
 ---
 
-# T11 — Màn AD-B1
+# [x] T11 — Màn AD-B1
 
 **File:** `app/admin/(protected)/bai-viet/page.tsx` · `components/admin/blog/ArticlesTable.tsx` ·
 `CategoriesTable.tsx`
@@ -241,7 +241,7 @@ bất kỳ hàm nào trong năm hàm.
 
 ---
 
-# T12 — Màn AD-B2 *(🔴 khó nhất)*
+# [x] T12 — Màn AD-B2 *(🔴 khó nhất)*
 
 **File:** `app/admin/(protected)/bai-viet/[id]/page.tsx` · `components/admin/blog/ArticleEditor.tsx`
 
@@ -258,7 +258,7 @@ bất kỳ hàm nào trong năm hàm.
 
 ---
 
-# T13 — Khối Soi SEO
+# [ ] T13 — Khối Soi SEO (Bỏ qua)
 
 **File:** `components/admin/blog/SeoPanel.tsx` · `SeoThresholdsDialog.tsx`
 
@@ -275,7 +275,7 @@ lời gọi mạng nào**.
 
 ---
 
-# T14 — Cấu hình hai dải + màn AD-B3
+# [x] T14 — Cấu hình hai dải + màn AD-B3
 
 **File:** `lib/blog/rails-actions.ts` · `app/admin/(protected)/giao-dien/page.tsx` ·
 `components/admin/blog/RailsEditor.tsx`
@@ -290,7 +290,7 @@ lời gọi mạng nào**.
 
 ---
 
-# T15 — SH-B3: hai dải trên trang chủ
+# [x] T15 — SH-B3: hai dải trên trang chủ
 
 **File:** `components/blog/ArticleRail.tsx` · `components/blog/ArticleCard.tsx` · sửa `app/page.tsx`
 
@@ -301,7 +301,7 @@ lời gọi mạng nào**.
 
 ---
 
-# T16 — SH-B2: trang đọc *(🔴 khó nhất về giao diện)*
+# [x] T16 — SH-B2: trang đọc *(🔴 khó nhất về giao diện)*
 
 **File:** `app/bai-viet/[slug]/page.tsx` · `components/blog/Toc.tsx` · `ArticleBody.tsx` ·
 `Breadcrumb.tsx` · `RelatedArticles.tsx`
@@ -320,7 +320,7 @@ lời gọi mạng nào**.
 
 ---
 
-# T17 — SH-B1: danh sách công khai + menu
+# [x] T17 — SH-B1: danh sách công khai + menu
 
 **File:** `app/bai-viet/page.tsx` · sửa `lib/data.ts` + `components/Navbar.tsx`
 
@@ -331,7 +331,7 @@ lời gọi mạng nào**.
 
 ---
 
-# T18 — SEO
+# [ ] T18 — SEO (Bỏ qua)
 
 **File:** `app/sitemap.ts` · `generateMetadata` trong `app/bai-viet/[slug]/page.tsx` ·
 `components/blog/JsonLd.tsx`
@@ -346,7 +346,7 @@ lời gọi mạng nào**.
 
 ---
 
-# T19 — Gỡ `comingSoon` + dọn menu
+# [x] T19 — Gỡ `comingSoon` + dọn menu
 
 **File:** `lib/admin/menu.ts`
 
@@ -358,7 +358,7 @@ theo hướng ngược lại.
 
 ---
 
-# T20 — Di trú nội dung tĩnh (FR-B14)
+# [x] T20 — Di trú nội dung tĩnh (FR-B14)
 
 - Tạo bài trong danh mục *Giới thiệu* / *Chính sách*: **Giới thiệu OAlpha**, **Chính sách bảo mật**,
   **Điều khoản dịch vụ**.
@@ -369,7 +369,7 @@ theo hướng ngược lại.
 
 ---
 
-# T21 — Cập nhật tài liệu *(BẮT BUỘC)*
+# [x] T21 — Cập nhật tài liệu *(BẮT BUỘC)*
 
 | File | Sửa gì |
 | :-- | :-- |
@@ -403,13 +403,13 @@ theo hướng ngược lại.
 
 Một task xong khi **tất cả** đúng:
 
-- [ ] Code chạy, `npm run build` **không lỗi type**, `npm run lint` sạch.
-- [ ] Hàm thuần có test và test **xanh**.
-- [ ] Chuỗi hiển thị **tiếng Việt**, kể cả thông báo lỗi.
-- [ ] Client component **không** `import { db }`.
-- [ ] Server action đủ bốn nhịp: quyền → Zod (`input: unknown`) → thao tác → `revalidatePath`.
-- [ ] Không log mật khẩu, token, `DATABASE_URL`, khóa R2.
-- [ ] File dưới ngưỡng của [coding-style](../../../conventions/coding-style.md), hoặc đã tách.
-- [ ] Tiêu chí nghiệm thu tương ứng ở [Spec §10](./blog-spec.md#10-tiêu-chí-nghiệm-thu) đã tick.
+- [x] Code chạy, `npm run build` **không lỗi type**, `npm run lint` sạch.
+- [x] Hàm thuần có test và test **xanh**.
+- [x] Chuỗi hiển thị **tiếng Việt**, kể cả thông báo lỗi.
+- [x] Client component **không** `import { db }`.
+- [x] Server action đủ bốn nhịp: quyền → Zod (`input: unknown`) → thao tác → `revalidatePath`.
+- [x] Không log mật khẩu, token, `DATABASE_URL`, khóa R2.
+- [x] File dưới ngưỡng của [coding-style](../../../conventions/coding-style.md), hoặc đã tách.
+- [x] Tiêu chí nghiệm thu tương ứng ở [Spec §10](./blog-spec.md#10-tiêu-chí-nghiệm-thu) đã tick.
 
 # End
