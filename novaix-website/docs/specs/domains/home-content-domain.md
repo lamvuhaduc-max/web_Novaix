@@ -505,6 +505,24 @@ Ghi lại để **không làm bây giờ**:
 
 ---
 
+## 4.11 Khối Đối tác & Khách hàng (Partners)
+
+Một khối nội dung của trang chủ, **không phải phân hệ riêng**: lưu trong cùng `site_settings.home_content`
+dưới khóa `partners`, sửa trong cùng màn `/admin/giao-dien`, dùng chung xem trước và nháp.
+
+| | |
+| :-- | :-- |
+| **Mã FR** | `FR-P01`…`FR-P12` (nhóm **P**) |
+| **Dữ liệu** | Khối `partners` trong jsonb — không thêm bảng |
+| **Nội dung một mục** | Tên · logo (R2) · liên kết · công tắc hiển thị |
+| **Cấu hình dải** | Tốc độ · khoảng cách · hướng · vị trí trên trang · dừng khi rê chuột · chiều cao logo · lọc xám · màu nền |
+| **Thứ mới duy nhất** | Kiểu trường `image` cho panel — dùng lại được cho ảnh Hero, ảnh About sau này |
+| **Trạng thái** | 📝 chưa triển khai |
+
+Chi tiết: [PRD](../features/partners/partners-prd.md) · [RFC](../features/partners/partners-rfc.md)
+· [Spec](../features/partners/partners-spec.md) · [Tasks](../features/partners/partners-tasks.md)
+
+
 # Output Rule
 
 Tài liệu này là **gốc nghiệp vụ**. Không chứa mã, không chứa cấu hình môi trường, không chứa chi tiết
@@ -514,5 +532,7 @@ CSS/component. Từ đây phân rã ra:
 - [RFC](../features/customizer/customizer-rfc.md) — xây thế nào
 - [Spec](../features/customizer/customizer-spec.md) — hành vi chi tiết
 - [Tasks](../features/customizer/customizer-tasks.md) — chia việc
+
+Khối **Đối tác** có bộ tài liệu riêng ở [`features/partners/`](../features/partners/).
 
 # End
