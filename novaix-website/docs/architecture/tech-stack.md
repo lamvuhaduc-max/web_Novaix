@@ -140,6 +140,8 @@ Schema nhỏ, truy vấn đơn giản, nhưng ba điểm quyết định:
 
 ### 4.5. Một `DATABASE_URL`, hai driver — tự chọn
 
+> Cách chuyển từ Docker local sang Neon: xem runbook [`chuyen-sang-neon.md`](./chuyen-sang-neon.md).
+
 `lib/db/index.ts` đọc chuỗi kết nối rồi tự quyết: chứa `neon.tech`/`neon.build` → driver **HTTP của Neon**; còn lại → **`postgres-js`** với `max: 1` (tránh cạn kết nối khi Next hot-reload liên tục).
 
 Vì sao không bắt khai thêm một biến `DB_DRIVER`: hai nguồn sự thật cho cùng một việc thì sớm muộn cũng lệch nhau, và triệu chứng là *"local chạy, prod không"* — loại lỗi tốn nhiều giờ nhất để tìm.
