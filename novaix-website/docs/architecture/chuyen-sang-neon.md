@@ -193,3 +193,45 @@ Ba điều dễ quên:
 | Đăng nhập báo sai mật khẩu dù đúng | Bảng `users` chưa chuyển; hoặc đang trỏ nhầm database |
 | Request đầu tiên sau vài giờ rất chậm | Cold start của Neon ở gói thấp — bình thường, xem [`tech-stack.md` §4.11](./tech-stack.md) |
 | `npm run db:push` báo `ECONNREFUSED` | Thiếu `?sslmode=require` ở cuối chuỗi |
+| `relation "articles" does not exist` dù bảng vẫn còn | `search_path` rỗng — xem §11 |
+
+---
+
+# 11. Bẫy `search_path` khi nạp dữ liệu qua chuỗi pooled
+
+**Triệu chứng:** `npm run db:push` báo thành công, `\dt` thấy đủ bảng, nhưng ứng dụng lại lỗi
+`relation "articles" does not exist`. Trang chủ thì vẫn 200 nhưng hiện **nội dung mặc định** thay vì
+nội dung đã lưu — vì `getHomeContent` bọc lỗi lại để không làm sập trang.
+
+**Nguyên nhân:** `pg_dump` luôn chèn sẵn dòng này ở đầu file:
+
+```sql
+SELECT pg_catalog.set_config('search_path', '', false);
+```
+
+Tham số `false` nghĩa là "áp cho cả phiên", không chỉ giao dịch hiện tại. Với kết nối trực tiếp thì
+vô hại — đóng phiên là hết. Nhưng **chuỗi pooled đi qua PgBouncer, nơi kết nối tới máy chủ được dùng
+lại giữa nhiều client**: trạng thái đó dính lại và mọi phiên sau đều nhận `search_path` rỗng, nên
+truy vấn không có tiền tố schema đều không tìm thấy bảng.
+
+Drizzle sinh câu lệnh dạng `select ... from "articles"` (không kèm `public.`), nên dính trọn.
+
+**Script đã xử lý sẵn** — lọc bỏ dòng đó trước khi nạp, và đặt mặc định ở cấp role. Mục này để khi
+bạn tự chạy `psql < dump.sql` bằng tay thì biết đường tránh.
+
+**Nếu đã lỡ dính:**
+
+```bash
+# 1. Đặt mặc định ở cấp role (dùng chuỗi DIRECT — bỏ "-pooler" khỏi hostname)
+psql "<chuỗi-direct>" -c 'ALTER ROLE CURRENT_USER SET search_path TO "$user", public;'
+
+# 2. Ép các kết nối cũ đăng nhập lại để nhận mặc định mới
+psql "<chuỗi-direct>" -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity
+                          WHERE datname = current_database() AND pid <> pg_backend_pid();"
+
+# 3. Kiểm lại qua chuỗi POOLED — phải ra ["$user", public]
+psql "<chuỗi-pooled>" -c "SHOW search_path;"
+```
+
+Bước 2 là bắt buộc: `ALTER ROLE` chỉ có hiệu lực lúc đăng nhập, nên kết nối đang nằm sẵn trong pool
+vẫn giữ trạng thái hỏng cho tới khi bị hủy.

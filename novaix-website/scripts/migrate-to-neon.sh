@@ -65,7 +65,16 @@ docker exec "$CONTAINER" pg_dump -U "$LOCAL_USER" -d "$LOCAL_DB" \
   --exclude-table-data=activity_logs \
   > /tmp/oalpha-data.sql
 
-docker exec -i "$CONTAINER" psql "$NEON_URL" -v ON_ERROR_STOP=1 -q < /tmp/oalpha-data.sql
+# Bỏ dòng set_config('search_path','',false) mà pg_dump chèn sẵn.
+# Qua chuỗi pooled (PgBouncer), lệnh này KHÔNG chỉ ảnh hưởng phiên hiện tại: nó
+# dính lại trên kết nối dùng chung của pool, làm mọi phiên sau có search_path
+# rỗng và ứng dụng báo 'relation "articles" does not exist' dù bảng vẫn còn.
+grep -v "set_config('search_path', ''" /tmp/oalpha-data.sql > /tmp/oalpha-data-clean.sql
+
+docker exec -i "$CONTAINER" psql "$NEON_URL" -v ON_ERROR_STOP=1 -q < /tmp/oalpha-data-clean.sql
+
+# Đặt search_path mặc định ở cấp role để không phụ thuộc trạng thái phiên.
+docker exec "$CONTAINER" psql "$NEON_URL" -q -c 'ALTER ROLE CURRENT_USER SET search_path TO "$user", public;' || true
 
 echo
 echo "==> Đối chiếu số bản ghi"
