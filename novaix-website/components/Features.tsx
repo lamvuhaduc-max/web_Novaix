@@ -1,28 +1,96 @@
+"use client";
+
 import Reveal from "./Reveal";
 import type { FeaturesContent } from "@/lib/site-content/schema";
+import { safeHex } from "@/lib/site-content/color";
 
 export default function Features({ content }: { content: FeaturesContent }) {
+  const isCustom = Boolean(content.customColors);
+
+  const featuresStyle: React.CSSProperties & Record<string, string> = isCustom
+    ? {
+        backgroundColor: safeHex(content.bgColor, "#0b1120"),
+        "--features-kicker-color": safeHex(content.kickerColor, "#2dd4bf"),
+        "--features-title-color": safeHex(content.titleColor, "#eef2fb"),
+        "--features-desc-color": safeHex(content.descColor, "#9aa6c4"),
+        "--features-card-bg": safeHex(content.cardBgColor, "#131c31"),
+        "--features-badge-color": safeHex(content.badgeColor, "#2dd4bf"),
+      }
+    : {};
+
   return (
-    <section id="giai-phap" data-section="features" className="py-[110px] relative z-[2] bg-bg-2">
+    <section
+      id="giai-phap"
+      data-section="features"
+      className="py-[110px] relative z-[2] bg-bg-2"
+      style={featuresStyle}
+    >
       <div className="wrap">
         <div className="grid md:grid-cols-2 gap-[50px] items-center">
           <Reveal>
-            <span className="kicker">{content.kicker}</span>
-            <h2 className="font-extrabold my-[26px] mt-4" style={{ fontSize: "clamp(28px,4vw,44px)" }}>
+            <span
+              className="kicker"
+              style={
+                isCustom
+                  ? {
+                      color: "var(--features-kicker-color)",
+                      borderColor: `var(--features-kicker-color)66`,
+                      background: `var(--features-kicker-color)14`,
+                    }
+                  : undefined
+              }
+            >
+              {content.kicker}
+            </span>
+            <h2
+              className="font-extrabold my-[26px] mt-4"
+              style={{
+                fontSize: "clamp(28px,4vw,44px)",
+                color: isCustom ? "var(--features-title-color)" : undefined,
+              }}
+            >
               {content.title}
             </h2>
             <div className="flex flex-col gap-[18px]">
-              {content.items.map((f) => (
-                <div key={f.n} className="flex gap-4 items-start p-[18px] panel rounded-[14px]">
+              {(content.items || []).map((f) => (
+                <div
+                  key={f.n}
+                  className="flex gap-4 items-start p-[18px] panel rounded-[14px]"
+                  style={
+                    isCustom
+                      ? {
+                          backgroundColor: "var(--features-card-bg)",
+                        }
+                      : undefined
+                  }
+                >
                   <div
                     className="w-[34px] h-[34px] flex-none rounded-[9px] grid place-items-center font-extrabold font-display text-[#04121a]"
-                    style={{ background: "linear-gradient(135deg,#2dd4bf,#38bdf8)" }}
+                    style={{
+                      background: isCustom
+                        ? `linear-gradient(135deg, var(--features-badge-color), var(--theme-accent, #38bdf8))`
+                        : "linear-gradient(135deg,#2dd4bf,#38bdf8)",
+                    }}
                   >
                     {f.n}
                   </div>
                   <div>
-                    <h4 className="text-base mb-0.5">{f.title}</h4>
-                    <p className="text-muted text-sm">{f.desc}</p>
+                    <h4
+                      className="text-base mb-0.5 font-bold"
+                      style={{
+                        color: isCustom ? "var(--features-title-color)" : undefined,
+                      }}
+                    >
+                      {f.title}
+                    </h4>
+                    <p
+                      className="text-muted text-sm"
+                      style={{
+                        color: isCustom ? "var(--features-desc-color)" : undefined,
+                      }}
+                    >
+                      {f.desc}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -32,11 +100,19 @@ export default function Features({ content }: { content: FeaturesContent }) {
           <Reveal delay={0.15}>
             <div
               className="border border-line rounded-[20px] min-h-[340px] relative overflow-hidden grid place-items-center"
-              style={{ background: "linear-gradient(160deg,#0b1120,#0d1424)" }}
+              style={{
+                background: isCustom
+                  ? `linear-gradient(160deg, var(--features-card-bg), color-mix(in srgb, var(--features-card-bg) 70%, #000))`
+                  : "linear-gradient(160deg,#0b1120,#0d1424)",
+              }}
             >
               <div
                 className="relative w-[220px] h-[220px] rounded-full animate-spin18"
-                style={{ border: "1px dashed rgba(45,212,191,0.4)" }}
+                style={{
+                  border: isCustom
+                    ? `1px dashed color-mix(in srgb, var(--features-badge-color) 40%, transparent)`
+                    : "1px dashed rgba(45,212,191,0.4)",
+                }}
               >
                 <div
                   className="absolute left-1/2 top-1/2 w-[380px] h-[380px] rounded-full -translate-x-1/2 -translate-y-1/2"
@@ -44,7 +120,12 @@ export default function Features({ content }: { content: FeaturesContent }) {
                 />
                 <div
                   className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[74px] h-[74px] rounded-[18px] grid place-items-center font-extrabold font-display text-[#04121a] animate-spin18r"
-                  style={{ background: "linear-gradient(135deg,#2dd4bf,#38bdf8)", boxShadow: "var(--glow)" }}
+                  style={{
+                    background: isCustom
+                      ? `linear-gradient(135deg, var(--features-badge-color), var(--theme-accent, #38bdf8))`
+                      : "linear-gradient(135deg,#2dd4bf,#38bdf8)",
+                    boxShadow: "var(--glow)",
+                  }}
                 >
                   OAlpha
                 </div>
@@ -57,6 +138,13 @@ export default function Features({ content }: { content: FeaturesContent }) {
                   <div
                     key={i}
                     className={`absolute w-[42px] h-[42px] rounded-[11px] grid place-items-center text-[18px] border border-line bg-[#0d1424] ${d.s}`}
+                    style={
+                      isCustom
+                        ? {
+                            backgroundColor: "var(--features-card-bg)",
+                          }
+                        : undefined
+                    }
                   >
                     {d.e}
                   </div>

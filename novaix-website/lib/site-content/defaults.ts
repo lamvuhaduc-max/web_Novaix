@@ -2,7 +2,7 @@
 // Website đang chạy đọc nội dung từ site_settings.home_content — SỬA FILE NÀY KHÔNG ĐỔI TRANG ĐANG CHẠY.
 // Muốn đổi chữ trên web: /admin/giao-dien
 
-import type { HomeContent } from "./schema";
+import { DEFAULT_SECTION_ORDER, type HomeContent } from "./schema";
 
 export const DEFAULT_HOME_CONTENT: HomeContent = {
   v: 1,
@@ -13,8 +13,15 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     textColor: "#eef2fb",
     textMuted: "#9aa6c4",
     bgColor: "#070b16",
+    btnPrimaryBg: "#2dd4bf",
+    btnPrimaryText: "#04121a",
+    btnGhostBg: "#131c31",
+    btnGhostText: "#eef2fb",
+    btnGhostBorder: "#2dd4bf",
     borderRadius: 12,
   },
+  sectionOrder: [...DEFAULT_SECTION_ORDER],
+
   nav: {
     brandName: "OAlpha",
     items: [
@@ -35,6 +42,20 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     desc: "OAlpha kết nối bán hàng, sản xuất, kho vận, nhân sự và tài chính trên một nền tảng duy nhất — chuẩn hóa quy trình, tự động hóa nghiệp vụ và ra quyết định bằng dữ liệu thời gian thực.",
     ctaPrimary: "Đặt lịch demo miễn phí →",
     ctaSecondary: "Khám phá module",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    highlightColor: "#2dd4bf",
+    highlightAccentColor: "#38bdf8",
+    descColor: "#9aa6c4",
+    btnPrimaryBg: "#2dd4bf",
+    btnPrimaryText: "#04121a",
+    btnGhostBg: "#131c31",
+    btnGhostText: "#eef2fb",
+    btnGhostBorder: "#2dd4bf",
+    statsBgColor: "#0b1120",
+    statsBgOpacity: 60,
+    statsBorderColor: "#1e293b",
     stats: [
       { target: 40, suffix: "", label: "Module nghiệp vụ" },
       { target: 99, suffix: "%", label: "Uptime cam kết" },
@@ -42,6 +63,8 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
       { target: 24, suffix: "/7", label: "Hỗ trợ vận hành" },
     ],
   },
+
+
   marquee: {
     enabled: true,
     label: "Phù hợp với mọi lĩnh vực kinh doanh",
@@ -67,7 +90,15 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     kicker: "Về OAlpha",
     title: "Xây dựng nền tảng công nghệ cho doanh nghiệp Việt",
     desc: "OAlpha ra đời từ mong muốn giúp doanh nghiệp Việt chuyển đổi số thực chất — không chỉ là phần mềm mà còn là quy trình vận hành chuẩn, đội ngũ đồng hành và công nghệ phù hợp với thực tế địa phương.",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    descColor: "#9aa6c4",
+    bgColor: "#0b1120",
+    cardBgColor: "#131c31",
+    accentColor: "#2dd4bf",
     values: [
+
       {
         icon: "🎯",
         title: "Sứ mệnh",
@@ -115,7 +146,17 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     kicker: "Hệ sinh thái module",
     title: "Một nền tảng — đầy đủ nghiệp vụ doanh nghiệp",
     desc: "Triển khai từng phần hoặc trọn bộ. Các module dùng chung một cơ sở dữ liệu, nên dữ liệu chảy liền mạch giữa các phòng ban mà không cần nhập liệu lại.",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    descColor: "#9aa6c4",
+    bgColor: "#070b16",
+    cardBgColor: "#0d1424",
+    cardTitleColor: "#eef2fb",
+    cardDescColor: "#9aa6c4",
+    tagColor: "#38bdf8",
     items: [
+
       {
         icon: "🤝",
         title: "CRM — Quan hệ khách hàng",
@@ -176,6 +217,13 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     kicker: "Vì sao chọn OAlpha",
     title: "Không chỉ là phần mềm — là một hệ thống vận hành chuẩn hóa",
     desc: "Giải pháp chuyển đổi số đồng bộ cho toàn bộ quy trình của bạn.",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    descColor: "#9aa6c4",
+    bgColor: "#0b1120",
+    cardBgColor: "#131c31",
+    badgeColor: "#2dd4bf",
     items: [
       {
         n: 1,
@@ -203,6 +251,13 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     kicker: "Lộ trình triển khai",
     title: "Từ khảo sát đến vận hành — 5 bước rõ ràng",
     desc: "Phương pháp triển khai chuẩn hóa giúp doanh nghiệp đưa hệ thống vào sử dụng nhanh, đúng quy trình và đo lường được hiệu quả.",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    descColor: "#9aa6c4",
+    bgColor: "#070b16",
+    cardBgColor: "#0d1424",
+    stepNumberColor: "#38bdf8",
     items: [
       {
         n: "BƯỚC 01",
@@ -235,6 +290,13 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     kicker: "Giải pháp theo đối tượng",
     title: "Phù hợp với từng giai đoạn phát triển",
     desc: "Dù bạn là doanh nghiệp đang tăng trưởng nóng hay đã có quy mô, OAlpha có gói phù hợp.",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    descColor: "#9aa6c4",
+    bgColor: "#0b1120",
+    cardBgColor: "#131c31",
+    accentColor: "#38bdf8",
     items: [
       {
         icon: "🚀",
@@ -272,6 +334,14 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     kicker: "Bảng giá",
     title: "Linh hoạt theo quy mô doanh nghiệp",
     desc: "Không có gói cứng nhắc — chúng tôi tư vấn lộ trình phù hợp dựa trên số người dùng, module cần thiết và đặc thù ngành.",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    descColor: "#9aa6c4",
+    bgColor: "#070b16",
+    cardBgColor: "#0d1424",
+    popularBorderColor: "#2dd4bf",
+    checkColor: "#2dd4bf",
     tiers: [
       {
         label: "Khởi đầu",
@@ -336,6 +406,13 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     kicker: "Khách hàng nói gì",
     title: "Vận hành gọn hơn, quyết định nhanh hơn",
     desc: "Một vài chia sẻ minh họa về trải nghiệm chuẩn hóa quy trình cùng OAlpha.",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    descColor: "#9aa6c4",
+    bgColor: "#070b16",
+    cardBgColor: "#0d1424",
+    quoteColor: "#eef2fb",
     items: [
       {
         initials: "TM",
@@ -361,6 +438,13 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     kicker: "Câu hỏi thường gặp",
     title: "Những điều doanh nghiệp hay hỏi",
     desc: "Chưa tìm thấy câu trả lời? Liên hệ đội ngũ tư vấn — chúng tôi phản hồi trong 2 giờ làm việc.",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    descColor: "#9aa6c4",
+    bgColor: "#0b1120",
+    cardBgColor: "#131c31",
+    activeQuestionColor: "#2dd4bf",
     items: [
       {
         q: "OAlpha phù hợp với quy mô doanh nghiệp nào?",
@@ -378,6 +462,7 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
         q: "OAlpha có tích hợp được với phần mềm đang dùng không?",
         a: "Có. OAlpha hỗ trợ tích hợp qua API REST & Webhook tiêu chuẩn. Chúng tôi đã có connector sẵn với các sàn TMĐT (Shopee, Lazada, TikTok Shop), đơn vị vận chuyển (GHN, GHTK, J&T), ngân hàng và phần mềm kế toán MISA.",
       },
+
       {
         q: "Chi phí có bao gồm hỗ trợ sau triển khai không?",
         a: "Có. Tất cả các gói đều bao gồm hỗ trợ kỹ thuật trong năm đầu tiên. Từ năm thứ hai, chúng tôi cung cấp gói duy trì linh hoạt theo nhu cầu với cam kết phản hồi trong vòng 4 giờ trong giờ hành chính.",
@@ -388,11 +473,34 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
       },
     ],
   },
+  articles: {
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    categoryBadgeColor: "#2dd4bf",
+    categoryBadgeBg: "#0b1120",
+    cardTitleColor: "#eef2fb",
+    cardDescColor: "#9aa6c4",
+    cardBgColor: "#0d1424",
+    readMoreColor: "#2dd4bf",
+    bgColor: "#030712",
+  },
+
   cta: {
+
     kicker: "Liên hệ",
     title: "Bắt đầu hành trình số hóa ngay hôm nay",
     desc: "Đặt lịch demo 30 phút — chúng tôi phân tích quy trình và đề xuất lộ trình phù hợp, hoàn toàn miễn phí và không ràng buộc.",
+    customColors: false,
+    kickerColor: "#2dd4bf",
+    titleColor: "#eef2fb",
+    descColor: "#9aa6c4",
+    bgColor: "#070b16",
+    cardBgColor: "#0d1424",
+    btnBgColor: "#2dd4bf",
+    btnTextColor: "#04121a",
     contacts: [
+
       { icon: "📍", label: "Địa chỉ", value: "14 Đường 41, An Khánh, TP. Thủ Đức, TP. Hồ Chí Minh" },
       { icon: "✉️", label: "Email", value: "OAlphaGlobal@oalpha.vn" },
       { icon: "📞", label: "Điện thoại", value: "+84 (0) xxx xxx xxx" },

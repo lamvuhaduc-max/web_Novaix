@@ -2,6 +2,7 @@
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import ColorInput from "./ColorInput";
@@ -28,6 +29,11 @@ const PRESETS: Array<{
       textColor: "#EEF2FB",
       textMuted: "#9AA6C4",
       bgColor: "#070B16",
+      btnPrimaryBg: "#2563EB",
+      btnPrimaryText: "#FFFFFF",
+      btnGhostBg: "#131C31",
+      btnGhostText: "#EEF2FB",
+      btnGhostBorder: "#2563EB",
       borderRadius: 12,
     },
   },
@@ -41,6 +47,11 @@ const PRESETS: Array<{
       textColor: "#EEF2FB",
       textMuted: "#9AA6C4",
       bgColor: "#070B16",
+      btnPrimaryBg: "#059669",
+      btnPrimaryText: "#FFFFFF",
+      btnGhostBg: "#131C31",
+      btnGhostText: "#EEF2FB",
+      btnGhostBorder: "#059669",
       borderRadius: 12,
     },
   },
@@ -54,6 +65,11 @@ const PRESETS: Array<{
       textColor: "#EEF2FB",
       textMuted: "#9AA6C4",
       bgColor: "#070B16",
+      btnPrimaryBg: "#DC2626",
+      btnPrimaryText: "#FFFFFF",
+      btnGhostBg: "#131C31",
+      btnGhostText: "#EEF2FB",
+      btnGhostBorder: "#DC2626",
       borderRadius: 12,
     },
   },
@@ -67,6 +83,11 @@ const PRESETS: Array<{
       textColor: "#EEF2FB",
       textMuted: "#9AA6C4",
       bgColor: "#070B16",
+      btnPrimaryBg: "#7C3AED",
+      btnPrimaryText: "#FFFFFF",
+      btnGhostBg: "#131C31",
+      btnGhostText: "#EEF2FB",
+      btnGhostBorder: "#7C3AED",
       borderRadius: 12,
     },
   },
@@ -101,7 +122,7 @@ export default function ThemeSection({
 
       {/* Preset Buttons Grid */}
       <Box
-        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, mb: 3 }}
+        sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, mb: 2.5 }}
       >
         {PRESETS.map((preset) => {
           const isSelected =
@@ -153,9 +174,16 @@ export default function ThemeSection({
         })}
       </Box>
 
-      {/* Danh sách các màu */}
+      {/* Nhóm màu chính & thương hiệu */}
+      <Typography
+        variant="caption"
+        sx={{ fontWeight: 700, letterSpacing: "0.05em", color: "text.secondary", mb: 1, display: "block" }}
+      >
+        MÀU THƯƠNG HIỆU & ĐIỂM NHẤN
+      </Typography>
+
       <ColorInput
-        label="Màu chính"
+        label="Màu chính (Primary)"
         value={theme.primary}
         onChange={(val) => updateField("primary", val)}
       />
@@ -167,31 +195,93 @@ export default function ThemeSection({
       />
 
       <ColorInput
-        label="Màu nhấn"
+        label="Màu nhấn (Accent)"
         value={theme.accent}
         onChange={(val) => updateField("accent", val)}
       />
 
+      <Divider sx={{ my: 2 }} />
+
+      {/* Nhóm màu chữ & nền */}
+      <Typography
+        variant="caption"
+        sx={{ fontWeight: 700, letterSpacing: "0.05em", color: "text.secondary", mb: 1, display: "block" }}
+      >
+        MÀU CHỮ & NỀN TOÀN TRANG
+      </Typography>
+
       <ColorInput
-        label="Màu chữ"
+        label="Màu chữ chính"
         value={theme.textColor}
         onChange={(val) => updateField("textColor", val)}
       />
 
       <ColorInput
-        label="Chữ phụ"
+        label="Màu chữ phụ (Muted)"
         value={theme.textMuted}
         onChange={(val) => updateField("textMuted", val)}
       />
 
       <ColorInput
-        label="Màu nền"
+        label="Màu nền toàn trang"
         value={theme.bgColor}
         onChange={(val) => updateField("bgColor", val)}
       />
 
+      <Divider sx={{ my: 2 }} />
+
+      {/* Nhóm nút chính (Primary Button) */}
+      <Typography
+        variant="caption"
+        sx={{ fontWeight: 700, letterSpacing: "0.05em", color: "text.secondary", mb: 1, display: "block" }}
+      >
+        NÚT CHÍNH (PRIMARY CTA)
+      </Typography>
+
+      <ColorInput
+        label="Màu nền nút chính"
+        value={theme.btnPrimaryBg}
+        onChange={(val) => updateField("btnPrimaryBg", val)}
+      />
+
+      <ColorInput
+        label="Màu chữ nút chính"
+        value={theme.btnPrimaryText}
+        onChange={(val) => updateField("btnPrimaryText", val)}
+      />
+
+      <Divider sx={{ my: 2 }} />
+
+      {/* Nhóm nút phụ (Ghost Button) */}
+      <Typography
+        variant="caption"
+        sx={{ fontWeight: 700, letterSpacing: "0.05em", color: "text.secondary", mb: 1, display: "block" }}
+      >
+        NÚT PHỤ (GHOST CTA)
+      </Typography>
+
+      <ColorInput
+        label="Màu nền nút phụ"
+        value={theme.btnGhostBg}
+        onChange={(val) => updateField("btnGhostBg", val)}
+      />
+
+      <ColorInput
+        label="Màu chữ nút phụ"
+        value={theme.btnGhostText}
+        onChange={(val) => updateField("btnGhostText", val)}
+      />
+
+      <ColorInput
+        label="Màu viền nút phụ"
+        value={theme.btnGhostBorder}
+        onChange={(val) => updateField("btnGhostBorder", val)}
+      />
+
+      <Divider sx={{ my: 2 }} />
+
       {/* Bo góc */}
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 1 }}>
         <Box
           sx={{
             display: "flex",
@@ -204,7 +294,7 @@ export default function ThemeSection({
             variant="body2"
             sx={{ fontWeight: 600, fontSize: "13px" }}
           >
-            Bo góc
+            Bo góc các thành phần
           </Typography>
           <Typography
             variant="caption"

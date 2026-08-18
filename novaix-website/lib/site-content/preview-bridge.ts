@@ -15,8 +15,12 @@ export type SectionKey =
   | "pricing"
   | "testimonials"
   | "faq"
+  | "articles"
   | "cta"
   | "footer";
+
+
+
 
 export type PreviewMessage =
   | { type: "preview:ready" }
