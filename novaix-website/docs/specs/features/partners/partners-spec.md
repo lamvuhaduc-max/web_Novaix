@@ -1,7 +1,11 @@
 # Spec — Dải Đối tác & Khách hàng (Partners Strip)
 
 > **PRD:** [`partners-prd.md`](./partners-prd.md) · **RFC:** [`partners-rfc.md`](./partners-rfc.md)
-> **Trạng thái:** 📝 chờ duyệt — đây là bản đặc tả để cài đặt, chưa có code.
+> **Trạng thái:** 📝 chờ duyệt — bản đặc tả để cài đặt, chưa có code.
+>
+> **Cập nhật 18/08/2026:** viết lại §2 và §4.5 cho khớp kiến trúc panel mới. Bản đầu mô tả cách khai
+> báo trường trong `SECTIONS_CONFIG`; cách đó **không còn dùng** — xem §2.1. Đồng thời **bỏ trường
+> `placement`** vì panel đã có sẵn tính năng sắp xếp khối dùng chung — xem §4.5.
 
 ---
 
@@ -22,7 +26,6 @@ export const partnerItemSchema = z.object({
 export const partnersSchema = z.object({
   enabled: z.boolean().default(true),
   label: text(60).default("Được tin dùng bởi"),
-  placement: z.enum(["sau-hero", "truoc-cta"]).default("sau-hero"),
 
   items: z.array(partnerItemSchema).max(24, "Tối đa 24 đối tác").default([]),
 
@@ -32,9 +35,12 @@ export const partnersSchema = z.object({
   direction: z.enum(["trai", "phai"]).default("trai"),
   pauseOnHover: z.boolean().default(true),
 
-  // Hiển thị
+  // Hiển thị logo
   logoHeight: z.number().int().min(20).max(96).default(40),
   grayscale: z.boolean().default(true),
+
+  // Màu — theo đúng quy ước customColors của các khối khác (xem §1.4)
+  customColors: z.boolean().default(false),
   bgColor: hexColor("#0b1120"),
   labelColor: hexColor("#5f6c8a"),
 });
@@ -55,10 +61,25 @@ export type PartnersContent = z.infer<typeof partnersSchema>;
 ```
 
 > ⚠️ **Không tăng `v`.** `v` là số phiên bản hình dạng dữ liệu; thêm một khối **có `.default()`** là
-> thay đổi tương thích ngược. `resolveHomeContent` sẽ tự trộn bản mặc định vào. Tăng `v` sẽ làm mọi
-> bản ghi hiện có fail parse và **toàn bộ nội dung trang chủ bị reset về mặc định**.
+> thay đổi tương thích ngược, `resolveHomeContent` tự trộn bản mặc định vào. Tăng `v` sẽ làm mọi bản
+> ghi hiện có fail parse và **toàn bộ nội dung trang chủ bị reset về mặc định**.
 
-## 1.2 Bản mặc định
+## 1.2 Đăng ký khối vào ba danh sách
+
+Khối mới phải có tên ở **cả ba** chỗ, thiếu một là hỏng im lặng:
+
+| Danh sách | Ở đâu | Thiếu thì sao |
+| :-- | :-- | :-- |
+| `DEFAULT_SECTION_ORDER` | `lib/site-content/schema.ts` | Khối không xuất hiện trong thứ tự, và `sectionOrder` lưu về sẽ **lọc mất** khóa này |
+| `RENDERABLE_SECTION_KEYS` | `components/preview/section-keys.ts` | Khối bị loại khỏi `DEFAULT_ORDER` lúc render → **biến mất khỏi trang chủ, không báo lỗi** |
+| `SectionKey` | `lib/site-content/preview-bridge.ts` | Bấm vào dải trong khung xem trước không mở đúng mục trong panel |
+
+Bộ self-test (§6) có phép kiểm đối chiếu hai danh sách đầu — thêm thiếu là test đỏ ngay.
+
+Vị trí chèn đề xuất trong `DEFAULT_SECTION_ORDER`: **sau `testimonials`**, để cụm bằng chứng xã hội
+(lời chứng thực → logo đối tác) nằm liền nhau. Người dùng đổi lại được bằng nút mũi tên trong panel.
+
+## 1.3 Bản mặc định
 
 `lib/site-content/defaults.ts` — khối `partners` mặc định **rỗng**, không bịa tên công ty:
 
@@ -66,7 +87,6 @@ export type PartnersContent = z.infer<typeof partnersSchema>;
 partners: {
   enabled: false,        // tắt cho tới khi có logo thật
   label: "Được tin dùng bởi",
-  placement: "sau-hero",
   items: [],
   speed: 40,
   gap: 72,
@@ -74,15 +94,24 @@ partners: {
   pauseOnHover: true,
   logoHeight: 40,
   grayscale: true,
+  customColors: false,
   bgColor: "#0b1120",
   labelColor: "#5f6c8a",
 },
 ```
 
-`enabled: false` mặc định vì dải rỗng không có gì để khoe, và bịa logo giả là điều
+`enabled: false` vì dải rỗng không có gì để khoe, và bịa logo giả là điều
 [coding-style](../../../conventions/coding-style.md) cấm ở mục nội dung mẫu.
 
-## 1.3 Ràng buộc và lý do
+## 1.4 Quy ước `customColors`
+
+Mọi khối trang chủ hiện dùng chung một quy ước: `customColors: false` nghĩa là **thừa hưởng màu
+theme chung**; bật lên mới dùng `bgColor` / `labelColor` riêng. `PartnersSection` phải có nút
+*"Dùng lại màu theme"* đặt `customColors: false` cùng các màu về mặc định, giống `FAQSection`.
+
+Component công khai chỉ áp màu riêng khi `customColors === true` — xem §4.2.
+
+## 1.5 Ràng buộc và lý do
 
 | Trường | Ràng buộc | Vì sao |
 | :-- | :-- | :-- |
@@ -95,24 +124,29 @@ partners: {
 
 ---
 
-# 2. Cấu hình panel quản trị
+# 2. Giao diện quản trị
 
-## 2.1 Kiểu trường mới `image`
+## 2.1 Kiến trúc panel hiện tại — đọc kỹ trước khi code
 
-`lib/site-content/fields.ts`:
+`lib/site-content/fields.ts` **từng** khai báo mọi trường theo kiểu dữ liệu (`type: "text"`,
+`"number"`, `"list"`…) và panel tự dựng giao diện từ đó. **Cách này đã bị thay thế.**
 
-```ts
-export type ImageField = BaseField & {
-  type: "image";
-  folder: "blog" | "partners";
-  maxSizeMB?: number;      // mặc định 2
-  aspectHint?: string;     // ví dụ "PNG nền trong suốt, cao 80–200px"
-};
+Hiện tại:
 
-export type SimpleFieldDef = TextField | NumberField | ImageField;
+- `SECTIONS_CONFIG` chỉ còn là **sổ đăng ký metadata**: `key`, `title`, `iconName`, `category`, và
+  `fields: []` rỗng cho mọi khối.
+- `SectionPanel.renderSectionBody()` là một chuỗi `if (sec.key === "...")` **điều hướng sang một
+  component riêng cho từng khối**: `HeroSection.tsx`, `AboutSection.tsx`, `FAQSection.tsx`…
+
+Nghĩa là thêm một khối mới cần **ba việc**, không phải một dòng khai báo:
+
+```text
+1. lib/site-content/fields.ts       → thêm metadata vào SECTIONS_CONFIG (fields: [])
+2. components/admin/customizer/PartnersSection.tsx  → viết giao diện sửa
+3. components/admin/customizer/SectionPanel.tsx     → thêm nhánh điều hướng
 ```
 
-## 2.2 Khai báo khối `partners` trong `SECTIONS_CONFIG`
+## 2.2 Metadata trong `SECTIONS_CONFIG`
 
 ```ts
 {
@@ -120,64 +154,96 @@ export type SimpleFieldDef = TextField | NumberField | ImageField;
   title: "Đối tác & Khách hàng",
   iconName: "IconBuildingStore",
   category: "TRANG CHỦ",
-  fields: [
-    { key: "enabled",  path: "partners.enabled",  label: "Hiển thị dải đối tác", type: "boolean" },
-    { key: "label",    path: "partners.label",    label: "Dòng nhãn",  type: "text", max: 60 },
-    { key: "placement", path: "partners.placement", label: "Vị trí trên trang", type: "select",
-      options: [
-        { value: "sau-hero",  label: "Ngay dưới khối Hero" },
-        { value: "truoc-cta", label: "Trước khối kêu gọi hành động" },
-      ] },
+  fields: [],
+},
+```
 
-    { key: "items", path: "partners.items", type: "list", label: "Danh sách đối tác",
-      min: 0, max: 24,
-      itemTitle: (item, i) => item.name || `Đối tác ${i + 1}`,
-      createEmpty: () => ({ name: "", logo: "", link: "", visible: true }),
-      itemFields: [
-        { key: "name",    path: "name",    label: "Tên đối tác", type: "text", max: 60, required: true,
-          helperText: "Dùng làm mô tả ảnh cho trình đọc màn hình" },
-        { key: "logo",    path: "logo",    label: "Logo", type: "image", folder: "partners",
-          maxSizeMB: 2, aspectHint: "PNG nền trong suốt, cao 80–200px" },
-        { key: "link",    path: "link",    label: "Liên kết", type: "text", max: 300,
-          helperText: "Để trống thì logo không bấm được" },
-        { key: "visible", path: "visible", label: "Hiển thị", type: "boolean" },
-      ] },
+`iconName` phải được import và map trong `SectionPanel.tsx` cùng chỗ với các icon khác.
 
-    { key: "speed", path: "partners.speed", label: "Tốc độ chạy (giây/vòng)", type: "number",
-      min: 5, max: 120,
-      helperText: "Số càng nhỏ chạy càng nhanh. Thêm logo mà giữ nguyên số này thì dải chạy nhanh hơn." },
-    { key: "gap",       path: "partners.gap",       label: "Khoảng cách giữa các logo (px)", type: "number", min: 20, max: 400 },
-    { key: "direction", path: "partners.direction", label: "Hướng chạy", type: "select",
-      options: [{ value: "trai", label: "Sang trái" }, { value: "phai", label: "Sang phải" }] },
-    { key: "pauseOnHover", path: "partners.pauseOnHover", label: "Dừng khi rê chuột", type: "boolean" },
+## 2.3 Nhánh điều hướng trong `SectionPanel.tsx`
 
-    { key: "logoHeight", path: "partners.logoHeight", label: "Chiều cao logo (px)", type: "number", min: 20, max: 96 },
-    { key: "grayscale",  path: "partners.grayscale",  label: "Lọc xám, hiện màu khi rê chuột", type: "boolean" },
-    { key: "bgColor",    path: "partners.bgColor",    label: "Màu nền dải",  type: "color" },
-    { key: "labelColor", path: "partners.labelColor", label: "Màu dòng nhãn", type: "color" },
-  ],
+```tsx
+if (sec.key === "partners") {
+  return (
+    <PartnersSection
+      partners={content.partners}
+      onChange={(newPartners) => onChange("partners", newPartners)}
+    />
+  );
 }
 ```
 
-> Hai kiểu `boolean` và `select` cũng chưa có trong `fields.ts` hiện tại — xem
-> [tasks §T2](./partners-tasks.md). Chúng là kiểu chung, không riêng gì đối tác.
+## 2.4 `PartnersSection.tsx` — khuôn theo `FAQSection.tsx`
 
-## 2.3 `ImageInput.tsx` — hành vi
+Chữ ký và lối viết bám đúng các khối đã có:
 
-Đặt tại `components/admin/customizer/ImageInput.tsx`, cạnh `ColorInput.tsx`.
+```tsx
+export default function PartnersSection({
+  partners,
+  onChange,
+}: {
+  partners: PartnersContent;
+  onChange: (next: PartnersContent) => void;
+}) {
+  const updateField = <K extends keyof PartnersContent>(key: K, val: PartnersContent[K]) => {
+    onChange({ ...partners, [key]: val });
+  };
+  // ...
+}
+```
+
+Bố cục trong khối gập:
+
+| Vùng | Điều khiển | Ghi chú |
+| :-- | :-- | :-- |
+| Bật/tắt | `Switch` | `enabled` |
+| Dòng nhãn | `TextField` | `label`, tối đa 60 |
+| **Danh sách đối tác** | Accordion lồng, mỗi mục có: `TextField` tên · `ImageInput` logo · `TextField` liên kết · `Switch` hiển thị · nút ↑ ↓ · nút xóa (có `Dialog` xác nhận) | Theo đúng khuôn danh sách của `FAQSection` |
+| Nút *"Thêm đối tác"* | `Button` + `IconPlus` | Khóa lại khi đã đủ 24 mục |
+| Tốc độ chạy | **`Slider`** 5–120, nhãn hiện `{speed}s / vòng` | Giống hệt `MarqueeSection.speed` |
+| Khoảng cách | **`Slider`** 20–400, nhãn hiện `{gap}px` | Giống `MarqueeSection.gap` |
+| Chiều cao logo | **`Slider`** 20–96 | |
+| Hướng chạy | `ToggleButtonGroup` hoặc `Select` 2 lựa chọn | |
+| Dừng khi rê chuột · Lọc xám | `Switch` | |
+| Màu | `ColorInput` cho `bgColor`, `labelColor` + nút *"Dùng lại màu theme"* | Chỉ hiện khi `customColors` bật |
+
+Ghi chú bắt buộc dưới ô tốc độ: *"Thêm logo mà giữ nguyên số giây thì dải chạy nhanh hơn."*
+
+> 🔴 **Không truyền giá trị người dùng nhập thẳng vào `sx` của MUI.** Emotion biên dịch `sx` thành
+> CSS thật của trang quản trị — một chuỗi màu hỏng đã từng làm trắng toàn bộ màn admin. Mọi màu đi
+> qua `safeHex()` ở `lib/site-content/color.ts`. Xem
+> [coding-style](../../../conventions/coding-style.md) và
+> [biên bản rà soát](../../../reviews/blog-review-2026-08-17.md).
+
+## 2.5 `ImageInput.tsx` — component mới
+
+Đặt tại `components/admin/customizer/ImageInput.tsx`, cạnh `ColorInput.tsx`. **Không** khai thêm
+kiểu trường vào `fields.ts` — kiến trúc đó không còn dùng; đây là một component thường, nhận props
+trực tiếp:
+
+```tsx
+export default function ImageInput({
+  label,
+  value,
+  onChange,
+  folder,          // "partners" | "blog"
+  maxSizeMB = 2,
+  hint,            // ví dụ "PNG nền trong suốt, cao 80–200px"
+}: { ... })
+```
 
 | Trạng thái | Hiển thị |
 | :-- | :-- |
-| Chưa có ảnh | Vùng thả tệp + nút *"Chọn tệp"* + dòng gợi ý `aspectHint` |
-| Đang tải lên | Thanh tiến trình, nút bị khóa |
+| Chưa có ảnh | Vùng thả tệp + nút *"Chọn tệp"* + dòng gợi ý `hint` |
+| Đang tải lên | `LinearProgress`, nút bị khóa |
 | Đã có ảnh | Ảnh xem trước trên **nền ca-rô** (thấy được vùng trong suốt) + nút *"Đổi ảnh"* / *"Gỡ ảnh"* |
-| Lỗi | `Alert` đỏ ngay dưới ô, giữ nguyên ảnh cũ |
+| Lỗi | `Alert` đỏ ngay dưới ô, **giữ nguyên ảnh cũ** |
 
-Ràng buộc bắt buộc:
+Ràng buộc:
 
-- **Kiểm dung lượng ở client trước khi gửi** — báo lỗi ngay, không để người dùng chờ tải xong 10 MB rồi mới biết bị từ chối.
-- **Không đưa giá trị người dùng nhập thẳng vào `sx`** — xem quy ước *"Giá trị người dùng nhập KHÔNG được ghép thẳng vào CSS"* trong [coding-style](../../../conventions/coding-style.md).
-- Nút *"Gỡ ảnh"* chỉ xóa URL khỏi nội dung, **không** xóa tệp trên R2 (RFC §5.5).
+- **Kiểm dung lượng ở client trước khi gửi** — không để người dùng chờ tải xong 10 MB rồi mới bị từ chối.
+- Nút *"Gỡ ảnh"* chỉ xóa URL khỏi nội dung, **không** xóa tệp trên R2 ([RFC §5.5](./partners-rfc.md)).
+- `ImageInput` dùng lại được cho ảnh nền Hero và ảnh About sau này — đừng gắn cứng vào đối tác.
 
 ---
 
@@ -208,18 +274,18 @@ export async function uploadImage(formData: FormData): Promise<ActionResult<{ ur
 }
 ```
 
-`lib/blog/image-actions.ts` giữ nguyên chữ ký `uploadArticleImage`, bên trong gọi
-`uploadImage` với `folder: "blog"`. Không chép logic.
+`lib/blog/image-actions.ts` giữ nguyên chữ ký `uploadArticleImage`, bên trong gọi `uploadImage` với
+`folder: "blog"`. Không chép logic.
 
 ## 3.2 Điểm bảo mật bắt buộc
 
 | Điểm | Vì sao |
 | :-- | :-- |
 | `requireUser()` là dòng đầu tiên | Server action là endpoint HTTP công khai |
-| `rethrowIfNextControlFlow(err)` mở đầu mọi `catch` | Nếu không, phiên hết hạn sẽ trả về chuỗi `"NEXT_REDIRECT"` cho người dùng |
+| `rethrowIfNextControlFlow(err)` mở đầu mọi `catch` | Nếu không, phiên hết hạn trả về chuỗi `"NEXT_REDIRECT"` cho người dùng |
 | `folder` khớp allowlist, không nội suy thô | Chuỗi `../` trong storage key sẽ ghi ra ngoài thư mục dự định |
 | Nhận dạng bằng magic byte | `file.type` do trình duyệt gửi, sửa được |
-| Từ chối SVG kèm thông báo rõ | RFC §5.3 |
+| Từ chối SVG kèm thông báo rõ | [RFC §5.3](./partners-rfc.md) |
 
 Không cần action mới cho việc **lưu** đối tác: `saveHomeContent` đã lưu cả khối `home_content`.
 
@@ -233,14 +299,29 @@ Không cần action mới cho việc **lưu** đối tác: `saveHomeContent` đ�
 export default function Partners({ content }: { content: PartnersContent }) { ... }
 ```
 
-Điều kiện tự ẩn — trả về `null` khi **một trong hai**:
+Trả về `null` khi **một trong hai**:
 
 1. `content.enabled === false`
 2. Không còn mục nào sau khi lọc: `items.filter(p => p.visible !== false && p.logo)`
 
 Không render khung rỗng, không render dòng nhãn treo lơ lửng (AC4).
 
-## 4.2 Cấu trúc và chuyển động
+## 4.2 Màu và biến CSS
+
+Theo đúng khuôn của các khối khác — đặt biến CSS trên thẻ ngoài cùng, **mọi màu qua `safeHex`**:
+
+```tsx
+const style = content.customColors
+  ? {
+      backgroundColor: safeHex(content.bgColor, "#0b1120"),
+      "--partners-label-color": safeHex(content.labelColor, "#5f6c8a"),
+    }
+  : {};
+```
+
+Không bật `customColors` thì khối thừa hưởng màu theme chung từ `dynamicCss` của `HomeSections`.
+
+## 4.3 Cấu trúc và chuyển động
 
 ```tsx
 const visible = content.items.filter((p) => p.visible !== false && p.logo);
@@ -257,9 +338,9 @@ const loop = [...visible, ...visible];        // ĐÚNG HAI bản — RFC §5.1
 | Mỗi logo | `<img>` thường, `height: {logoHeight}px`, `width: auto`, `loading="lazy"`, `alt={name}` |
 | Lọc xám | `grayscale` → `filter: grayscale(1); opacity: .7`, bỏ khi `:hover` |
 
-Chỉ animate `transform` — chạy trên GPU, không gây reflow (RFC §8).
+Chỉ animate `transform` — chạy trên GPU, không gây reflow.
 
-## 4.3 Liên kết
+## 4.4 Liên kết
 
 ```tsx
 p.link
@@ -267,10 +348,29 @@ p.link
   : logo
 ```
 
-`rel` đầy đủ: `noopener noreferrer` chặn tab-nabbing, `nofollow` vì đây không phải liên kết biên tập.
 Không có `link` thì **không bọc thẻ `<a>`** — để con trỏ không thành bàn tay (AC6).
 
-## 4.4 Giảm chuyển động
+## 4.5 Chèn vào trang chủ — qua `sectionOrder`, không phải prop riêng
+
+> **Đây là phần đổi so với bản spec đầu.** Bản cũ có trường `placement` với hai giá trị cố định.
+> Panel nay đã có **nút mũi tên ↑ ↓ trên mọi khối trang chủ**, lưu vào `content.sectionOrder`.
+> Làm thêm `placement` là dựng cơ chế thứ hai cho cùng một việc — người dùng sẽ gặp hai chỗ đặt vị
+> trí và không biết cái nào thắng.
+
+`HomeSections.tsx` render theo `effectiveOrder`; chỉ cần thêm một nhánh vào `renderSectionByKey`:
+
+```tsx
+case "partners":
+  return <Partners key="partners" content={content.partners} />;
+```
+
+Cộng với việc đăng ký khóa ở §1.2. Vị trí mặc định do thứ tự trong `DEFAULT_SECTION_ORDER` quyết
+định; người dùng đổi bằng nút mũi tên, không cần lập trình viên.
+
+Đặt `data-section="partners"` trên thẻ ngoài cùng để `PreviewBridge` cuộn tới được
+(`preview:scroll-to`) và để `dynamicCss` nhắm được vào khối.
+
+## 4.6 Giảm chuyển động
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -283,30 +383,8 @@ Không có `link` thì **không bọc thẻ `<a>`** — để con trỏ không t
 }
 ```
 
-Dải chuyển thành lưới tĩnh, xem được đủ logo (AC7). Đặt trong `app/globals.css` cùng chỗ với các
+Dải chuyển thành lưới tĩnh, xem được đủ logo (AC7). Đặt trong `app/globals.css` cùng chỗ các
 keyframe khác — **không** dùng class Tailwind vì đây là vùng công khai dùng token riêng.
-
-## 4.5 Chèn vào trang chủ
-
-`components/preview/HomeSections.tsx`:
-
-```tsx
-<Hero content={content.hero} />
-{content.partners.placement === "sau-hero" && <Partners content={content.partners} />}
-<Marquee content={content.marquee} />
-...
-<ArticleRail rails={articleRails} />
-{content.partners.placement === "truoc-cta" && <Partners content={content.partners} />}
-<CTA content={content.cta} />
-```
-
-Đặt `data-section="partners"` trên thẻ ngoài cùng để `PreviewBridge` cuộn tới được khi người dùng
-mở khối tương ứng trong panel (`preview:scroll-to`).
-
-## 4.6 Đăng ký khóa khối cho xem trước
-
-`lib/site-content/preview-bridge.ts` — thêm `"partners"` vào `SectionKey`. Thiếu bước này thì khối
-mới không cuộn tới được và bấm vào dải trong khung xem trước sẽ không mở đúng mục trong panel.
 
 ---
 
@@ -321,20 +399,30 @@ mới không cuộn tới được và bấm vào dải trong khung xem trước
 | `link` không có `https://` | Chuẩn hóa khi lưu: thêm `https://` nếu thiếu giao thức |
 | Logo cực rộng (banner ngang) | `logoHeight` cố định chiều cao, `width: auto` — dải dài ra chứ không vỡ |
 | Dữ liệu cũ chưa có khối `partners` | `.default({})` trong schema xử lý, không cần migration |
+| `sectionOrder` cũ chưa có `"partners"` | `HomeSections` tự bù khóa thiếu vào cuối; đổi vị trí bằng nút mũi tên |
 | Người dùng dán base64 vào ô `logo` | Chặn bởi giới hạn 500 ký tự |
 
 ---
 
 # 6. Kiểm thử
 
-Bổ sung vào `scripts/test-customizer.ts` — chạy bằng `npx tsx scripts/test-customizer.ts`:
+Bổ sung vào `scripts/test-customizer.ts` — chạy bằng `npx tsx scripts/test-customizer.ts`.
+
+Bộ test hiện có 8 nhóm; nhóm **6** và **7** sẽ **tự động bắt lỗi đăng ký thiếu** của khối mới:
+
+| # | Nhóm test có sẵn | Bắt được gì cho khối partners |
+| :-- | :-- | :-- |
+| 6 | Mọi khối trong `SECTIONS_CONFIG` đều có dữ liệu mặc định | Quên thêm `partners` vào `defaults.ts` |
+| 7 | Mọi khóa trong `DEFAULT_SECTION_ORDER` đều render được | Quên thêm vào `RENDERABLE_SECTION_KEYS` hoặc quên nhánh `case "partners"` |
+| 8 | Chuỗi tiêm CSS bị chặn | Màu của khối mới vẫn qua `hexColor` |
+
+Thêm mới:
 
 | # | Kiểm | Kỳ vọng |
 | :-- | :-- | :-- |
-| 1 | `DEFAULT_HOME_CONTENT` parse qua schema mới | Hợp lệ |
-| 2 | `resolveHomeContent` với dữ liệu **không có** khối `partners` | Trả về khối mặc định, các khối khác **giữ nguyên** |
-| 3 | 25 đối tác | Bị từ chối |
-| 4 | `speed: 0` và `speed: 999` | Bị từ chối |
-| 5 | Mọi field trong `SECTIONS_CONFIG` khối `partners` đều tồn tại trong `DEFAULT_HOME_CONTENT` | Đủ 100% |
+| 9 | `resolveHomeContent` với dữ liệu **không có** khối `partners` | Trả về khối mặc định, các khối khác **giữ nguyên** |
+| 10 | 25 đối tác | Bị từ chối |
+| 11 | `speed: 0` và `speed: 999` | Bị từ chối |
+| 12 | `sectionOrder` cũ thiếu `"partners"` | Sau chuẩn hóa, `"partners"` được bù vào cuối |
 
 Kiểm thủ công theo đúng AC1–AC9 của [PRD §5](./partners-prd.md).

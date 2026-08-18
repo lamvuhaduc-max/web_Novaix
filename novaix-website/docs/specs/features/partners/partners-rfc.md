@@ -21,7 +21,7 @@ dải thứ nhất.
 | # | Quyết định | Bác bỏ phương án |
 | :-- | :-- | :-- |
 | **D1** | Lưu trong `home_content` jsonb, thêm khối `partners` | Bảng `partners` riêng |
-| **D2** | Thêm kiểu trường `image` vào `fields.ts` của Customizer | Viết một màn quản trị riêng |
+| **D2** | Viết `PartnersSection.tsx` theo khuôn các khối có sẵn của panel | Viết một màn quản trị riêng |
 | **D3** | Dùng CSS animation nhân đôi danh sách | Thư viện carousel |
 
 ---
@@ -67,24 +67,41 @@ Chưa có dấu hiệu nào thì **không tách** — đó là trừu tượng h
 
 ---
 
-# 4. D2 — Kiểu trường `image` cho Customizer
+# 4. D2 — Component riêng cho khối, không khai báo trường
 
-## 4.1 Vấn đề
+> **Cập nhật 18/08/2026.** Bản RFC đầu đề xuất thêm `type: "image"` vào `fields.ts` để panel tự dựng
+> giao diện. Kiến trúc đó **đã bị thay thế** trước khi tính năng này được code — mục này viết lại
+> theo hiện trạng.
 
-`lib/site-content/fields.ts` hiện có `text`, `textarea`, `number`, `list`. Không có kiểu nào nhận
-được một tấm ảnh. Đây là **thứ duy nhất thực sự mới** trong cả tính năng này.
+## 4.1 Kiến trúc panel hiện tại
 
-## 4.2 Chọn gì
+`SECTIONS_CONFIG` trong `fields.ts` nay chỉ còn là **sổ đăng ký metadata** (`key`, `title`,
+`iconName`, `category`, `fields: []` rỗng). Giao diện sửa của từng khối là **một component riêng**
+— `HeroSection.tsx`, `AboutSection.tsx`, `FAQSection.tsx`… — được `SectionPanel.renderSectionBody()`
+điều hướng tới bằng một chuỗi `if (sec.key === "...")`.
 
-Thêm `type: "image"` vào `SimpleFieldDef`, dựng `ImageInput.tsx` bên cạnh `ColorInput.tsx` và
-`FieldInput.tsx` đã có. Panel sửa nội dung tự dựng từ `SECTIONS_CONFIG`, nên khai báo xong là khối
-`partners` có giao diện — không viết thêm màn nào.
+Đánh đổi của kiến trúc này: mỗi khối viết tay nhiều hơn, nhưng bố cục tự do hơn hẳn (slider, nút sắp
+xếp, hộp thoại xác nhận xóa, nhóm màu gập/mở) — thứ mà bảng khai báo trường không diễn đạt nổi.
 
-## 4.3 Vì sao không viết màn quản trị riêng
+## 4.2 Hệ quả cho dải đối tác
 
-Một màn riêng nghĩa là: một route mới, một mục menu mới, một cơ chế xem trước thứ hai, và người dùng
-phải nhớ *"logo đối tác sửa ở chỗ khác với chữ trang chủ"*. Trong khi kiểu trường `image` là thứ
-**sớm muộn cũng cần** — ảnh nền Hero và ảnh khối *Về chúng tôi* đều đang chờ nó.
+Thêm khối cần ba việc thay vì một dòng khai báo:
+
+```text
+1. fields.ts        → metadata vào SECTIONS_CONFIG (fields: [])
+2. PartnersSection.tsx  → viết giao diện sửa, khuôn theo FAQSection.tsx
+3. SectionPanel.tsx     → thêm nhánh điều hướng
+```
+
+Chi tiết ở [spec §2](./partners-spec.md).
+
+## 4.3 `ImageInput` là component thường, không phải kiểu trường
+
+Vì không còn bảng khai báo trường, `ImageInput.tsx` là một component nhận props trực tiếp
+(`value`, `onChange`, `folder`, `maxSizeMB`, `hint`), đặt cạnh `ColorInput.tsx`.
+
+Đây vẫn là **thứ mới duy nhất có giá trị lâu dài** trong cả tính năng: ảnh nền Hero và ảnh khối
+*Về chúng tôi* đều sẽ dùng lại. Viết nó gắn cứng vào đối tác là bỏ phí.
 
 ## 4.4 Tái dùng action upload đã có
 
@@ -100,8 +117,8 @@ lib/blog/image-actions.ts
   uploadArticleImage(...)      // gọi sang hàm chung, giữ nguyên chữ ký cũ
 ```
 
-Chép hàm này ra chỗ thứ hai là đúng thứ [coding-style](../../../conventions/coding-style.md) cấm ở mục
-*"Tách để tái dùng"*: lần siết bảo mật sau sẽ chỉ chạm một bản, bản kia hỏng trong im lặng.
+Chép hàm này ra chỗ thứ hai là đúng thứ [coding-style](../../../conventions/coding-style.md) cấm ở
+mục *"Tách để tái dùng"*: lần siết bảo mật sau sẽ chỉ chạm một bản, bản kia hỏng trong im lặng.
 
 ---
 
@@ -172,18 +189,21 @@ Chuyển động ngang liên tục gây khó chịu cho người nhạy cảm ti
 chuyển động"*, dải **đứng yên** và hiển thị logo dạng lưới tĩnh — không phải ẩn đi. Người dùng vẫn
 xem được đủ nội dung.
 
-## 5.7 Vị trí trên trang: hai lựa chọn, không phải tùy ý
+## 5.7 Vị trí trên trang: dùng `sectionOrder` có sẵn, bỏ trường `placement`
 
-`FR-P10` cho chọn vị trí, nhưng chỉ **hai** giá trị:
+> **Cập nhật 18/08/2026.** Bản đầu đề xuất một trường `placement` với hai giá trị cố định. Trong lúc
+> tài liệu chờ duyệt, panel đã có **nút mũi tên ↑ ↓ trên mọi khối trang chủ**, lưu vào
+> `content.sectionOrder`. Trường `placement` vì thế **bị bỏ**.
 
-| Giá trị | Chèn vào | Ý đồ |
-| :-- | :-- | :-- |
-| `sau-hero` | Giữa `Hero` và `About` | Bằng chứng ngay khi khách vừa vào |
-| `truoc-cta` | Giữa `ArticleRail` và `CTA` | Chốt niềm tin ngay trước lời kêu gọi hành động |
+Làm thêm `placement` bây giờ là dựng cơ chế thứ hai cho đúng một việc: người dùng sẽ thấy hai chỗ
+đặt vị trí cho cùng một khối và không biết cái nào thắng. Đó là kiểu hỏng khó gỡ nhất — không phải
+lỗi kỹ thuật mà là mâu thuẫn trong mô hình khái niệm.
 
-Một danh sách kéo-thả cho phép đặt bất kỳ đâu nghe hấp dẫn hơn, nhưng nó biến `HomeSections` thành
-một bộ dựng trang động — và ràng buộc *"khối nào cũng có thể đứng cạnh khối nào"* sẽ phá bố cục ở
-những tổ hợp không ai kiểm thử.
+Dải đối tác chỉ cần đăng ký tên vào ba danh sách (`DEFAULT_SECTION_ORDER`,
+`RENDERABLE_SECTION_KEYS`, `SectionKey`) là tự động có nút sắp xếp như mọi khối khác. Vị trí mặc
+định đề xuất: **sau `testimonials`**, để cụm bằng chứng xã hội nằm liền nhau.
+
+Chi tiết ở [spec §1.2 và §4.5](./partners-spec.md).
 
 ---
 

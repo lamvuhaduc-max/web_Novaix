@@ -2,45 +2,48 @@
 
 > **Spec:** [`partners-spec.md`](./partners-spec.md) · **RFC:** [`partners-rfc.md`](./partners-rfc.md)
 > **Trạng thái:** 📝 chưa bắt đầu · **Ước lượng:** ~1,5 ngày công
+>
+> **Cập nhật 18/08/2026:** viết lại T2 và T4 cho khớp kiến trúc panel mới (component riêng cho từng
+> khối, không còn khai báo trường trong `fields.ts`). Bỏ phần việc liên quan tới trường `placement`.
 
-Thứ tự dưới đây là **thứ tự phụ thuộc**, không phải thứ tự ưu tiên. T1 và T2 phải xong trước khi
-làm được T3 trở đi.
+Thứ tự dưới đây là **thứ tự phụ thuộc**, không phải thứ tự ưu tiên.
 
 ---
 
-## T1 — Schema và dữ liệu mặc định
+## T1 — Schema, dữ liệu mặc định và đăng ký khối
 
 - [ ] `lib/site-content/schema.ts`: thêm `partnerItemSchema`, `partnersSchema`, export `PartnersContent`
 - [ ] Gắn `partners: partnersSchema.default({})` vào `homeContentSchema`
-- [ ] **KHÔNG tăng `v`** — xem [spec §1.1](./partners-spec.md), tăng `v` sẽ reset toàn bộ nội dung trang chủ đang có
+- [ ] **KHÔNG tăng `v`** — [spec §1.1](./partners-spec.md); tăng `v` sẽ reset toàn bộ nội dung trang chủ đang có
 - [ ] `lib/site-content/defaults.ts`: khối `partners` với `items: []`, `enabled: false`
-- [ ] `lib/site-content/preview-bridge.ts`: thêm `"partners"` vào `SectionKey`
+- [ ] Đăng ký khóa `"partners"` vào **cả ba** danh sách ([spec §1.2](./partners-spec.md)):
+  - [ ] `DEFAULT_SECTION_ORDER` trong `schema.ts` — đặt sau `testimonials`
+  - [ ] `RENDERABLE_SECTION_KEYS` trong `components/preview/section-keys.ts`
+  - [ ] `SectionKey` trong `lib/site-content/preview-bridge.ts`
 
-**Xong khi:** `npx tsx scripts/test-customizer.ts` vẫn xanh, và bản ghi `home_content` cũ trong
-database (chưa có khối `partners`) vẫn đọc ra đủ nội dung, không bị reset.
+**Xong khi:** `npx tsx scripts/test-customizer.ts` xanh (nhóm 6 và 7 sẽ đỏ nếu đăng ký thiếu), và
+bản ghi `home_content` cũ trong database vẫn đọc ra đủ nội dung, không bị reset.
 
 ---
 
-## T2 — Ba kiểu trường mới cho Customizer
+## T2 — `ImageInput.tsx`
 
-Đây là phần dùng chung, không riêng gì đối tác — các khối khác sẽ dùng lại.
+Component thường, **không** khai kiểu trường vào `fields.ts` — kiến trúc đó không còn dùng.
 
-- [ ] `fields.ts`: thêm `ImageField`, `BooleanField`, `SelectField` vào `SimpleFieldDef`
-- [ ] `components/admin/customizer/ImageInput.tsx` — theo bảng trạng thái ở [spec §2.3](./partners-spec.md)
-- [ ] `BooleanInput` (Switch) và `SelectInput` (Select)
-- [ ] `FieldInput.tsx`: định tuyến ba kiểu mới
+- [ ] `components/admin/customizer/ImageInput.tsx` theo bảng trạng thái ở [spec §2.5](./partners-spec.md)
+- [ ] Props: `label`, `value`, `onChange`, `folder`, `maxSizeMB`, `hint`
 - [ ] Kiểm dung lượng **ở client** trước khi gửi
+- [ ] Ảnh xem trước trên nền ca-rô để thấy vùng trong suốt
 - [ ] Không đưa giá trị người dùng nhập thẳng vào `sx` của MUI
 
-**Xong khi:** khai một trường `image` bất kỳ trong `SECTIONS_CONFIG` là panel dựng được giao diện,
-không phải viết thêm component.
+**Xong khi:** component dùng được cho bất kỳ khối nào, không gắn cứng vào đối tác.
 
 ---
 
 ## T3 — Server action upload dùng chung
 
 - [ ] `lib/media/image-actions.ts`: `uploadImage(formData)` với allowlist `folder`
-- [ ] Chuyển logic `detectImageMimeType` sang dùng chung
+- [ ] Chuyển `detectImageMimeType` sang dùng chung
 - [ ] `lib/blog/image-actions.ts`: `uploadArticleImage` gọi sang hàm chung, **giữ nguyên chữ ký**
 - [ ] Từ chối SVG kèm thông báo *"Không nhận tệp SVG. Vui lòng xuất logo sang PNG nền trong suốt."*
 - [ ] `requireUser()` là dòng đầu tiên
@@ -51,14 +54,20 @@ không phải viết thêm component.
 
 ---
 
-## T4 — Khai báo khối trong panel
+## T4 — Khối trong panel quản trị
 
-- [ ] `fields.ts`: thêm khối `partners` vào `SECTIONS_CONFIG` theo [spec §2.2](./partners-spec.md)
-- [ ] Ghi chú ở ô tốc độ: thêm logo mà giữ nguyên số giây thì dải chạy nhanh hơn
-- [ ] Ghi chú ở ô tên: dùng làm mô tả ảnh cho trình đọc màn hình
+Ba việc, theo [spec §2](./partners-spec.md):
 
-**Xong khi:** mở `/admin/giao-dien` thấy khối *"Đối tác & Khách hàng"*, thêm/xóa/sắp xếp được, chưa
-cần có component công khai.
+- [ ] `fields.ts`: thêm metadata vào `SECTIONS_CONFIG` (`fields: []`)
+- [ ] `components/admin/customizer/PartnersSection.tsx` — khuôn theo `FAQSection.tsx`
+  - [ ] Danh sách đối tác: accordion lồng, nút ↑ ↓, hộp thoại xác nhận xóa
+  - [ ] `Slider` cho tốc độ / khoảng cách / chiều cao logo — giống `MarqueeSection`
+  - [ ] Nhóm màu theo quy ước `customColors` + nút *"Dùng lại màu theme"*
+  - [ ] Ghi chú ở ô tốc độ: thêm logo mà giữ nguyên số giây thì dải chạy nhanh hơn
+- [ ] `SectionPanel.tsx`: thêm nhánh `if (sec.key === "partners")` và import icon
+
+**Xong khi:** mở `/admin/giao-dien` thấy khối *"Đối tác & Khách hàng"* với nút mũi tên sắp xếp như
+các khối khác; thêm/xóa/sắp xếp đối tác được, chưa cần component công khai.
 
 ---
 
@@ -67,6 +76,7 @@ cần có component công khai.
 - [ ] `components/Partners.tsx` theo [spec §4](./partners-spec.md)
 - [ ] Nhân **đúng hai** bản danh sách, dịch `calc(-50% - gap/2)` — [RFC §5.1](./partners-rfc.md)
 - [ ] Tự ẩn khi tắt hoặc không còn logo hợp lệ
+- [ ] Màu qua `safeHex`, chỉ áp khi `customColors` bật
 - [ ] `<img>` thường, `loading="lazy"`, `alt={name}`, chiều cao cố định
 - [ ] Không có `link` thì không bọc `<a>`; có thì `rel="noopener noreferrer nofollow"`
 - [ ] `app/globals.css`: keyframe `partners-scroll` + khối `prefers-reduced-motion`
@@ -79,25 +89,27 @@ hành thì dải đứng yên dạng lưới.
 
 ## T6 — Ghép vào trang chủ
 
-- [ ] `components/preview/HomeSections.tsx`: chèn theo `placement` ([spec §4.5](./partners-spec.md))
-- [ ] Đổi `placement` trong panel → khung xem trước nhảy đúng vị trí ngay, không cần lưu
+- [ ] `HomeSections.tsx`: thêm `case "partners"` vào `renderSectionByKey`
+- [ ] Không viết logic vị trí riêng — thứ tự do `sectionOrder` quyết định ([spec §4.5](./partners-spec.md))
+- [ ] Bấm nút mũi tên trong panel → khung xem trước đổi vị trí ngay, không cần lưu
 
 ---
 
 ## T7 — Kiểm thử
 
-- [ ] Bổ sung 5 nhóm kiểm vào `scripts/test-customizer.ts` ([spec §6](./partners-spec.md))
+- [ ] Bổ sung nhóm test 9–12 vào `scripts/test-customizer.ts` ([spec §6](./partners-spec.md))
 - [ ] Chạy tay đủ **AC1–AC9** của [PRD §5](./partners-prd.md)
 - [ ] Kiểm trên điện thoại thật hoặc chế độ mobile của trình duyệt
 - [ ] Kiểm bản ghi `home_content` cũ vẫn đọc được sau khi đổi schema
+- [ ] Kiểm bản ghi có `sectionOrder` cũ (chưa có `"partners"`) — khối phải được bù vào cuối
 
 ---
 
 ## T8 — Tài liệu (cùng commit, không để lần sau)
 
-- [ ] `docs/specs/domains/home-content-domain.md`: bổ sung khối `partners` vào bản kê nội dung
+- [ ] `docs/specs/domains/home-content-domain.md` §4.11: bổ sung khối `partners` vào bản kê nội dung
 - [ ] Đổi trạng thái bốn tài liệu này từ 📝 sang ✅
-- [ ] `docs/conventions/coding-style.md`: nếu kiểu trường `image` sinh ra quy ước mới thì ghi lại
+- [ ] `docs/conventions/coding-style.md`: nếu `ImageInput` sinh ra quy ước mới thì ghi lại
 
 > Theo [luật repo](../../../../../CLAUDE.md) §2: mã đổi thì `docs/` đổi **cùng commit**.
 
@@ -107,10 +119,11 @@ hành thì dải đứng yên dạng lưới.
 
 | Việc | Vì sao |
 | :-- | :-- |
-| Sửa lỗi nhịp của `Marquee.tsx` | Ngoài phạm vi — RFC §5.1 đã ghi lại để không ai chép sang |
-| Trang *"Khách hàng của chúng tôi"* riêng | PRD §3 |
-| Xóa ảnh cũ trên R2 | RFC §5.5 |
-| Cho tải SVG | RFC §5.3 |
+| Trường `placement` riêng | Panel đã có nút sắp xếp khối — [RFC §5.7](./partners-rfc.md) |
+| Sửa lỗi nhịp của `Marquee.tsx` | Ngoài phạm vi — [RFC §5.1](./partners-rfc.md) ghi lại để không ai chép sang |
+| Trang *"Khách hàng của chúng tôi"* riêng | [PRD §3](./partners-prd.md) |
+| Xóa ảnh cũ trên R2 | [RFC §5.5](./partners-rfc.md) |
+| Cho tải SVG | [RFC §5.3](./partners-rfc.md) |
 
 ---
 
@@ -119,9 +132,11 @@ hành thì dải đứng yên dạng lưới.
 | Cạm bẫy | Hậu quả |
 | :-- | :-- |
 | Tăng `v` lên 2 | Mọi bản ghi hiện có fail parse → **toàn bộ nội dung trang chủ về mặc định** |
+| Đăng ký khóa thiếu một trong ba danh sách | Khối **biến mất khỏi trang chủ trong im lặng**, hoặc không cuộn tới được từ khung xem trước |
+| Khai `fields: [...]` như tài liệu bản đầu | Panel không đọc nữa — khối sẽ rỗng. Phải viết `PartnersSection.tsx` |
 | Nhân ba bản danh sách như `Marquee.tsx` | Dải giật một nhịp mỗi vòng, rất rõ với logo |
 | Quên `rethrowIfNextControlFlow` trong action upload | Phiên hết hạn → người dùng nhận chuỗi `"NEXT_REDIRECT"` |
 | Chép `uploadArticleImage` thay vì tổng quát hóa | Lần siết bảo mật sau chỉ chạm một bản |
-| Đưa `bgColor` thẳng vào `sx` của MUI | Tiêm CSS làm trắng trang quản trị — đã xảy ra một lần, xem [biên bản rà soát](../../../reviews/blog-review-2026-08-17.md) |
+| Chép lại `safeHex` thay vì import từ `lib/site-content/color.ts` | Đã xảy ra ở `ArticleRail`: regex lệch làm màu `#fff` bị âm thầm bỏ |
+| Đưa màu thẳng vào `sx` của MUI | Tiêm CSS làm trắng trang quản trị — đã xảy ra một lần, xem [biên bản rà soát](../../../reviews/blog-review-2026-08-17.md) |
 | Dùng `next/image` cho logo | Mỗi host mới phải khai vào `next.config.mjs`; không đáng cho ảnh trong dải chạy |
-| Quên thêm `"partners"` vào `SectionKey` | Bấm vào dải trong khung xem trước không mở đúng mục trong panel |

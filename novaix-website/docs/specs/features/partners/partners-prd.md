@@ -3,6 +3,7 @@
 > **Domain gốc:** [`home-content-domain.md`](../../domains/home-content-domain.md) — đây là **một khối nội dung của trang chủ**, không phải phân hệ riêng.
 > **Mã FR:** `FR-P01`…`FR-P12` (nhóm **P** — Partners)
 > **Trạng thái:** 📝 **chưa triển khai** — tài liệu chờ duyệt, chưa viết dòng code nào.
+> **Cập nhật 18/08/2026:** `FR-P10` đổi cách thực hiện sau khi panel có tính năng sắp xếp khối.
 > **Phụ thuộc:** [Customizer](../customizer/customizer-prd.md) (đã xong) — dùng chung `site_settings.home_content`, khung xem trước và cơ chế nháp/hoàn tác.
 
 ---
@@ -87,7 +88,7 @@ marketing lại phải mở ticket, và repo có thêm một dải chạy thứ 
 | **FR-P07** | **Tốc độ chạy** — số giây để chạy hết một vòng | 5–120 giây |
 | **FR-P08** | **Khoảng cách** giữa hai logo | 20–400 px |
 | **FR-P09** | **Hướng chạy**: trái hoặc phải | — |
-| **FR-P10** | **Vị trí trên trang chủ**: ngay dưới Hero, hoặc trước khối kêu gọi hành động | — |
+| **FR-P10** | **Vị trí trên trang chủ** đổi được | Dùng nút sắp xếp khối có sẵn của panel, không làm trường riêng — xem [RFC §5.7](./partners-rfc.md) |
 | **FR-P11** | Dòng nhãn phía trên dải (ví dụ *"Được tin dùng bởi"*) và màu nền | — |
 | **FR-P12** | **Dừng khi rê chuột** — bật/tắt | — |
 
