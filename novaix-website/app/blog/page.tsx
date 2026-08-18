@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import SiteNavbar from "@/components/site/SiteNavbar";
+import SiteFooter from "@/components/site/SiteFooter";
 import ArticleCard from "@/components/blog/ArticleCard";
 import { getPublishedArticles } from "@/lib/blog/queries";
 import { listCategories } from "@/lib/blog/category-queries";
@@ -40,7 +40,7 @@ export default async function PublicArticlesListPage({ searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-bg text-ink flex flex-col font-sans">
-      <Navbar />
+      <SiteNavbar />
 
       <main className="flex-grow pt-28 pb-20">
         <div className="wrap">
@@ -139,7 +139,7 @@ export default async function PublicArticlesListPage({ searchParams }: Props) {
         </div>
       </main>
 
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }

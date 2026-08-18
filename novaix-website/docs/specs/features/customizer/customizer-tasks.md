@@ -3,7 +3,8 @@
 > **PRD:** [`customizer-prd.md`](./customizer-prd.md) · **RFC:** [`customizer-rfc.md`](./customizer-rfc.md) ·
 > **Spec:** [`customizer-spec.md`](./customizer-spec.md) · **Domain:** [`home-content-domain.md`](../../domains/home-content-domain.md)
 >
-> **Trạng thái:** 📝 chưa bắt đầu.
+> **Trạng thái:** ✅ Đã hoàn thành toàn bộ (T1 – T15).
+
 
 ---
 
@@ -32,23 +33,24 @@
 
 **Ước tính tổng: 7–9 ngày làm việc.** Cột *PT* = phụ thuộc.
 
-| # | Task | Lớp | PT | Độ khó |
-| :-- | :-- | :-- | :-- | :-- |
-| **T1** | Lược đồ + bản mặc định + merge (hàm thuần) + test | Lib | C2 | 🟠 Vừa |
-| **T2** | 🔴 **Bóc chữ khỏi 13 component** — nhận props | FE | T1 | 🔴 Cao |
-| **T3** | Đọc nội dung ở trang chủ (`queries.ts`) | BE | T1, C1 | 🟢 Thấp |
-| **T4** | Server action lưu + chống ghi đè + nhật ký | BE | T3 | 🟠 Vừa |
-| **T5** | Chế độ xem trước `?preview=1` + `PreviewBridge` | FE | T2 | 🟠 Vừa |
-| **T6** | Cầu `postMessage` hai chiều + kiểm origin | FE | T5 | 🟠 Vừa |
-| **T7** | Khung màn: iframe trái + thanh công cụ + Desktop/Mobile | FE | T6 | 🟠 Vừa |
-| **T8** | Bản kê trường (`fields.ts`) cho đủ 13 khối | Lib | T1 | 🟠 Vừa |
-| **T9** | Panel dựng động: ô chữ, ô số, đếm ký tự, báo lỗi | FE | T7, T8 | 🔴 Cao |
-| **T10** | Sửa danh sách: thêm · xóa · kéo đổi thứ tự | FE | T9 | 🟠 Vừa |
-| **T11** | Nháp · hoàn tác/làm lại · đặt lại | FE | T9 | 🔴 Cao |
-| **T12** | Liên kết hai chiều panel ⇄ khung xem trước | FE | T9 | 🟠 Vừa |
-| **T13** | Nối tab *Dải bài viết* (FR-B07) vào cùng màn | FE | T7 | 🟢 Thấp |
-| **T14** | Gỡ `comingSoon` · xóa `lib/data.ts` · dọn import | FE | T2, T9 | 🟢 Thấp |
-| **T15** | Cập nhật **tài liệu** *(bắt buộc, không được nợ)* | Docs | mọi task | 🟠 Vừa |
+| # | Task | Lớp | PT | Độ khó | Trạng thái |
+| :-- | :-- | :-- | :-- | :-- | :-- |
+| **T1** | Lược đồ + bản mặc định + merge (hàm thuần) + test | Lib | C2 | 🟠 Vừa | [x] ✅ Hoàn thành |
+| **T2** | 🔴 **Bóc chữ khỏi 13 component** — nhận props | FE | T1 | 🔴 Cao | [x] ✅ Hoàn thành |
+| **T3** | Đọc nội dung ở trang chủ (`queries.ts`) | BE | T1, C1 | 🟢 Thấp | [x] ✅ Hoàn thành |
+| **T4** | Server action lưu + chống ghi đè + nhật ký | BE | T3 | 🟠 Vừa | [x] ✅ Hoàn thành |
+| **T5** | Chế độ xem trước `?preview=1` + `PreviewBridge` | FE | T2 | 🟠 Vừa | [x] ✅ Hoàn thành |
+| **T6** | Cầu `postMessage` hai chiều + kiểm origin | FE | T5 | 🟠 Vừa | [x] ✅ Hoàn thành |
+| **T7** | Khung màn: iframe trái + thanh công cụ + Desktop/Mobile | FE | T6 | 🟠 Vừa | [x] ✅ Hoàn thành |
+| **T8** | Bản kê trường (`fields.ts`) cho đủ 13 khối | Lib | T1 | 🟠 Vừa | [x] ✅ Hoàn thành |
+| **T9** | Panel dựng động: ô chữ, ô số, đếm ký tự, báo lỗi | FE | T7, T8 | 🔴 Cao | [x] ✅ Hoàn thành |
+| **T10** | Sửa danh sách: thêm · xóa · kéo đổi thứ tự | FE | T9 | 🟠 Vừa | [x] ✅ Hoàn thành |
+| **T11** | Nháp · hoàn tác/làm lại · đặt lại | FE | T9 | 🔴 Cao | [x] ✅ Hoàn thành |
+| **T12** | Liên kết hai chiều panel ⇄ khung xem trước | FE | T9 | 🟠 Vừa | [x] ✅ Hoàn thành |
+| **T13** | Nối tab *Dải bài viết* (FR-B07) vào cùng màn | FE | T7 | 🟢 Thấp | [x] ✅ Hoàn thành |
+| **T14** | Gỡ `comingSoon` · xóa `lib/data.ts` · dọn import | FE | T2, T9 | 🟢 Thấp | [x] ✅ Hoàn thành |
+| **T15** | Cập nhật **tài liệu** *(bắt buộc, không được nợ)* | Docs | mọi task | 🟠 Vừa | [x] ✅ Hoàn thành |
+
 
 **Thứ tự chạy:** T1 → **T2 (xong hẳn, ổn định)** → T3–T4 → T5–T7 → T8–T12 → T13–T15.
 
@@ -308,14 +310,15 @@ mà quên khai vào panel"* — lỗi sẽ xảy ra, chỉ là chưa biết lúc
 
 Một task xong khi **tất cả** đúng:
 
-- [ ] `npm run build` **không lỗi type**, `npm run lint` sạch.
-- [ ] Hàm thuần có test và test **xanh**.
-- [ ] Chuỗi hiển thị **tiếng Việt**, kể cả thông báo lỗi.
-- [ ] Client component **không** `import { db }`.
-- [ ] Server action đủ bốn nhịp: quyền → Zod (`input: unknown`) → thao tác → `revalidatePath`.
-- [ ] Không `dangerouslySetInnerHTML` ở bất kỳ đâu trong phân hệ này.
-- [ ] `postMessage` luôn có `targetOrigin` cụ thể và kiểm `origin` khi nhận.
-- [ ] File dưới ngưỡng của [coding-style](../../../conventions/coding-style.md), hoặc đã tách.
-- [ ] Tiêu chí nghiệm thu tương ứng ở [Spec §10](./customizer-spec.md#10-tiêu-chí-nghiệm-thu) đã tick.
+- [x] `npm run build` **không lỗi type**, `npm run lint` sạch.
+- [x] Hàm thuần có test và test **xanh**.
+- [x] Chuỗi hiển thị **tiếng Việt**, kể cả thông báo lỗi.
+- [x] Client component **không** `import { db }`.
+- [x] Server action đủ bốn nhịp: quyền → Zod (`input: unknown`) → thao tác → `revalidatePath`.
+- [x] Không `dangerouslySetInnerHTML` ở bất kỳ đâu trong phân hệ này.
+- [x] `postMessage` luôn có `targetOrigin` cụ thể và kiểm `origin` khi nhận.
+- [x] File dưới ngưỡng của [coding-style](../../../conventions/coding-style.md), hoặc đã tách.
+- [x] Tiêu chí nghiệm thu tương ứng ở [Spec §10](./customizer-spec.md#10-tiêu-chí-nghiệm-thu) đã tick.
 
 # End
+

@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import Stats from "./Stats";
+import type { HeroContent } from "@/lib/site-content/schema";
 
 const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
 
@@ -15,15 +16,15 @@ const fade = {
   }),
 };
 
-export default function Hero() {
+export default function Hero({ content }: { content: HeroContent }) {
   return (
-    <header className="relative min-h-screen flex items-center pt-[68px] overflow-hidden">
+    <header data-section="hero" className="relative min-h-screen flex items-center pt-[68px] overflow-hidden">
       <HeroScene />
       <div className="wrap z-[3]">
         <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
           <div>
             <motion.span custom={0} variants={fade} initial="hidden" animate="show" className="kicker">
-              Nền tảng CRM · ERP cho doanh nghiệp Việt
+              {content.kicker}
             </motion.span>
             <motion.h1
               custom={1}
@@ -33,7 +34,9 @@ export default function Hero() {
               className="font-extrabold my-[18px] mt-[22px]"
               style={{ fontSize: "clamp(40px,6vw,76px)" }}
             >
-              Hệ thống hóa <span className="grad-text">toàn bộ vận hành</span> doanh nghiệp của bạn
+              {content.titleLead}{" "}
+              <span className="grad-text">{content.titleHighlight}</span>
+              {content.titleTail ? ` ${content.titleTail}` : ""}
             </motion.h1>
             <motion.p
               custom={2}
@@ -43,18 +46,22 @@ export default function Hero() {
               className="text-muted max-w-[540px] mb-[30px]"
               style={{ fontSize: "clamp(16px,2vw,19px)" }}
             >
-              OAlpha kết nối bán hàng, sản xuất, kho vận, nhân sự và tài chính trên một nền tảng duy
-              nhất — chuẩn hóa quy trình, tự động hóa nghiệp vụ và ra quyết định bằng dữ liệu thời
-              gian thực.
+              {content.desc}
             </motion.p>
             <motion.div custom={3} variants={fade} initial="hidden" animate="show" className="flex gap-3.5 flex-wrap">
-              <a href="#lien-he" className="btn btn-primary">Đặt lịch demo miễn phí →</a>
-              <a href="#modules" className="btn btn-ghost">Khám phá module</a>
+              <a href="#lien-he" className="btn btn-primary">
+                {content.ctaPrimary}
+              </a>
+              {content.ctaSecondary && (
+                <a href="#modules" className="btn btn-ghost">
+                  {content.ctaSecondary}
+                </a>
+              )}
             </motion.div>
           </div>
         </div>
         <motion.div custom={4} variants={fade} initial="hidden" animate="show">
-          <Stats />
+          <Stats stats={content.stats} />
         </motion.div>
       </div>
     </header>

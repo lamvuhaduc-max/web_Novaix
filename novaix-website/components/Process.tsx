@@ -1,18 +1,18 @@
-import { steps } from "@/lib/data";
 import Reveal from "./Reveal";
 import SectionHead from "./SectionHead";
+import type { ProcessContent } from "@/lib/site-content/schema";
 
-export default function Process() {
+export default function Process({ content }: { content: ProcessContent }) {
   return (
-    <section id="quy-trinh" className="py-[110px] relative z-[2]">
+    <section id="quy-trinh" data-section="process" className="py-[110px] relative z-[2]">
       <div className="wrap">
         <SectionHead
-          kicker="Lộ trình triển khai"
-          title="Từ khảo sát đến vận hành — 5 bước rõ ràng"
-          desc="Phương pháp triển khai chuẩn hóa giúp doanh nghiệp đưa hệ thống vào sử dụng nhanh, đúng quy trình và đo lường được hiệu quả."
+          kicker={content.kicker}
+          title={content.title}
+          desc={content.desc}
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-          {steps.map((s, i) => (
+          {content.items.map((s, i) => (
             <Reveal key={s.n} delay={i * 0.07}>
               <div className="panel rounded-[16px] p-6 h-full">
                 <div className="font-display font-extrabold text-sm text-accent tracking-[0.1em]">{s.n}</div>

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import SiteNavbar from "@/components/site/SiteNavbar";
+import SiteFooter from "@/components/site/SiteFooter";
 import Toc from "@/components/blog/Toc";
 import InlineToc from "@/components/blog/InlineToc";
 import ArticleCard from "@/components/blog/ArticleCard";
@@ -47,7 +47,7 @@ export default async function ArticleDetailPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      <Navbar />
+      <SiteNavbar />
 
       <main className="flex-grow pt-28 pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -172,7 +172,7 @@ export default async function ArticleDetailPage({ params }: Props) {
         </div>
       </main>
 
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }

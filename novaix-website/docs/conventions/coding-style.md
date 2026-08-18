@@ -208,6 +208,23 @@ Bốn luật:
 
 Ví dụ trong repo: `lib/blog/category-queries.ts` và `lib/blog/rails-config.ts` từng nằm trong file action nên bị phơi ra ngoài; đã tách sang module thường.
 
+
+### Giá trị người dùng nhập KHÔNG được ghép thẳng vào CSS
+
+Màu sắc, kích thước, tên font do người dùng gõ ở `/admin/giao-dien` đều chảy vào CSS. Ghép thẳng là mở đường tiêm CSS: chuỗi `red; } * { display: none } .x {` đóng sớm khai báo hiện tại rồi áp luật của người gõ lên cả trang.
+
+Chỗ dễ bỏ sót nhất là **`sx` của MUI** — Emotion biên dịch `sx={{ bgcolor: value }}` thành một luật CSS thật trong trang quản trị. Lỗi vì thế không nằm ở trang công khai mà làm **trắng luôn màn hình admin**, kể cả khi bản xem trước đã nằm trong iframe riêng.
+
+Luôn đi qua `safeHex()` / `isHexColor()` ở `lib/site-content/color.ts`, và kiểm ở **cả ba tầng**:
+
+| Tầng | Việc |
+| :-- | :-- |
+| Ô nhập (`ColorInput`) | Báo lỗi ngay cho người dùng, không đưa giá trị hỏng vào `sx` |
+| Schema Zod | Chặn lưu vào database |
+| Lúc render (`HomeSections`) | Chặn dữ liệu cũ đã nằm sẵn trong database từ trước |
+
+---
+
 ### `redirect()` trong action phải được ném lại
 
 `redirect()` và `notFound()` hoạt động bằng cách **ném ra Error** mang `digest` đặc biệt. Khối `try/catch` bao quanh thân action sẽ nuốt mất nó: chuyển hướng không xảy ra, người dùng nhận về chuỗi `"NEXT_REDIRECT"` như một thông báo lỗi. `requireUser()` có gọi `redirect()`, nên **mọi khối `catch` trong action phải mở đầu bằng**:

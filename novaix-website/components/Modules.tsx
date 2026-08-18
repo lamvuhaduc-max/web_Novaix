@@ -1,18 +1,18 @@
-import { modules } from "@/lib/data";
 import Reveal from "./Reveal";
 import SectionHead from "./SectionHead";
+import type { ModulesContent } from "@/lib/site-content/schema";
 
-export default function Modules() {
+export default function Modules({ content }: { content: ModulesContent }) {
   return (
-    <section id="modules" className="py-[110px] relative z-[2]">
+    <section id="modules" data-section="modules" className="py-[110px] relative z-[2]">
       <div className="wrap">
         <SectionHead
-          kicker="Hệ sinh thái module"
-          title="Một nền tảng — đầy đủ nghiệp vụ doanh nghiệp"
-          desc="Triển khai từng phần hoặc trọn bộ. Các module dùng chung một cơ sở dữ liệu, nên dữ liệu chảy liền mạch giữa các phòng ban mà không cần nhập liệu lại."
+          kicker={content.kicker}
+          title={content.title}
+          desc={content.desc}
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-[18px]">
-          {modules.map((m, i) => (
+          {content.items.map((m, i) => (
             <Reveal key={m.title} delay={(i % 3) * 0.08}>
               <div className="panel rounded-[18px] p-7 h-full transition-all duration-300 hover:-translate-y-1.5 hover:border-[rgba(45,212,191,0.4)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)] group">
                 <div

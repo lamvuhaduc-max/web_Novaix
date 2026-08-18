@@ -1,40 +1,21 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Marquee from "@/components/Marquee";
-import About from "@/components/About";
-import Modules from "@/components/Modules";
-import Features from "@/components/Features";
-import Process from "@/components/Process";
-import Segments from "@/components/Segments";
-import Pricing from "@/components/Pricing";
-import Testimonials from "@/components/Testimonials";
-import FAQ from "@/components/FAQ";
-import ArticleRail from "@/components/blog/ArticleRail";
-import CTA from "@/components/CTA";
-import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+import HomeSections from "@/components/preview/HomeSections";
+import { getHomeContent } from "@/lib/site-content/queries";
 import { getHomeRails } from "@/lib/blog/queries";
 
-export const revalidate = 60; // Refresh home page cache every 60 seconds
+// Trang chủ là trang được xem nhiều nhất — giữ ISR để không truy vấn database
+// ở mỗi lượt truy cập. Bản xem trước của trình chỉnh sửa nằm ở /xem-truoc,
+// KHÔNG dùng searchParams ở đây (searchParams làm trang chuyển sang render động).
+export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "OAlpha — Hệ thống hóa toàn bộ vận hành doanh nghiệp của bạn",
+  description:
+    "Nền tảng CRM · ERP cho doanh nghiệp Việt. Chuẩn hóa quy trình, tự động hóa nghiệp vụ và ra quyết định bằng dữ liệu.",
+};
 
 export default async function Home() {
-  const homeRails = await getHomeRails();
+  const [content, homeRails] = await Promise.all([getHomeContent(), getHomeRails()]);
 
-  return (
-    <main>
-      <Navbar />
-      <Hero />
-      <Marquee />
-      <About />
-      <Modules />
-      <Features />
-      <Process />
-      <Segments />
-      <Pricing />
-      <Testimonials />
-      <FAQ />
-      <ArticleRail rails={homeRails} />
-      <CTA />
-      <Footer />
-    </main>
-  );
+  return <HomeSections content={content} articleRails={homeRails} />;
 }
