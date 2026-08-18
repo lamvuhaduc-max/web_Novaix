@@ -205,3 +205,120 @@ body:has(.admin-root) ::-webkit-scrollbar-thumb {
   box-shadow: none;
   border-radius: 99px;
 }
+
+/* ── Nội dung bài viết: bảng và code không được kéo lệch cả trang ─────────── */
+.table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  margin: 1.5rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+.table-scroll > table {
+  margin: 0;
+  min-width: 640px; /* dưới ngưỡng này cột bị ép quá hẹp, chữ vỡ giữa từ */
+}
+
+/* Chuỗi dài không có khoảng trắng (URL, mã đơn hàng) phải xuống dòng */
+.prose :where(p, li, td, th, h1, h2, h3, h4) {
+  overflow-wrap: anywhere;
+}
+
+/* Khối code do trình soạn thảo sinh ra */
+.prose :where(pre) {
+  overflow-x: auto;
+  max-width: 100%;
+  background: #0b1120;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+}
+.prose :where(pre) code {
+  background: none;
+  padding: 0;
+  font-size: 0.85em;
+  color: #cfe9ff;
+}
+.prose :where(code):not(pre code) {
+  background: rgba(45, 212, 191, 0.12);
+  color: #7ff0e0;
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  font-size: 0.88em;
+}
+
+/* ── Dải Đối tác & Khách hàng ─────────────────────────────────────────────── */
+.partners-label {
+  color: var(--partners-label-color, var(--theme-text-muted, #5f6c8a));
+}
+
+.partners-viewport {
+  overflow: hidden;
+}
+
+.partners-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: var(--partners-gap, 72px);
+  animation: partners-scroll var(--partners-speed, 40s) linear infinite;
+  will-change: transform;
+}
+
+.partners-reverse {
+  animation-direction: reverse;
+}
+
+.partners-pausable:hover .partners-track {
+  animation-play-state: paused;
+}
+
+.partners-item {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.partners-logo {
+  height: var(--partners-logo-height, 40px);
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  display: block;
+}
+
+.partners-grayscale {
+  filter: grayscale(1);
+  opacity: 0.7;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+.partners-item:hover .partners-grayscale {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+/*
+ * Dịch trọn MỘT bản danh sách. Vùng chạy có hai bản nên bề rộng là 2W + gap;
+ * -50% của nó là W + gap/2, thừa đúng nửa gap — trừ lại thì điểm nối trùng khít.
+ */
+@keyframes partners-scroll {
+  to {
+    transform: translateX(calc(-50% - var(--partners-gap, 72px) / 2));
+  }
+}
+
+/* Chuyển động ngang liên tục gây khó chịu cho người nhạy cảm tiền đình:
+   dừng hẳn và xếp thành lưới tĩnh, vẫn xem được đủ logo. */
+@media (prefers-reduced-motion: reduce) {
+  .partners-track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    row-gap: 1.5rem;
+  }
+  /* Bản nhân đôi chỉ phục vụ vòng chạy — ở chế độ tĩnh nó thành logo lặp lại. */
+  .partners-item[aria-hidden="true"] {
+    display: none;
+  }
+}

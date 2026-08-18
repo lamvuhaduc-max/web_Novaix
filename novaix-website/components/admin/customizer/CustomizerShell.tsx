@@ -50,6 +50,7 @@ export default function CustomizerShell({
     segments: false,
     pricing: false,
     testimonials: false,
+    partners: false,
     faq: false,
     articles: false,
     cta: false,

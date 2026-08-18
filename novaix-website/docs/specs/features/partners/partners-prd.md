@@ -2,7 +2,7 @@
 
 > **Domain gốc:** [`home-content-domain.md`](../../domains/home-content-domain.md) — đây là **một khối nội dung của trang chủ**, không phải phân hệ riêng.
 > **Mã FR:** `FR-P01`…`FR-P12` (nhóm **P** — Partners)
-> **Trạng thái:** 📝 **chưa triển khai** — tài liệu chờ duyệt, chưa viết dòng code nào.
+> **Trạng thái:** ✅ **đã triển khai** (18/08/2026).
 > **Cập nhật 18/08/2026:** `FR-P10` đổi cách thực hiện sau khi panel có tính năng sắp xếp khối.
 > **Phụ thuộc:** [Customizer](../customizer/customizer-prd.md) (đã xong) — dùng chung `site_settings.home_content`, khung xem trước và cơ chế nháp/hoàn tác.
 

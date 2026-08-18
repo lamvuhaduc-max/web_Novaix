@@ -1,7 +1,7 @@
 # Spec — Dải Đối tác & Khách hàng (Partners Strip)
 
 > **PRD:** [`partners-prd.md`](./partners-prd.md) · **RFC:** [`partners-rfc.md`](./partners-rfc.md)
-> **Trạng thái:** 📝 chờ duyệt — bản đặc tả để cài đặt, chưa có code.
+> **Trạng thái:** ✅ **đã triển khai** (18/08/2026).
 >
 > **Cập nhật 18/08/2026:** viết lại §2 và §4.5 cho khớp kiến trúc panel mới. Bản đầu mô tả cách khai
 > báo trường trong `SECTIONS_CONFIG`; cách đó **không còn dùng** — xem §2.1. Đồng thời **bỏ trường
@@ -46,14 +46,15 @@ export const partnersSchema = z.object({
 });
 ```
 
-Gắn vào `homeContentSchema` với `.default({})` để **dữ liệu cũ trong database không có khối
-`partners` vẫn parse được**:
+Gắn vào `homeContentSchema` kèm giá trị mặc định đầy đủ để **dữ liệu cũ trong database không có
+khối `partners` vẫn parse được**. Zod v4 KHÔNG nhận `.default({})` — phải truyền đủ mọi trường,
+nên khai một hằng `DEFAULT_PARTNERS` rồi cho cả `defaults.ts` dùng lại, tránh hai bản trôi dạt:
 
 ```ts
 export const homeContentSchema = z.object({
   v: z.literal(1),
   // ...
-  partners: partnersSchema.default({}),
+  partners: partnersSchema.default(DEFAULT_PARTNERS),
   // ...
 });
 

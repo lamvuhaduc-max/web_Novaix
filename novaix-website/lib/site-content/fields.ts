@@ -183,6 +183,13 @@ export const SECTIONS_CONFIG: SectionConfig[] = [
     fields: [],
   },
   {
+    key: "partners",
+    title: "Đối tác & Khách hàng",
+    iconName: "IconBuildingStore",
+    category: "TRANG CHỦ",
+    fields: [],
+  },
+  {
     key: "cta",
     title: "Liên hệ & Form đăng ký",
     iconName: "IconMail",

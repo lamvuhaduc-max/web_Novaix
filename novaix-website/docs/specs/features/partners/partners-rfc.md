@@ -1,7 +1,7 @@
 # RFC — Dải Đối tác & Khách hàng (Partners Strip)
 
 > **PRD:** [`partners-prd.md`](./partners-prd.md) · **Domain:** [`home-content-domain.md`](../../domains/home-content-domain.md)
-> **Trạng thái:** 📝 chờ duyệt · **Mã FR:** `FR-P01`…`FR-P12`
+> **Trạng thái:** ✅ **đã triển khai** (18/08/2026).
 
 ---
 

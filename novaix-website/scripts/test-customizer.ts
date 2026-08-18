@@ -140,4 +140,56 @@ console.log("\n=== 8. TEST MÀU KHÔNG HỢP LỆ BỊ CHẶN ===");
   console.log("✅ Chuỗi tiêm CSS bị chặn ở cả schema lẫn safeHex.");
 }
 
+console.log("\n=== 9. TEST KHỐI ĐỐI TÁC ===");
+{
+  // 9a. Dữ liệu cũ chưa có khối partners vẫn đọc được, khối khác giữ nguyên.
+  const legacy: any = JSON.parse(JSON.stringify(DEFAULT_HOME_CONTENT));
+  delete legacy.partners;
+  legacy.hero.titleLead = "Giữ nguyên";
+  const resolved = resolveHomeContent(legacy);
+  if (!resolved.partners || resolved.hero.titleLead !== "Giữ nguyên") {
+    console.error("❌ Thiếu khối partners làm hỏng dữ liệu cũ!");
+    process.exit(1);
+  }
+
+  // 9b. Quá 24 đối tác phải bị chặn.
+  const tooMany: any = JSON.parse(JSON.stringify(DEFAULT_HOME_CONTENT));
+  tooMany.partners.items = Array.from({ length: 25 }, (_, i) => ({
+    name: `Đối tác ${i + 1}`, logo: "https://cdn.oalpha.vn/x.png", link: "", visible: true,
+  }));
+  if (homeContentSchema.safeParse(tooMany).success) {
+    console.error("❌ Schema chấp nhận quá 24 đối tác!");
+    process.exit(1);
+  }
+
+  // 9c. Tốc độ ngoài khoảng cho phép phải bị chặn.
+  for (const speed of [0, 999]) {
+    const bad: any = JSON.parse(JSON.stringify(DEFAULT_HOME_CONTENT));
+    bad.partners.speed = speed;
+    if (homeContentSchema.safeParse(bad).success) {
+      console.error(`❌ Schema chấp nhận speed = ${speed}!`);
+      process.exit(1);
+    }
+  }
+
+  // 9d. Tên đối tác bỏ trống phải bị chặn — nó là alt của ảnh.
+  const noName: any = JSON.parse(JSON.stringify(DEFAULT_HOME_CONTENT));
+  noName.partners.items = [{ name: "", logo: "https://cdn.oalpha.vn/x.png", link: "", visible: true }];
+  if (homeContentSchema.safeParse(noName).success) {
+    console.error("❌ Schema chấp nhận đối tác không có tên!");
+    process.exit(1);
+  }
+
+  // 9e. sectionOrder cũ chưa có "partners" thì phải được bù vào.
+  const oldOrder: any = JSON.parse(JSON.stringify(DEFAULT_HOME_CONTENT));
+  oldOrder.sectionOrder = DEFAULT_SECTION_ORDER.filter((k) => k !== "partners");
+  const fixed = resolveHomeContent(oldOrder);
+  if (!fixed.sectionOrder.includes("partners")) {
+    console.error("❌ sectionOrder thiếu 'partners' mà không được bù vào!");
+    process.exit(1);
+  }
+
+  console.log("✅ Khối đối tác: tương thích ngược, chặn đúng giới hạn, bù thứ tự khối.");
+}
+
 console.log("\n🎉 TOÀN BỘ CÁC BỘ TEST ĐỀU THÀNH CÔNG!");

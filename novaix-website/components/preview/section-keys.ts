@@ -15,6 +15,7 @@ export const RENDERABLE_SECTION_KEYS = [
   "segments",
   "pricing",
   "testimonials",
+  "partners",
   "faq",
   "articles",
   "cta",

@@ -14,6 +14,7 @@ export type SectionKey =
   | "segments"
   | "pricing"
   | "testimonials"
+  | "partners"
   | "faq"
   | "articles"
   | "cta"

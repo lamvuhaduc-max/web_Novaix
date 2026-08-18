@@ -2,7 +2,7 @@
 // Website đang chạy đọc nội dung từ site_settings.home_content — SỬA FILE NÀY KHÔNG ĐỔI TRANG ĐANG CHẠY.
 // Muốn đổi chữ trên web: /admin/giao-dien
 
-import { DEFAULT_SECTION_ORDER, type HomeContent } from "./schema";
+import { DEFAULT_PARTNERS, DEFAULT_SECTION_ORDER, type HomeContent } from "./schema";
 
 export const DEFAULT_HOME_CONTENT: HomeContent = {
   v: 1,
@@ -486,6 +486,7 @@ export const DEFAULT_HOME_CONTENT: HomeContent = {
     bgColor: "#030712",
   },
 
+  partners: DEFAULT_PARTNERS,
   cta: {
 
     kicker: "Liên hệ",

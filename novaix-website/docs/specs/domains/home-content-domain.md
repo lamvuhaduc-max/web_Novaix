@@ -515,9 +515,9 @@ dưới khóa `partners`, sửa trong cùng màn `/admin/giao-dien`, dùng chung
 | **Mã FR** | `FR-P01`…`FR-P12` (nhóm **P**) |
 | **Dữ liệu** | Khối `partners` trong jsonb — không thêm bảng |
 | **Nội dung một mục** | Tên · logo (R2) · liên kết · công tắc hiển thị |
-| **Cấu hình dải** | Tốc độ · khoảng cách · hướng · vị trí trên trang · dừng khi rê chuột · chiều cao logo · lọc xám · màu nền |
+| **Cấu hình dải** | Tốc độ · khoảng cách · hướng · dừng khi rê chuột · chiều cao logo · lọc xám · màu nền. Vị trí trên trang dùng nút sắp xếp khối chung |
 | **Thứ mới duy nhất** | Kiểu trường `image` cho panel — dùng lại được cho ảnh Hero, ảnh About sau này |
-| **Trạng thái** | 📝 chưa triển khai |
+| **Trạng thái** | ✅ đã triển khai (18/08/2026) |
 
 Chi tiết: [PRD](../features/partners/partners-prd.md) · [RFC](../features/partners/partners-rfc.md)
 · [Spec](../features/partners/partners-spec.md) · [Tasks](../features/partners/partners-tasks.md)

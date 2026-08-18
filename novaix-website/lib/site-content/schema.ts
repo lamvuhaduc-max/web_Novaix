@@ -386,6 +386,57 @@ export const articlesSchema = z.object({
   bgColor: hexColor("#030712"),
 });
 
+export const partnerItemSchema = z.object({
+  name: required(60, "Tên đối tác"),
+  logo: z.string().trim().max(500).default(""),
+  link: text(300).default(""),
+  visible: z.boolean().default(true),
+});
+
+export const partnersSchema = z.object({
+  enabled: z.boolean().default(true),
+  label: text(60).default("Được tin dùng bởi"),
+
+  items: z.array(partnerItemSchema).max(24, "Tối đa 24 đối tác").default([]),
+
+  // Chuyển động
+  speed: z.number().int().min(5).max(120).default(40),
+  gap: z.number().int().min(20).max(400).default(72),
+  direction: z.enum(["trai", "phai"]).default("trai"),
+  pauseOnHover: z.boolean().default(true),
+
+  // Hiển thị logo
+  logoHeight: z.number().int().min(20).max(96).default(40),
+  grayscale: z.boolean().default(true),
+
+  // Màu — theo quy ước customColors của các khối khác
+  customColors: z.boolean().default(false),
+  bgColor: hexColor("#0b1120"),
+  labelColor: hexColor("#5f6c8a"),
+});
+
+/**
+ * Giá trị mặc định của khối Đối tác.
+ *
+ * Khai ở đây và cho `defaults.ts` dùng lại — KHÔNG chép thành hai bản, vì hai
+ * bản sẽ trôi dạt và người đọc không biết bản nào thắng.
+ */
+export const DEFAULT_PARTNERS: z.infer<typeof partnersSchema> = {
+  // Tắt sẵn: dải rỗng không có gì để khoe, và không bịa logo giả.
+  enabled: false,
+  label: "Được tin dùng bởi",
+  items: [],
+  speed: 40,
+  gap: 72,
+  direction: "trai",
+  pauseOnHover: true,
+  logoHeight: 40,
+  grayscale: true,
+  customColors: false,
+  bgColor: "#0b1120",
+  labelColor: "#5f6c8a",
+};
+
 export const DEFAULT_SECTION_ORDER = [
   "hero",
   "marquee",
@@ -396,12 +447,45 @@ export const DEFAULT_SECTION_ORDER = [
   "segments",
   "pricing",
   "testimonials",
+  "partners",
   "faq",
   "articles",
   "cta",
 ] as const;
 
 export type ReorderableSectionKey = (typeof DEFAULT_SECTION_ORDER)[number];
+/**
+ * Chuẩn hóa thứ tự khối: bỏ khóa lạ, bỏ trùng, và bù khóa còn thiếu vào ĐÚNG
+ * vị trí mặc định của nó thay vì dồn xuống cuối.
+ *
+ * Bù vào cuối thì mỗi lần thêm khối mới, mọi bản ghi đã lưu đều đẩy khối đó
+ * xuống dưới chân trang — không phải chỗ người thiết kế định đặt, và người dùng
+ * phải tự bấm mũi tên hàng chục lần để kéo lên.
+ */
+export function normalizeSectionOrder(input: readonly string[] | undefined): string[] {
+  const known = DEFAULT_SECTION_ORDER as readonly string[];
+  const kept = Array.from(new Set((input || []).filter((k) => known.includes(k))));
+
+  for (const key of known) {
+    if (kept.includes(key)) continue;
+
+    // Tìm khối đứng ngay trước nó trong thứ tự mặc định mà hiện đang có mặt,
+    // rồi chèn ngay sau khối đó.
+    const canonicalIdx = known.indexOf(key);
+    let insertAt = 0;
+    for (let i = canonicalIdx - 1; i >= 0; i--) {
+      const pos = kept.indexOf(known[i]);
+      if (pos !== -1) {
+        insertAt = pos + 1;
+        break;
+      }
+    }
+    kept.splice(insertAt, 0, key);
+  }
+
+  return kept;
+}
+
 
 export const homeContentSchema = z.object({
   v: z.literal(1),
@@ -426,11 +510,7 @@ export const homeContentSchema = z.object({
   sectionOrder: z
     .array(z.string())
     .default([...DEFAULT_SECTION_ORDER])
-    .transform((arr) => {
-      const known = DEFAULT_SECTION_ORDER as readonly string[];
-      const kept = Array.from(new Set(arr.filter((k) => known.includes(k))));
-      return [...kept, ...known.filter((k) => !kept.includes(k))];
-    }),
+    .transform((arr) => normalizeSectionOrder(arr)),
 
   nav: navSchema,
   hero: heroSchema,
@@ -455,6 +535,7 @@ export const homeContentSchema = z.object({
     readMoreColor: "#2dd4bf",
     bgColor: "#030712",
   }),
+  partners: partnersSchema.default(DEFAULT_PARTNERS),
   cta: ctaSchema,
   footer: footerSchema,
 });
@@ -473,6 +554,7 @@ export type PricingContent = z.infer<typeof pricingSchema>;
 export type TestimonialsContent = z.infer<typeof testimonialsSchema>;
 export type FAQContent = z.infer<typeof faqSchema>;
 export type ArticlesContent = z.infer<typeof articlesSchema>;
+export type PartnersContent = z.infer<typeof partnersSchema>;
 export type CTAContent = z.infer<typeof ctaSchema>;
 export type FooterContent = z.infer<typeof footerSchema>;
 

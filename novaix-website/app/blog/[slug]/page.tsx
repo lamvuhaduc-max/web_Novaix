@@ -6,6 +6,7 @@ import Toc from "@/components/blog/Toc";
 import InlineToc from "@/components/blog/InlineToc";
 import ArticleCard from "@/components/blog/ArticleCard";
 import { getArticleBySlug, getRelatedArticles } from "@/lib/blog/queries";
+import { wrapResponsiveTables } from "@/lib/blog/html";
 
 export const revalidate = 300; // Cache ISR 5 phút
 
@@ -151,7 +152,7 @@ export default async function ArticleDetailPage({ params }: Props) {
                   prose-table:w-full prose-table:border-collapse prose-table:my-6
                   prose-th:bg-slate-900 prose-th:p-3 prose-th:border prose-th:border-slate-800 prose-th:text-left prose-th:text-white prose-th:text-xs md:prose-th:text-sm
                   prose-td:p-3 prose-td:border prose-td:border-slate-800 prose-td:text-slate-300 prose-td:text-xs md:prose-td:text-sm"
-                dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+                dangerouslySetInnerHTML={{ __html: wrapResponsiveTables(article.contentHtml) }}
               />
             </article>
           </div>

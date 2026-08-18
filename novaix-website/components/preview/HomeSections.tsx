@@ -6,6 +6,7 @@ import Modules from "@/components/Modules";
 import Features from "@/components/Features";
 import Process from "@/components/Process";
 import Segments from "@/components/Segments";
+import Partners from "@/components/Partners";
 import Pricing from "@/components/Pricing";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
@@ -15,7 +16,7 @@ import ArticleRail from "@/components/blog/ArticleRail";
 import type { HomeContent } from "@/lib/site-content/schema";
 import type { PublicArticleCard } from "@/lib/blog/queries";
 import { safeHex } from "@/lib/site-content/color";
-import { DEFAULT_SECTION_ORDER } from "@/lib/site-content/schema";
+import { normalizeSectionOrder } from "@/lib/site-content/schema";
 import { RENDERABLE_SECTION_KEYS } from "./section-keys";
 
 /**
@@ -321,22 +322,11 @@ export default function HomeSections({
     }
   `;
 
-  // Thứ tự khối lấy từ DEFAULT_SECTION_ORDER trong schema — KHÔNG chép lại danh sách
-  // ở đây. Hai bản sẽ trôi dạt ngay lần thêm khối mới, và khối bị sót sẽ biến mất
-  // khỏi trang chủ trong im lặng vì bộ lọc bên dưới loại mọi khóa không có trong danh sách.
-  const DEFAULT_ORDER: string[] = DEFAULT_SECTION_ORDER.filter((k) =>
+  // Chuẩn hóa dùng chung với schema: bỏ khóa lạ, bỏ trùng, bù khóa thiếu vào
+  // đúng vị trí mặc định. Chỉ giữ khóa thực sự render được.
+  const effectiveOrder = normalizeSectionOrder(content.sectionOrder).filter((k) =>
     (RENDERABLE_SECTION_KEYS as readonly string[]).includes(k)
   );
-
-  const rawOrder = Array.isArray(content.sectionOrder) && content.sectionOrder.length > 0
-    ? content.sectionOrder
-    : DEFAULT_ORDER;
-
-  // Vừa lọc khóa lạ, vừa BỎ TRÙNG: sectionOrder khai là z.array(z.string()) nên một
-  // bản ghi hỏng có thể chứa cùng một khóa hai lần, làm khối render hai lần và trùng React key.
-  const validOrder = Array.from(new Set(rawOrder.filter((k) => DEFAULT_ORDER.includes(k))));
-  const missing = DEFAULT_ORDER.filter((k) => !validOrder.includes(k));
-  const effectiveOrder = [...validOrder, ...missing];
 
   const renderSectionByKey = (key: string) => {
     switch (key) {
@@ -363,6 +353,8 @@ export default function HomeSections({
       case "articles":
         return <ArticleRail key="articles" rails={articleRails} content={content.articles} />;
 
+      case "partners":
+        return <Partners key="partners" content={content.partners} />;
       case "cta":
         return <CTA key="cta" content={content.cta} />;
       default:

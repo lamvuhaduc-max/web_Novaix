@@ -18,6 +18,10 @@ export const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
     "ol",
     "li",
     "blockquote",
+    // Trình soạn thảo có nút chèn khối code (toggleCodeBlock của Tiptap) sinh ra
+    // <pre><code>. Thiếu hai thẻ này thì bấm nút xong, lưu lại là mất hết định dạng.
+    "pre",
+    "code",
     "a",
     "span",
     "div",
@@ -41,6 +45,8 @@ export const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
     span: ["class", "style"],
     div: ["class", "style"],
     td: ["colspan", "rowspan", "class", "style"],
+    pre: ["class"],
+    code: ["class"],
     th: ["colspan", "rowspan", "class", "style"],
   },
   allowedStyles: {
@@ -160,4 +166,22 @@ export function assertLocalImages(html: string): void {
       );
     }
   }
+}
+
+/**
+ * Bọc mỗi <table> trong nội dung bài viết vào một khung cuộn ngang riêng.
+ *
+ * Bảng rộng hơn màn hình điện thoại làm tràn cả trang: người đọc vuốt ngang là
+ * kéo lệch toàn bộ bố cục, còn nếu body chặn tràn thì phần bảng bị cắt mất và
+ * không cách nào xem được. Bọc lại thì chỉ riêng bảng cuộn, trang đứng yên.
+ *
+ * Chạy lúc render chứ không lúc lưu, để các bài viết đã có trong database cũng
+ * được sửa mà không phải lưu lại từng bài.
+ */
+export function wrapResponsiveTables(html: string): string {
+  if (!html.includes("<table")) return html;
+  return html.replace(
+    /<table(\s[^>]*)?>([\s\S]*?)<\/table>/gi,
+    (match) => `<div class="table-scroll">${match}</div>`
+  );
 }

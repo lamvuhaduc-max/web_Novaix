@@ -25,6 +25,7 @@ import {
   IconNavigation,
   IconNews,
   IconPackage,
+  IconBuildingStore,
   IconRocket,
 
   IconRotate,
@@ -46,6 +47,7 @@ import ListField from "./ListField";
 import MarqueeSection from "./MarqueeSection";
 import ModulesSection from "./ModulesSection";
 import NavSection from "./NavSection";
+import PartnersSection from "./PartnersSection";
 import PricingSection from "./PricingSection";
 import ProcessSection from "./ProcessSection";
 import SegmentsSection from "./SegmentsSection";
@@ -69,6 +71,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   IconSparkles: <IconSparkles size={18} />,
   IconUsers: <IconUsers size={18} />,
   IconPackage: <IconPackage size={18} />,
+  IconBuildingStore: <IconBuildingStore size={18} />,
   IconChecklist: <IconChecklist size={18} />,
   IconRoute: <IconRoute size={18} />,
   IconBuilding: <IconBuilding size={18} />,
@@ -245,6 +248,15 @@ export default function SectionPanel({
     }
 
 
+    if (sec.key === "partners") {
+      return (
+        <PartnersSection
+          partners={content.partners}
+          onChange={(newPartners) => onChange("partners", newPartners)}
+        />
+      );
+    }
+
     if (sec.key === "cta") {
       return (
         <CTASection
@@ -376,6 +388,7 @@ export default function SectionPanel({
                             <Tooltip title="Di chuyển khối này lên trên">
                               <span>
                                 <IconButton
+                                  component="span"
                                   size="small"
                                   disabled={!canMoveUp}
                                   onClick={(e) => {
@@ -397,6 +410,7 @@ export default function SectionPanel({
                             <Tooltip title="Di chuyển khối này xuống dưới">
                               <span>
                                 <IconButton
+                                  component="span"
                                   size="small"
                                   disabled={!canMoveDown}
                                   onClick={(e) => {
