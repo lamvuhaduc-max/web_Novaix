@@ -1,16 +1,29 @@
 import { z } from "zod";
+import { HEX_COLOR } from "./color";
 
 const text = (max: number) => z.string().trim().max(max);
 const required = (max: number, label: string) =>
   z.string().trim().min(1, `${label} không được để trống.`).max(max, `${label} tối đa ${max} ký tự.`);
 
+/**
+ * Màu được ghép thẳng vào khối <style> của trang chủ, nên phải chặn ngay từ schema:
+ * một chuỗi như "red; } * { display: none" sẽ thoát khỏi khai báo và phá vỡ
+ * toàn bộ CSS trang công khai. Chỉ chấp nhận đúng mã hex.
+ */
+const hexColor = (fallback: string) =>
+  z
+    .string()
+    .trim()
+    .regex(HEX_COLOR, "Màu phải ở dạng mã hex, ví dụ #2dd4bf.")
+    .default(fallback);
+
 export const themeSchema = z.object({
-  primary: z.string().default("#2dd4bf"),
-  primaryDark: z.string().default("#0d9488"),
-  accent: z.string().default("#38bdf8"),
-  textColor: z.string().default("#eef2fb"),
-  textMuted: z.string().default("#9aa6c4"),
-  bgColor: z.string().default("#070b16"),
+  primary: hexColor("#2dd4bf"),
+  primaryDark: hexColor("#0d9488"),
+  accent: hexColor("#38bdf8"),
+  textColor: hexColor("#eef2fb"),
+  textMuted: hexColor("#9aa6c4"),
+  bgColor: hexColor("#070b16"),
   borderRadius: z.number().int().min(0).max(32).default(12),
 });
 
@@ -47,10 +60,10 @@ export const marqueeSchema = z.object({
   enabled: z.boolean().default(true),
   label: text(60).default("Phù hợp với mọi lĩnh vực kinh doanh"),
   items: z.array(required(80, "Mẫu tin")).min(1, "Cần ít nhất 1 mẫu tin").max(20, "Tối đa 20 mẫu tin"),
-  bgColor: z.string().default("#0b1120"),
-  textColor: z.string().default("#5f6c8a"),
-  labelBgColor: z.string().default("#2dd4bf"),
-  labelTextColor: z.string().default("#04121a"),
+  bgColor: hexColor("#0b1120"),
+  textColor: hexColor("#5f6c8a"),
+  labelBgColor: hexColor("#2dd4bf"),
+  labelTextColor: hexColor("#04121a"),
   speed: z.number().int().min(5).max(120).default(30),
   gap: z.number().int().min(20).max(400).default(160),
   link: text(200).default(""),
@@ -210,8 +223,8 @@ export const footerColumnSchema = z.object({
 });
 
 export const footerSchema = z.object({
-  bgColor: z.string().default("#0b1120"),
-  textColor: z.string().default("#9aa6c4"),
+  bgColor: hexColor("#0b1120"),
+  textColor: hexColor("#9aa6c4"),
   brandDesc: text(300).default("Giải pháp công nghệ giúp doanh nghiệp Việt hệ thống hóa quy trình và vận hành bằng dữ liệu."),
   columns: z.array(footerColumnSchema).min(1, "Cần ít nhất 1 cột").max(6, "Tối đa 6 cột").default([
     {

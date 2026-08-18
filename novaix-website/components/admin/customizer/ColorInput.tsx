@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { isHexColor, safeHex } from "@/lib/site-content/color";
 
 export default function ColorInput({
   label,
@@ -15,6 +16,10 @@ export default function ColorInput({
   onChange: (val: string) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // KHÔNG đưa thẳng `value` vào sx: Emotion biến nó thành CSS thật của trang quản trị.
+  const valid = isHexColor(value);
+  const swatch = safeHex(value, "#000000");
 
   return (
     <Box sx={{ mb: 2 }}>
@@ -31,8 +36,10 @@ export default function ColorInput({
         <TextField
           size="small"
           fullWidth
-          value={value || "#000000"}
+          value={value || ""}
           onChange={(e) => onChange(e.target.value)}
+          error={Boolean(value) && !valid}
+          helperText={Boolean(value) && !valid ? "Màu phải ở dạng hex, ví dụ #2dd4bf" : " "}
           sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: "8px",
@@ -51,7 +58,7 @@ export default function ColorInput({
             height: 38,
             flexShrink: 0,
             borderRadius: "8px",
-            bgcolor: value || "#000000",
+            bgcolor: swatch,
             border: "1px solid",
             borderColor: "divider",
             cursor: "pointer",
@@ -65,7 +72,7 @@ export default function ColorInput({
           <input
             ref={inputRef}
             type="color"
-            value={value && value.startsWith("#") && value.length === 7 ? value : "#000000"}
+            value={value && value.length === 7 && isHexColor(value) ? value : "#000000"}
             onChange={(e) => onChange(e.target.value)}
             style={{
               position: "absolute",

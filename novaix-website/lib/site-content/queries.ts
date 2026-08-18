@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { siteSettings } from "@/lib/db/schema";
@@ -10,7 +11,7 @@ export const HOME_CONTENT_KEY = "home_content";
  * Đọc nội dung trang chủ từ database (dùng cho trang chủ SSR/ISR).
  * Nếu database chưa có dữ liệu hoặc lỗi kết nối, fallback về DEFAULT_HOME_CONTENT.
  */
-export async function getHomeContent(): Promise<HomeContent> {
+export const getHomeContent = cache(async (): Promise<HomeContent> => {
   try {
     const [row] = await db
       .select({ value: siteSettings.value })
@@ -23,4 +24,4 @@ export async function getHomeContent(): Promise<HomeContent> {
     console.warn("[home-content] Lỗi khi truy vấn database, dùng bản mặc định:", error);
     return resolveHomeContent({});
   }
-}
+});

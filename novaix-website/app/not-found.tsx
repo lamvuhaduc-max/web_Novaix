@@ -1,11 +1,11 @@
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import SiteNavbar from "@/components/site/SiteNavbar";
+import SiteFooter from "@/components/site/SiteFooter";
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-bg text-ink flex flex-col font-sans">
-      <Navbar />
+      <SiteNavbar />
 
       <main className="flex-grow flex items-center justify-center pt-28 pb-20">
         <div className="wrap text-center max-w-lg">
@@ -27,7 +27,7 @@ export default function NotFound() {
         </div>
       </main>
 
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }

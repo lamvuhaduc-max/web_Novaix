@@ -15,6 +15,9 @@ export function deepMerge<T extends Record<string, unknown>>(base: T, override: 
   const result: Record<string, unknown> = { ...base };
 
   for (const key of Object.keys(override)) {
+    // JSON.parse giữ nguyên khóa "__proto__" như một thuộc tính thường, nhưng phép gán
+    // result[key] = ... thì lại kích hoạt setter prototype và làm ô nhiễm Object.prototype.
+    if (key === "__proto__" || key === "constructor" || key === "prototype") continue;
     const baseVal = base[key];
     const overVal = override[key];
 

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth/session";
+import { rethrowIfNextControlFlow } from "@/lib/next-errors";
 import { db } from "@/lib/db";
 import { activityLogs, siteSettings, users } from "@/lib/db/schema";
 import { DEFAULT_HOME_CONTENT } from "./defaults";
@@ -85,6 +86,7 @@ export async function getHomeContentForEdit(): Promise<
       },
     };
   } catch (error) {
+    rethrowIfNextControlFlow(error);
     const msg = error instanceof Error ? error.message : "Không thể tải nội dung trang chủ.";
     return { ok: false, error: msg };
   }
@@ -118,7 +120,15 @@ export async function saveHomeContent(input: unknown): Promise<ActionResult<{ up
       .where(eq(siteSettings.key, HOME_CONTENT_KEY))
       .limit(1);
 
-    if (current && baseUpdatedAt) {
+    if (current) {
+      // Thiếu baseUpdatedAt nghĩa là client không biết mình đang sửa trên bản nào —
+      // cho qua là ghi đè mù lên thay đổi của người khác.
+      if (!baseUpdatedAt) {
+        return {
+          ok: false,
+          error: "Không xác định được phiên bản đang sửa. Vui lòng tải lại trang trước khi lưu.",
+        };
+      }
       const currentIso = current.updatedAt.toISOString();
       if (currentIso !== baseUpdatedAt) {
         return {
@@ -151,9 +161,10 @@ export async function saveHomeContent(input: unknown): Promise<ActionResult<{ up
 
     // Ghi nhật ký hoạt động
     await db.insert(activityLogs).values({
-      userId: me.id,
+      actorId: me.id,
+      actorEmail: me.email,
       action: "settings.home_content.update",
-      entityType: "site_settings",
+      entity: "site_settings",
       entityId: HOME_CONTENT_KEY,
       meta: { changed },
       createdAt: now,
@@ -169,6 +180,7 @@ export async function saveHomeContent(input: unknown): Promise<ActionResult<{ up
       },
     };
   } catch (error) {
+    rethrowIfNextControlFlow(error);
     const msg = error instanceof Error ? error.message : "Đã xảy ra lỗi khi lưu nội dung.";
     return { ok: false, error: msg };
   }

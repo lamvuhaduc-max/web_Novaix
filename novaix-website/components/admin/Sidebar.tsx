@@ -28,14 +28,26 @@ const icons = {
   users: IconUsers,
 } as const;
 
-function isActive(pathname: string, item: MenuItem) {
-  if (item.href === "/admin") return pathname === "/admin";
-  return pathname === item.href || pathname.startsWith(`${item.href}/`);
+/**
+ * Chọn mục khớp SÂU NHẤT với đường dẫn hiện tại.
+ * Nếu chỉ xét tiền tố, "/admin/giao-dien" và "/admin/giao-dien/dai-bai-viet"
+ * sẽ cùng sáng khi đang ở route con.
+ */
+function activeHref(pathname: string, hrefs: string[]): string | null {
+  const matches = hrefs.filter((href) =>
+    href === "/admin" ? pathname === "/admin" : pathname === href || pathname.startsWith(href + "/")
+  );
+  if (matches.length === 0) return null;
+  return matches.reduce((longest, href) => (href.length > longest.length ? href : longest));
 }
 
 export default function Sidebar({ role, onNavigate }: { role: UserRole; onNavigate?: () => void }) {
   const pathname = usePathname();
   const groups = visibleGroups(role);
+  const currentHref = activeHref(
+    pathname,
+    groups.flatMap((g) => g.items.map((i) => i.href))
+  );
 
   return (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column", bgcolor: "background.paper" }}>
@@ -68,7 +80,7 @@ export default function Sidebar({ role, onNavigate }: { role: UserRole; onNaviga
             <List disablePadding>
               {group.items.map((item) => {
                 const Icon = icons[item.icon];
-                const active = isActive(pathname, item);
+                const active = item.href === currentHref;
                 return (
                   <ListItemButton
                     key={item.href}

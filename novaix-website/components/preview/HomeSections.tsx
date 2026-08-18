@@ -14,11 +14,14 @@ import Footer from "@/components/Footer";
 import ArticleRail from "@/components/blog/ArticleRail";
 import type { HomeContent } from "@/lib/site-content/schema";
 import type { PublicArticleCard } from "@/lib/blog/queries";
+import { safeHex } from "@/lib/site-content/color";
 
 /**
  * Component gom chung toàn bộ các khối trang chủ.
  * Tự động áp dụng bộ theme màu sắc và bo góc toàn trang.
  */
+
+
 export default function HomeSections({
   content,
   articleRails = [],
@@ -36,42 +39,52 @@ export default function HomeSections({
     borderRadius: 12,
   };
 
+  const c = {
+    primary: safeHex(theme.primary, "#2dd4bf"),
+    primaryDark: safeHex(theme.primaryDark, "#0d9488"),
+    accent: safeHex(theme.accent, "#38bdf8"),
+    textColor: safeHex(theme.textColor, "#eef2fb"),
+    textMuted: safeHex(theme.textMuted, "#9aa6c4"),
+    bgColor: safeHex(theme.bgColor, "#070b16"),
+    radius: Number.isFinite(theme.borderRadius) ? Math.min(32, Math.max(0, Math.trunc(theme.borderRadius))) : 12,
+  };
+
   return (
     <main
       style={{
-        backgroundColor: theme.bgColor || "#070b16",
-        color: theme.textColor || "#eef2fb",
+        backgroundColor: c.bgColor,
+        color: c.textColor,
         minHeight: "100vh",
       }}
     >
       <style>{`
         :root {
-          --theme-primary: ${theme.primary};
-          --theme-primary-dark: ${theme.primaryDark};
-          --theme-accent: ${theme.accent};
-          --theme-text: ${theme.textColor};
-          --theme-text-muted: ${theme.textMuted};
-          --theme-bg: ${theme.bgColor};
-          --theme-radius: ${theme.borderRadius}px;
+          --theme-primary: ${c.primary};
+          --theme-primary-dark: ${c.primaryDark};
+          --theme-accent: ${c.accent};
+          --theme-text: ${c.textColor};
+          --theme-text-muted: ${c.textMuted};
+          --theme-bg: ${c.bgColor};
+          --theme-radius: ${c.radius}px;
         }
         .btn, .panel, .form-input {
-          border-radius: ${theme.borderRadius}px !important;
+          border-radius: ${c.radius}px !important;
         }
         .btn-primary {
-          background: linear-gradient(135deg, ${theme.primary}, ${theme.accent}) !important;
+          background: linear-gradient(135deg, ${c.primary}, ${c.accent}) !important;
         }
         .kicker {
-          color: ${theme.primary} !important;
-          border-color: ${theme.primary}66 !important;
-          background: ${theme.primary}14 !important;
+          color: ${c.primary} !important;
+          border-color: ${c.primary}66 !important;
+          background: ${c.primary}14 !important;
         }
         .grad-text {
-          background: linear-gradient(120deg, ${theme.primary}, ${theme.accent} 55%, #fbbf24) !important;
+          background: linear-gradient(120deg, ${c.primary}, ${c.accent} 55%, #fbbf24) !important;
           -webkit-background-clip: text !important;
           background-clip: text !important;
         }
         .grad-text-2 {
-          background: linear-gradient(120deg, ${theme.primary}, ${theme.accent}) !important;
+          background: linear-gradient(120deg, ${c.primary}, ${c.accent}) !important;
           -webkit-background-clip: text !important;
           background-clip: text !important;
         }
